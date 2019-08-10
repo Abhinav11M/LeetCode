@@ -1,5 +1,6 @@
 package leetcode;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import datastructures.ListNode;
@@ -36,8 +37,18 @@ public class LeetMain {
 		ListNode l1 = createList1();
 		ListNode l2 = createList2();
 		
-		ListNode res = LeetAlgos.mergeLists(l1, l2);
-		printListNode(res);
+//		ListNode res = LeetAlgos.mergeLists(l1, l2);
+//		printListNode(res);
+		ArrayList<String> res = new ArrayList<>();
+		LeetAlgos.generateParanthesis(res, "", 2, 2);
+//		System.out.println(res);
+		
+		ListNode mergeHead = LeetAlgos.mergeKLists2(new ListNode[] {null, l1, null, l2});
+		printListNode(mergeHead);
+		
+		ListNode swapped = LeetAlgos.swapPairs(createList3());
+		System.out.println("*********");
+		printListNode(swapped);
 	}
 
 	private static void printListNode(ListNode res) {
@@ -48,16 +59,15 @@ public class LeetMain {
 	}
 
 	private static ListNode createList1() {
-		ListNode l = new ListNode(1);
-		l.next = new ListNode(2);
-		l.next.next = new ListNode(4);
+		ListNode l = new ListNode(-1);
+		l.next = new ListNode(5);
+		l.next.next = new ListNode(11);
 		return l;
 	}
 
 	private static ListNode createList2() {
-		ListNode l = new ListNode(1);
-		l.next = new ListNode(3);
-		l.next.next = new ListNode(4);
+		ListNode l = new ListNode(6);
+		l.next = new ListNode(10);
 		return l;
 	}
 
@@ -68,6 +78,16 @@ public class LeetMain {
 		l.next.next.next = new ListNode(4);
 		l.next.next.next.next = new ListNode(5);
 		
+		return l;
+	}
+	
+	private static ListNode createList3() {
+		ListNode l = new ListNode(1);
+		l.next = new ListNode(2);
+		l.next.next = new ListNode(3);
+		l.next.next.next = new ListNode(4);
+		l.next.next.next.next = new ListNode(5);
+		l.next.next.next.next.next = new ListNode(6);
 		return l;
 	}
 

@@ -410,7 +410,6 @@ public class LeetAlgos {
 	}
 
 	private static ListNode mergeListsRecursively(ListNode list1, ListNode list2) {
-		// TODO Auto-generated method stub
 		if(list1 == null && list2 == null) {
 			return null;
 		}
@@ -433,6 +432,171 @@ public class LeetAlgos {
 				return head;
 			}
 		}
+	}
+
+	/**
+	 * Given n pairs of parentheses, write a function to generate all 
+	 * combinations of well-formed parentheses.
+	 * For example, given n = 3, a solution set is:
+	 * [ "((()))", "(()())", "(())()", "()(())", "()()()" ]
+	 */
+	public static void generateParanthesis(List<String> result, String s, int left, int right){
+	    if(left > right) // If there are more left brackets remaining than right, return
+	        return;
+	 
+	    if(left == 0 && right == 0){
+	        result.add(s);
+	        return;
+	    } 
+	 
+	    if(left > 0){
+	        generateParanthesis(result, s+"(", left-1, right);
+	    }
+	 
+	    if(right > 0){
+	        generateParanthesis(result, s+")", left, right-1);
+	    }
+	}
+	
+	/**
+	 * Merge k sorted linked lists and return it as one sorted list. 
+	 * Analyze and describe its complexity.
+	 * ==== Not a optimal solution ====
+	 */
+	public static ListNode mergeKLists(ListNode[] listNodes) {
+		ListNode head = null;
+		for(int i = 0; i < listNodes.length; ++i) {
+			head = mergeListsRecursively(head, listNodes[i]);
+		}
+		
+		return head;
+	}
+	
+	/**
+	 * This has even worse complexity
+	 */
+	public static ListNode mergeKLists1(ListNode[] listNodes) {
+	
+		ListNode mergeHead = null;
+		ListNode returnHead = null;
+		
+		ListNode[] heads = new ListNode[listNodes.length];
+		for(int i = 0; i < listNodes.length; ++i) {
+			heads[i] = listNodes[i];
+		}
+		
+		while(!allHeadsNull(heads)) {
+		// Find the min of heads and increment the heads
+			ListNode tempNode = null;
+			int min = Integer.MAX_VALUE;
+			int index = 0;
+
+			for(int i = 0; i < heads.length; ++i) {
+				if(heads[i] == null) {
+					continue;
+				}
+				
+				if(heads[i].val < min) {
+					min = heads[i].val;
+					tempNode = heads[i];
+					index = i;
+				}
+			}
+
+			if(mergeHead == null) {
+				mergeHead = new ListNode(min);
+				returnHead = mergeHead;
+			}
+			else {
+				mergeHead.next = new ListNode(min);
+				mergeHead = mergeHead.next;
+			}
+			try {
+			heads[index] = heads[index].next;
+			}catch(Exception e) {
+				System.out.println("Caught");
+			}
+		}
+		
+		return returnHead;
+	}
+
+	private static boolean allHeadsNull(ListNode[] heads) {
+		for(ListNode l : heads) {
+			if(l != null) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	// Using divide and conquer
+	public static ListNode mergeKLists2(ListNode[] listNodes) {
+		if(listNodes == null || listNodes.length == 0) {
+			return null;
+		}
+		
+		return mergeKLists(listNodes, listNodes.length-1);
+	}
+
+	private static ListNode mergeKLists(ListNode[] listNodes, int last) {
+		int tempLast = last;
+		
+		while(last != 0) {
+			int begin  = 0;
+			while(begin < tempLast) {
+				listNodes[begin] = mergeLists(listNodes[begin], listNodes[tempLast]);
+				begin++;
+				tempLast--;
+			}
+			
+			if(begin >= tempLast) { // Update the last once all lists are merged
+				last = tempLast;
+			}
+		}
+		
+		return listNodes[0];
+//		
+//		
+//		if(begin > last) {
+//			return null;
+//		}
+//		if(begin == last) {
+//			return listNodes[begin];
+//		}
+//		
+//		int mid = (last-begin)/2;
+//		ListNode head1 = mergeKLists(begin, mid, listNodes);
+//		ListNode head2 = mergeKLists(mid + 1, last, listNodes);
+//		
+//		return mergeLists(head1, head2);
+	}
+	
+	/**
+	 * Given a linked list, swap every two adjacent nodes and return its head. 
+	 * You may not modify the values in the list's nodes, only nodes itself may be changed.
+	 * Given 1->2->3->4, you should return the list as 2->1->4->3.
+	 */
+	public static ListNode swapPairs(ListNode head) {
+		if(head == null || head.next == null) {
+			return head;
+		}
+		ListNode tempHead = head.next;
+		ListNode prev = null;
+		
+		while(head != null && head.next != null) {
+			ListNode front = head;
+			head = head.next;
+			front.next = head.next;
+			head.next = front;
+			if(prev != null) {
+				prev.next = head;
+			}
+			prev = front;
+			head = prev.next;
+		}
+		
+		return tempHead;
 	}
 }
 
