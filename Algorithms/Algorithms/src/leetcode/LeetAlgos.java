@@ -598,5 +598,118 @@ public class LeetAlgos {
 		
 		return tempHead;
 	}
+	
+	public static ListNode swapPairsRec(ListNode head) {
+		if(head == null || head.next == null) {
+			return head;
+		}
+		
+		ListNode headToRet = head.next;
+		swapPairsRecursively(head);
+		return headToRet;
+	}
+	
+	public static ListNode swapPairsRecursively(ListNode head) {
+		if(head == null || head.next == null) {
+			return head;
+		}
+		
+		// Swap the first two from head and return new head.
+		ListNode newHead = head.next;
+		head.next = newHead.next;
+		newHead.next = head;
+		head.next = swapPairsRecursively(head.next);
+		return newHead;
+	}
+	
+	/**
+	 * Given a linked list, reverse the nodes of a linked list k at a time and return its 
+	 * modified list. k is a positive integer and is less than or equal to the length of the 
+	 * linked list. If the number of nodes is not a multiple of k then left-out nodes 
+	 * in the end should remain as it is.
+	 * Given this linked list: 1->2->3->4->5
+	 * For k = 2, you should return: 2->1->4->3->5
+	 * For k = 3, you should return: 3->2->1->4->5
+	 */
+	public static ListNode reverseKGroupRec(ListNode head, int k) {
+		if(head == null) {
+			return head;
+		}
+
+		Stack<ListNode> stack = new Stack<>();
+		ListNode tempHead = head;
+		
+		for(int i = 0; i < k; ++i) {
+			if(tempHead == null) {
+				return head; // Return without reversing
+			}
+
+			stack.add(tempHead);
+			tempHead = tempHead.next;
+		}
+		
+		ListNode returnHead = stack.pop();
+		ListNode nextHead = returnHead.next;
+		ListNode newHead = returnHead;
+		
+		while(!stack.isEmpty()) {
+			newHead.next = stack.pop();
+			newHead = newHead.next;
+		}
+		
+		newHead.next = reverseKGroupRec(nextHead, k);
+		
+		return returnHead;
+	}
+
+	// Without using a Stack
+	public static ListNode reverseKGroupRec1(ListNode head, int k) {
+		ListNode next = null;
+		ListNode prev = null;
+		ListNode current = head;
+		int count = 0;
+		
+		if(!hasKElements(head, k)) {
+			return head;
+		}
+		
+		while(current != null && count < k) {
+			next = current.next;
+			current.next = prev;
+			prev = current;
+			current = next;
+			++count;
+		}
+		
+		if(current != null) {
+			head.next = reverseKGroupRec1(current, k);
+		}
+		
+		return prev;
+	}
+	
+	private static boolean hasKElements(ListNode head, int k) {
+		int count = 0;
+		
+		while(head != null) {
+			++count;
+			head = head.next;
+
+			if(count == k) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+
+	private static int countList(ListNode head) {
+		int count = 0;
+		while(head != null) {
+			head = head.next;
+			++count;
+		}
+		return count;
+	}
 }
 

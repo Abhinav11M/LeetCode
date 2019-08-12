@@ -43,12 +43,19 @@ public class LeetMain {
 		LeetAlgos.generateParanthesis(res, "", 2, 2);
 //		System.out.println(res);
 		
-		ListNode mergeHead = LeetAlgos.mergeKLists2(new ListNode[] {null, l1, null, l2});
-		printListNode(mergeHead);
+//		ListNode mergeHead = LeetAlgos.mergeKLists2(new ListNode[] {null, l1, null, l2});
+//		printListNode(mergeHead);
 		
-		ListNode swapped = LeetAlgos.swapPairs(createList3());
-		System.out.println("*********");
-		printListNode(swapped);
+//		ListNode swapped = LeetAlgos.swapPairs(createList3());
+//		System.out.println("*********");
+//		printListNode(swapped);
+//		ListNode swapped1 = LeetAlgos.swapPairsRec(createList3());
+//		printListNode(swapped1);
+		
+//		System.out.println(LeetAlgos.reverseFirstK(createList(), 3));
+		ListNode x = LeetAlgos.reverseKGroupRec(createList3(), 3);
+		ListNode x1 = LeetAlgos.reverseKGroupRec1(createList3(), 2);
+		printListNode(x1);
 	}
 
 	private static void printListNode(ListNode res) {
@@ -87,8 +94,10 @@ public class LeetMain {
 		l.next.next = new ListNode(3);
 		l.next.next.next = new ListNode(4);
 		l.next.next.next.next = new ListNode(5);
-		l.next.next.next.next.next = new ListNode(6);
+//		l.next.next.next.next.next = new ListNode(6);
+//		l.next.next.next.next.next.next = new ListNode(7);
+//		l.next.next.next.next.next.next.next = new ListNode(8);
+//		l.next.next.next.next.next.next.next.next = new ListNode(9);
 		return l;
 	}
-
 }
