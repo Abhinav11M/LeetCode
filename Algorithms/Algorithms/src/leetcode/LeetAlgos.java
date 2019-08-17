@@ -2,11 +2,14 @@ package leetcode;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Currency;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.Set;
 import java.util.Stack;
 import java.util.stream.Collectors;
 
@@ -710,6 +713,343 @@ public class LeetAlgos {
 			++count;
 		}
 		return count;
+	}
+	
+	/**
+	 * Given a sorted array nums, remove the duplicates in-place such that each element appear 
+	 * only once and return the new length. * Do not allocate extra space for another array, 
+	 * you must do this by modifying the input array in-place with O(1) extra memory.
+	 * Given nums = [1,1,2],
+	 * Your function should return length = 2, with the first two elements of nums being 1 and 2 respectively.
+	 * It doesn't matter what you leave beyond the returned length.
+	 */
+	public static int removeDuplicates(int[] nums) {
+		if(nums.length == 0 || nums.length == 1) {
+			return nums.length;
+		}
+		
+		int indexToUpdate = 1;
+		int indexToIterate = 1;
+		int prevNum = nums[0];
+		while(indexToIterate < nums.length) {
+			if(nums[indexToIterate] == prevNum) {
+				++indexToIterate;
+				continue;
+			}
+			nums[indexToUpdate++] = nums[indexToIterate];
+			prevNum = nums[indexToIterate++];
+		}
+		return indexToUpdate;
+	}
+	
+	/**
+	 * Given an array nums and a value val, remove all instances of that value in-place
+	 * and return the new length. Do not allocate extra space for another array,
+	 * you must do this by modifying the input array in-place with O(1) extra memory. 
+	 * The order of elements can be changed. It doesn't matter what you leave beyond the new length.
+	 * Given nums = [3,2,2,3], val = 3,
+	 * Your function should return length = 2, with the first two elements of nums being 2.
+	 */
+	 public static int removeElement(int[] nums, int val) {
+		 int length = nums.length;
+		 for(int i = 0; i < length;) {
+			 if(nums[i] == val) {
+				 for(int j = i; j < nums.length-1; ++j) {
+					 nums[j] = nums[j+1];
+				 }
+				 --length;
+			 }
+			 else {
+				 ++i;
+			 }
+		 }
+		 
+		 return length;
+	 }
+	 
+	 /**
+	  * Return the index of the first occurrence of needle in haystack, or -1 if needle is not part of haystack.
+	  * Input: haystack = "hello", needle = "ll"
+	  * Output: 2
+	  * Input: haystack = "aaaaa", needle = "bba"
+	  * Output: -1
+	  * When needle is an empty string, we will return 0.
+	  */
+	 // This is not efficient
+	public static int strStr(String haystack, String needle) {
+		if (needle.isEmpty()) {
+			return 0;
+		}
+		
+		int hayStackIndex = 0;
+		
+		while(hayStackIndex < haystack.length()) {
+			// Get the first index
+			while(haystack.charAt(hayStackIndex) != needle.charAt(0)) {
+				if(hayStackIndex >= haystack.length()-1) {
+					return -1;
+				}
+				hayStackIndex++;
+			}
+			
+			// First char index will be hayStackIndex
+			int returnIndex = hayStackIndex;
+			int tempHayStackIndex = hayStackIndex;
+			++tempHayStackIndex;
+			int i = 1;
+			for(i = 1; i < needle.length(); ++i) {
+				if(tempHayStackIndex >= haystack.length() || haystack.charAt(tempHayStackIndex) != needle.charAt(i)) {
+					break;
+				}
+				++tempHayStackIndex;
+			}
+			
+			if(i == needle.length()) {
+				return returnIndex;
+			}
+			++hayStackIndex;
+		}
+		
+		return -1;
+	}
+	
+	// Still not quite optimized
+	public static int strStr1(String haystack, String needle) {
+		if(needle.isEmpty()) {
+			return 0;
+		}
+		
+		List<Integer> startIndices = new ArrayList<>();
+		
+		for(int i = 0; i < haystack.length()-needle.length(); ++i) {
+			if(haystack.charAt(i) == needle.charAt(0)) {
+				startIndices.add(i);
+			}
+		}
+		
+		if(startIndices.isEmpty()) {
+			return -1;
+		}
+		
+		for(int beg : startIndices) {
+			if(beg + needle.length() > haystack.length()) {
+				continue;
+			}
+			
+			int haystackIndex = beg+1;
+			for(int i = 1; i < needle.length(); ++i) {
+				if(haystack.charAt(haystackIndex) != needle.charAt(i)) {
+					break;
+				}
+				++haystackIndex;
+			}
+			if(haystackIndex == beg + needle.length()) {
+				 return beg;
+			}
+		}
+		
+		return -1;
+	}
+	
+	public static int subStringIndex(String str, String substr) {
+		for(int i = 0; i <= str.length()-substr.length(); ++i) {
+			int j = 0;
+			for(j = 0; j < substr.length(); ++j) {
+				if(substr.charAt(j) != str.charAt(i+j)) {
+					break;
+				}
+				if(j == substr.length()-1) {
+					return i;
+				}
+			}
+		}
+
+		return -1;
+	}
+	
+	/**
+	 * Given two integers dividend and divisor, divide two integers without using multiplication, division and mod operator.
+	 * Return the quotient after dividing dividend by divisor.
+	 * The integer division should truncate toward zero.
+	 * Input: dividend = 10, divisor = 3
+	 * Output: 3
+	 * Input: dividend = 7, divisor = -3
+	 * Output: -2
+	 */
+	public static int divide(int dividend, int divisor) {
+		if(dividend == 0 ) {
+			return 0;
+		}
+		if(divisor == 1) {
+			return dividend;
+		}
+		if(divisor == Integer.MIN_VALUE) {
+			if(dividend == Integer.MIN_VALUE) {
+				return 1;
+			}
+			return 0;
+		}
+		if(divisor == -1) {
+			if(dividend == Integer.MIN_VALUE) {
+				return Integer.MAX_VALUE;
+			}
+			else {
+				return dividend * (-1);
+			}
+		}
+		
+		boolean invertSign = (dividend < 0 && divisor > 0) || (dividend > 0 && divisor < 0);
+		int quotient = 0;
+		
+		if(divisor < 0) {
+			divisor = -divisor;
+		}
+		
+		if(dividend == Integer.MIN_VALUE) {
+			dividend += divisor;
+			++quotient;
+		}
+		if(dividend < 0) {
+			dividend = -dividend;
+		}
+		
+		while(dividend >= divisor) {
+			dividend -= divisor;
+			++quotient;
+		}
+		
+		return invertSign ? -quotient : quotient;
+	}
+	
+	/**
+	 * You are given two non-empty linked lists representing two non-negative integers. 
+	 * The digits are stored in reverse order and each of their nodes contain a single digit. 
+	 * Add the two numbers and return it as a linked list.You may assume the two numbers 
+	 * do not contain any leading zero, except the number 0 itself.
+	 * Input: (2 -> 4 -> 3) + (5 -> 6 -> 4)
+	 * Output: 7 -> 0 -> 8
+	 * Explanation: 342 + 465 = 807.
+	 */
+	public static ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+		return addTwoNumbers(null, l1, l2, 0);
+	}
+	
+	private static ListNode addTwoNumbers(ListNode newHead, ListNode l1, ListNode l2, int carry) {
+		if(l1 == null && l2 == null) {
+			if(carry == 0) {
+				return null;
+			}
+			else {
+				return new ListNode(carry);
+			}
+		}
+		if(l1 == null) {
+			if(carry == 0) {
+				return l2;
+			}
+			else {
+				return addTwoNumbers(null, l2, new ListNode(carry), 0);
+			}
+		}
+		if(l2 == null) {
+			if(carry == 0) {
+				return l1;
+			}
+			else {
+				return addTwoNumbers(null, l1, new ListNode(carry), 0);
+			}
+		}
+		
+		int val = l1.val + l2.val + carry;
+		int newCarry = 0;
+		if(val >= 10) {
+			val = val - 10;
+			newCarry = 1;
+		}
+		
+		
+		newHead = new ListNode(val);
+		
+		newHead.next = addTwoNumbers(newHead.next, l1.next, l2.next, newCarry);
+
+		return newHead;
+	}
+	
+	/**
+	 * Given a string, find the length of the longest substring without repeating characters.
+	 * Input: "abcabcbb"
+	 * Output: 3 
+	 * Explanation: The answer is "abc", with the length of 3.
+	 * Input: "bbbbb"
+	 * Output: 1
+	 * Explanation: The answer is "b", with the length of 1.
+	 * Input: "pwwkew"
+	 * Output: 3
+	 * Explanation: The answer is "wke", with the length of 3. 
+	 * Note that the answer must be a substring, "pwke" is a subsequence and not a substring.
+	 */
+	public static int lengthOfLongestSubstring(String s) {
+		if(s.isEmpty()) {
+			return 0;
+		}
+		
+		int max = 0;
+		char[] arr = s.toCharArray();
+		
+		for(int i = 0; i < arr.length; ++i)
+		{ 
+			int counter = 0;
+			Set<Character> alphaUsed = new HashSet<>();
+			int startIndex = i;
+			while(startIndex < arr.length && !alphaUsed.contains(arr[startIndex])) {
+				++counter;
+				alphaUsed.add(arr[startIndex]);
+				++startIndex;
+			}
+			if(max < counter) {
+				max = counter;
+			}
+		}
+		return  max;
+	}
+	
+	// This is way more optimized that the prev solution (O(n) vs O(n^3))
+	public static int lengthOfLongestSubstringOpt(String s) {
+		if(s.isEmpty()) {
+			return 0;
+		}
+		
+		// Create a array of all the characters to indices
+		int[] visited = new int[256];
+		for(int x = 0; x < 256; ++x) {
+			visited[x] = -1;
+		}
+		
+		int maxLength = 1;
+		int currLength = 1;
+		
+		visited[s.charAt(0)] = 0;
+		
+		for(int i = 1; i < s.length(); ++i) {
+			int prevIndexOfChar = visited[s.charAt(i)];
+			if(prevIndexOfChar == -1 || i - prevIndexOfChar > currLength) { // Not visited yet or is not in the range of the 
+											// current NRCS since it may be starting from pos x
+				++currLength;
+			}
+			else {
+				// set i to the previous index of the character found.
+				if(currLength > maxLength) {
+					maxLength = currLength;
+				}
+				currLength = i - prevIndexOfChar; // Removed the part from NRCS till the prev occurence of the char
+													// Ex: pabapq => when coming to 2nd a, I am removing the distance
+													// 				till 1st a, i.e. 4-2 = 2.
+				
+			}
+			visited[s.charAt(i)] = i;
+		}
+		
+		return currLength > maxLength ? currLength : maxLength;
 	}
 }
 

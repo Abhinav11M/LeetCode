@@ -55,9 +55,52 @@ public class LeetMain {
 //		System.out.println(LeetAlgos.reverseFirstK(createList(), 3));
 		ListNode x = LeetAlgos.reverseKGroupRec(createList3(), 3);
 		ListNode x1 = LeetAlgos.reverseKGroupRec1(createList3(), 2);
-		printListNode(x1);
+//		printListNode(x1);
+		
+//		int[] duplicateArr = new int[] {0,0,1,1,1,2,2,3,3,4};
+//		int[] duplicateArr = new int[] {1,2,2};
+//		int[] duplicateArr = new int[] {1,2,3,4,5};
+//		int distinct = LeetAlgos.removeDuplicates(duplicateArr);
+//		System.out.println("Len : " + distinct);
+//		for(int val11 : duplicateArr) {
+//			System.out.print(val11 + ",");
+//		}
+		
+//		int[] arr1 = new int[] {3,2,2,3};
+//		int[] arr1 = new int[] {0,1,2,2,3,0,4,2};
+//		System.out.println(LeetAlgos.removeElement(arr1, 2));
+//		printIntArr(arr1);
+		
+//		System.out.println(LeetAlgos.strStr1("Hello", "ll"));
+//		System.out.println(LeetAlgos.strStr1("mississippi", "issip"));
+//		System.out.println(LeetAlgos.subStringIndex("mississippi", "issip"));
+//		System.out.println(Math.abs(-2147483648));
+//		System.out.println(LeetAlgos.divide(-2147483648, -1));
+//		System.out.println(LeetAlgos.divide(7, -3));
+//		System.out.println(LeetAlgos.divide(10, 3));
+//		System.out.println(LeetAlgos.divide(-1010369383,-2147483648));
+
+		ListNode ll1 = new ListNode(3);
+		ll1.next = new ListNode(7);
+		ListNode ll2 = new ListNode(9);
+		ll2.next = new ListNode(2);
+		
+//		ListNode ret = LeetAlgos.addTwoNumbers(createList1(), createList2());
+//		ListNode ret = LeetAlgos.addTwoNumbers(ll1, ll2);
+//		printListNode(ret);
+		
+		System.out.println(LeetAlgos.lengthOfLongestSubstringOpt("abcabcbb"));
+		System.out.println(LeetAlgos.lengthOfLongestSubstringOpt("pwwkew"));
+		System.out.println(LeetAlgos.lengthOfLongestSubstringOpt("dvdf"));
+		
 	}
 
+	private static void printIntArr(int[] arr) {
+		for(int i : arr) {
+			System.out.print(i + ", ");
+		}
+	}
+	
 	private static void printListNode(ListNode res) {
 		while(res != null) {
 			System.out.print(Integer.toString(res.val) + ",");
@@ -66,15 +109,16 @@ public class LeetMain {
 	}
 
 	private static ListNode createList1() {
-		ListNode l = new ListNode(-1);
-		l.next = new ListNode(5);
-		l.next.next = new ListNode(11);
+		ListNode l = new ListNode(4);
+		l.next = new ListNode(6);
+		l.next.next = new ListNode(4);
 		return l;
 	}
 
 	private static ListNode createList2() {
 		ListNode l = new ListNode(6);
-		l.next = new ListNode(10);
+		l.next = new ListNode(4);
+		l.next.next = new ListNode(6);
 		return l;
 	}
 
