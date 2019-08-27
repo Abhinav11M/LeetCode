@@ -93,6 +93,19 @@ public class LeetMain {
 		System.out.println(LeetAlgos.lengthOfLongestSubstringOpt("pwwkew"));
 		System.out.println(LeetAlgos.lengthOfLongestSubstringOpt("dvdf"));
 		
+		System.out.println(LeetAlgos.findMedianOfSortedArraysOfEqualLength(new int[] {1,2,3}, new int[] {4,5,6}));
+		System.out.println(LeetAlgos.findMedianOfSortedArraysOfEqualLength(new int[] {1,3,6,7}, new int[] {2,5,8,12}));
+		
+//		System.out.println(LeetAlgos.findMedianSortedArrays(new int[] {1}, new int[] {2,3,4}));
+		int[] nums1 = new int[] {2,4,8,9,12};
+		int[] nums2 = new int[] {3,5,11,14,18};
+//		nums1 = new int[] {2};
+//		nums2 = new int[] {3,5,11,14};
+		nums1 = new int[] {1,3};
+		nums2 = new int[] {2};
+	
+		System.out.println(LeetAlgos.findMedianSortedArrays(nums1, nums2));
+		
 	}
 
 	private static void printIntArr(int[] arr) {

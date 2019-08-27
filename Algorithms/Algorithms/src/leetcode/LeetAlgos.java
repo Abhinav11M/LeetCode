@@ -13,6 +13,8 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.stream.Collectors;
 
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane.MaximizeAction;
+
 import datastructures.ListNode;
 
 public class LeetAlgos {
@@ -1050,6 +1052,116 @@ public class LeetAlgos {
 		}
 		
 		return currLength > maxLength ? currLength : maxLength;
+	}
+	
+	/**
+	 * Median of two sorted arrays of same size
+	 * Input : arr1[] = {1,12,15,26,38}, arr2[] = {2,13,17,30,25}
+	 * Output : 16
+	 */
+	public static double findMedianOfSortedArraysOfEqualLength(int[] arr1, int[] arr2) {
+		if(arr1.length == 1) {
+			return (arr1[0] + arr2[0])/2;
+		}
+		
+		int l1 = 0;
+		int l2 = 0;
+		int h1 = arr1.length-1;
+		int h2 = arr2.length-1;
+		double median1 = 0;
+		double median2 = 0;
+		
+		while(h1-l1 != 1 && l2-h2 != 1) {
+			if((h1-l1)%2 == 0) {
+				median1 = (arr1[(h1-l1-1)/2] + arr1[(h1-l1)/2])/2;
+				median2 = (arr2[(h2-l2-1)/2] + arr2[(h2-l2)/2])/2;
+			}
+			else {
+				median1 = arr1[(h1-l1-1)/2];
+				median2 = arr2[(h2-l2-1)/2];
+			}
+			
+			if(median1 < median2) {
+				l1 = (h1-l1+1)/2;
+				h2 = h2/2;
+			}
+			else {
+				h1 = h1/2;
+				l2 = (h2-l1+1)/2;
+			}
+		}
+		
+		return (Math.max(arr1[l1], arr2[l2]) + Math.min(arr1[h1], arr2[h2]))/2.0;
+	}
+	
+	/**
+	 * There are two sorted arrays nums1 and nums2 of size m and n respectively.
+	 * Find the median of the two sorted arrays. The overall run time complexity should be O(log (m+n)).
+	 * You may assume nums1 and nums2 cannot be both empty.
+	 * Ex1 : nums1 = [1, 3]
+	 * nums2 = [2]
+	 * The median is 2.0
+	 * Ex2 : nums1 = [1, 2]
+	 * nums2 = [3, 4]
+	 * The median is (2 + 3)/2 = 2.5
+	 */
+	public static double findMedianSortedArrays(int[] nums1, int[] nums2) {
+		if(nums1.length == 0 && nums2.length == 0) {
+			return 0;
+		}
+		
+		if(nums1.length == 0 ) {
+			return nums2.length%2 == 0 ? (nums2[(nums2.length/2)-1] + nums2[nums2.length/2])/2.0 : nums2[(nums2.length/2)];
+		}
+		
+		if(nums2.length == 0 ) {
+			return nums1.length%2 == 0 ? (nums1[(nums1.length/2)-1] + nums1[nums1.length/2])/2.0 : nums1[(nums1.length/2)];
+		}
+		
+		int[] x = null; // x should be the smaller array.
+		int[] y = null; // y should be the bigger array.
+		if(nums1.length < nums2.length) {
+			x = nums1;
+			y = nums2;
+		}
+		else {
+			x = nums2;
+			y = nums1;
+		}
+		
+		// Partition x and y
+		int xBegin = 0;
+		int xEnd = x.length;
+		int partX = 0;
+		int partY = 0;
+		
+		while (xBegin <= xEnd) {
+			partX = (xBegin + xEnd) / 2;
+			// Maintain equal number of elements on left and right side
+			partY = (x.length + y.length + 1)/2 - partX;
+			
+			int maxXLeft = partX == 0 ? Integer.MIN_VALUE : x[partX-1];
+			int maxYLeft = partY == 0 ? Integer.MIN_VALUE : y[partY-1];
+			int minXRight = partX == x.length ? Integer.MAX_VALUE : x[partX];
+			int minYRight = partY == y.length ? Integer.MAX_VALUE : y[partY];
+			
+			if(maxXLeft > minYRight) { // Need less x elements in the left side. Move the mid to left
+				xEnd = partX-1;
+			}
+			else if(maxYLeft > minXRight) { // Need more x elements in the left side. Move the mid to the right
+				xBegin = partX+1;
+			}
+			else { // x[xLow] < y[yHigh] && y[yLow] < x[xHigh]
+				// Partition found
+				if((x.length + y.length)%2 == 0) {
+					return (Math.max(maxXLeft,maxYLeft) + Math.min(minXRight, minYRight))/2.0;
+				}
+				else {
+					return Math.max(maxXLeft,maxYLeft);
+				}
+			}
+		}
+		return 0.0; // Should never come here. Only comes here if the arrays are not sorted.
 	}
 }
 
