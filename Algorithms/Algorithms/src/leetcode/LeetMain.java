@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import datastructures.ListNode;
+import datastructures.ListNodeWithRandom;
 
 public class LeetMain {
 
@@ -106,6 +107,31 @@ public class LeetMain {
 	
 		System.out.println(LeetAlgos.findMedianSortedArrays(nums1, nums2));
 		
+		// Clone a linked list with random pointer.
+		ListNodeWithRandom l = creteLinkedListWithRandow();
+		ListNodeWithRandom.printList(l);
+		ListNodeWithRandom cloned = LeetAlgos.cloneListWithRandom(l);
+		ListNodeWithRandom.printList(cloned);
+	}
+
+	private static ListNodeWithRandom creteLinkedListWithRandow() {
+		ListNodeWithRandom a = new ListNodeWithRandom(1);
+		ListNodeWithRandom b = new ListNodeWithRandom(2);
+		ListNodeWithRandom c = new ListNodeWithRandom(3);
+		ListNodeWithRandom d = new ListNodeWithRandom(4);
+		ListNodeWithRandom e = new ListNodeWithRandom(5);
+		a.next = b;
+		a.random = d;
+		b.next = c;
+		b.random = e;
+		c.next = d;
+		c.random = a;
+		d.next = e;
+		d.random = b;
+		e.next = null;
+		e.random = c;
+		
+		return a;
 	}
 
 	private static void printIntArr(int[] arr) {

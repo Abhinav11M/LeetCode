@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 import javax.swing.plaf.basic.BasicInternalFrameTitlePane.MaximizeAction;
 
 import datastructures.ListNode;
+import datastructures.ListNodeWithRandom;
 
 public class LeetAlgos {
 	
@@ -1162,6 +1163,43 @@ public class LeetAlgos {
 			}
 		}
 		return 0.0; // Should never come here. Only comes here if the arrays are not sorted.
+	}
+	
+	/**
+	 * Clone a linked list with random pointer
+	 */
+	public static ListNodeWithRandom cloneListWithRandom(ListNodeWithRandom head) {
+		ListNodeWithRandom tempHead = head;
+
+		// Insert a dummy node with prev data for each node
+		while(tempHead != null) {
+			ListNodeWithRandom dummy = new ListNodeWithRandom(tempHead.data);
+			dummy.next = tempHead.next;
+			tempHead.next = dummy;
+			tempHead = tempHead.next.next;
+		}
+		
+		// Set the random pointers.
+		tempHead = head;
+		while(tempHead != null) {
+			tempHead.next.random = tempHead.random.next; // setting the random of a dummy node to a different dummy node.
+			tempHead = tempHead.next.next;
+		}
+		
+		// Separate the lists out
+		tempHead = head;
+		ListNodeWithRandom retHead = head.next;
+		ListNodeWithRandom tempRetHead = head.next;
+		while(tempHead != null && tempHead.next.next != null) {
+			tempHead.next = tempHead.next.next;
+			tempRetHead.next = tempRetHead.next.next;
+			tempHead = tempHead.next;
+			tempRetHead = tempRetHead.next;
+		}
+		tempHead.next = null;
+		tempRetHead.next = null;
+		
+		return retHead;
 	}
 }
 
