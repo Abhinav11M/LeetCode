@@ -1,8 +1,8 @@
 package leetcode;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Currency;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -12,8 +12,7 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.Stack;
 import java.util.stream.Collectors;
-
-import javax.swing.plaf.basic.BasicInternalFrameTitlePane.MaximizeAction;
+import java.util.stream.Stream;
 
 import datastructures.ListNode;
 import datastructures.ListNodeWithRandom;
@@ -1201,5 +1200,558 @@ public class LeetAlgos {
 		
 		return retHead;
 	}
+	
+	/**
+	 * Find the longest pelindrome subsequence.
+	 * Given a string s, find the longest palindromic substring in s. You may assume that the maximum length of s is 1000.
+	 * Input: "babad"
+	 * Output: "bab"
+	 * Note: "aba" is also a valid answer.
+	 * Input: "cbbd"
+	 * Output: "bb"
+	 */
+	public static String longestPalindrome(String s) {
+		if(s.isEmpty() || s.length() == 1) {
+			return "";
+		}
+		
+		String finalStr = "";
+		
+		for(int i = 1; i < s.length()-1; ++i) {
+			String retSubstr = "";
+			if(s.charAt(i-1) == s.charAt(i+1)) { // Odd case
+				retSubstr = retSubstr + s.charAt(i);
+				int left = i-1;
+				int right = i+1;
+				while(left >= 0 && right < s.length()) {
+					retSubstr = s.charAt(left) + retSubstr + s.charAt(right);
+					--left;
+					++right;
+				}
+				if(finalStr.length() < retSubstr.length()) {
+					finalStr = retSubstr;
+				}
+			}
+			else if(s.charAt(i) == s.charAt(i-1)) {//Even case
+				retSubstr = retSubstr + s.charAt(i-1) + s.charAt(i);
+				int left = i-2;
+				int right = i+1;
+				while(left >= 0 && right < s.length() && s.charAt(left) == s.charAt(right)) {
+					retSubstr = s.charAt(left) + retSubstr + s.charAt(right);
+					--left;
+					++right;
+				}
+				if(finalStr.length() < retSubstr.length()) {
+					finalStr = retSubstr;
+				}
+			}
+//			else if(s.length() >= i+1 && s.charAt(i-1) == s.charAt(i+1)) { // what if i is the last index
+//				
+//			}
+			else {
+				i++;
+			}
+		}
+		
+		return finalStr;
+	}
+	
+	public static String largestPelindrome1(String s) {
+		if(s.isEmpty()) {
+			return s;
+		}
+		
+		String largestPelindrome = "" + s.charAt(0);
+		
+		// For odd pelindromes
+		for(int i = 1; i < s.length()-1; ++i) {
+			if(s.charAt(i-1) == s.charAt(i+1)) {
+				int left = i-2;
+				int right = i+2;
+				String temp = "" + s.charAt(i-1) + s.charAt(i) + s.charAt(i+1);
+				while(left >= 0 && right <= s.length()-1) {
+					if(s.charAt(left) == s.charAt(right)) {
+						temp = s.charAt(left) + temp + s.charAt(right);
+						--left;
+						++right;
+					}
+					else {
+						break;
+					}
+				}
+				if(temp.length() > largestPelindrome.length()) {
+					largestPelindrome = temp;
+				}
+			}
+		}
+		
+		// For even pelindromes
+		for(int i = 1; i < s.length(); ++i) {
+			if(s.charAt(i-1) == s.charAt(i)) {
+				int left = i-2;
+				int right = i+1;
+				String temp = "" + s.charAt(i-1) + s.charAt(i);
+				while(left >=0 && right <= s.length()-1) {
+					if(s.charAt(left) == s.charAt(right)) {
+						temp = s.charAt(left) + temp + s.charAt(right);
+						--left;
+						++right;
+					}
+					else {
+						break;
+					}
+				}
+				if(temp.length() > largestPelindrome.length()) {
+					largestPelindrome = temp;
+				}
+			}
+		}
+		
+		return largestPelindrome;
+	}
+	
+	/**
+	 * @apiNote : Manacher's algorithm finds the longest pelindrome substring in O(n) time.
+	 * @param s String to find the longest pelindrome in.
+	 * @return longest pelindrome substring.
+	 */
+	public static String manacherAlgo(String s) {
+		String str = "@#"; // Marks the start of the string
+		for(int i = 0; i < s.length(); ++i) {
+			str = str + s.charAt(i) + "#";
+		}
+		str = str + "$"; // Marks the end of the string
+
+		int[] p = new int[str.length()];
+		
+		int center = 0;
+		int rightBoundary = 0;
+		int mirror = 0;
+		
+		for(int i = 1; i < str.length(); ++i) {
+			
+			mirror = 2*center - i;
+			
+			// Copy the pelindrome value from the mirror if i lies on the left side of the right boundary
+			if(i < rightBoundary) {
+				p[i] = Math.min(rightBoundary-i, p[mirror]); // TODO: Need to understand this
+			}
+			
+			// Expand the pelindrome value
+			while((i + p[i] + 1 < str.length()) && (str.charAt(i + p[i] + 1) == str.charAt(i - (p[i] + 1)))) {
+				p[i]++;
+			}
+			
+			// If the pelindrome crosses the right boundary, update the center and right boundary
+			if(p[i] + i > rightBoundary) {
+				center = i;
+				rightBoundary = p[i] + i;
+			}
+		}
+		
+		// Find the index and max length
+		int idx = -1;
+		int maxLen = -1;
+		
+		for(int i = 0; i < p.length; ++i) {
+			if(p[i] > maxLen) {
+				maxLen = p[i];
+				idx = i;
+			}
+		}
+		
+		String ret = "";
+		for(int i = (idx - 1 - maxLen)/2; i < (idx - 1 + maxLen)/2; ++i) {
+			ret += s.charAt(i);
+		}
+
+		return ret;
+	}
+	
+	/**
+	 * Given a 32-bit signed integer, reverse digits of an integer.
+	 * int (min, max) values => (-2,147,483,648 to +2,147,483,647).
+	 * 1534236469 => 9646324153
+	 * 1056389758 964632435
+	 */
+	public static int reverse(int x) {
+		int posX = Math.abs(x);
+		boolean isNegative = x < 0;
+		int reverse = 0;
+		
+		while(posX > 0) {
+			if(reverse*10 / 10 != reverse ) {
+				// bit overflow
+				return 0;
+			}
+			reverse = reverse * 10 + posX%10;
+			posX = posX/10;
+		}
+		return isNegative ? reverse*(-1) : reverse;
+	}
+	
+	/**
+	 * Determine whether an integer is a palindrome. An integer is a palindrome when it 
+	 * reads the same backward as forward.
+	 */
+	public static boolean isPalindrome(int x) {
+		int tempX = x;
+		int reverse = 0;
+		
+		while(x > 0) {
+			reverse = reverse * 10 + x%10;
+			x = x/10;
+		}
+		return tempX == reverse;
+	}
+	
+	/**
+	 * Given n non-negative integers a1, a2, ..., an , where each represents a point at coordinate (i, ai). 
+	 * n vertical lines are drawn such that the two endpoints of line i is at (i, ai) and (i, 0). 
+	 * Find two lines, which together with x-axis forms a container, 
+	 * such that the container contains the most water.
+	 */
+	// Need to optimize this.
+	public static int maxArea(int[] heights) {
+		int maxArea = -1;
+		for(int i = 0; i < heights.length; ++i) {
+			for(int j = i+1; j < heights.length; ++j) {
+				int area = (j-i)*(Math.min(heights[i], heights[j]));
+				if(area > maxArea) {
+					maxArea = area;
+				}
+			}
+		}
+		
+		return maxArea;
+	}
+	
+	public static int maxAreaOpt(int[] height) {
+		int max = 0;
+		int left = 0, right = height.length-1;
+		while(left < right) {
+			int tempMax = Math.min(height[left], height[right])*(right-left);
+			max = max > tempMax ? max : tempMax;
+			if(height[left] < height[right]) { // left is small, move right
+				++left;
+			}
+			else if(height[left] > height[right]) { // right is small, move left
+				--right;
+			}
+			else { // We can move both left and right ahead as it even if we move only left or right, 
+					//the amount of water will
+					// always be less or equal to that the tank with same height
+				++left;
+				--right;
+			}
+		}
+		
+		return max;
+	}
+	
+	/*
+	 * Roman numerals are represented by seven different symbols: I, V, X, L, C, D and M.
+	 * {I=>1, V=>5, X=>10, L=>50, C=>100, D=>500, M=>1000}
+	 * I can be placed before V (5) and X (10) to make 4 and 9. 
+	 * X can be placed before L (50) and C (100) to make 40 and 90. 
+	 * C can be placed before D (500) and M (1000) to make 400 and 900.
+	 * Input: 3
+	 * Output: "III"
+	 * Input: 4
+	 * Output: "IV"
+	 * Input: 9
+	 * Output: "IX"
+	 * Input: 9
+	 * Output: "IX"
+	 * Input: 1994
+	 * Output: "MCMXCIV"
+	 * Explanation: M = 1000, CM = 900, XC = 90 and IV = 4.
+	 */
+	public static String intToRoman(int num) {
+		int[] values = {1, 4, 5, 9, 10, 40, 50, 90, 100, 400, 500, 900, 1000};
+		String[] romans = {"I", "IV", "V", "IX", "X", "XL", "L", "XC", "C", "CD", "D", "CM", "M"};
+		int index = 12;
+		
+		// optimizing search index
+		while(num < values[index]) {
+			--index;
+		}
+		
+		String roman = "";
+		
+		while(num > 0) {
+			int divisor = num/values[index]; // Getting the first digit
+			num = num%values[index];
+			
+			while(divisor > 0){
+				// Repeat the roman characters
+				roman += romans[index];
+				--divisor;
+			}
+			--index;
+		}
+		
+		return roman;
+	}
+	
+	public static int romanToInt(String s) {
+		int val = 0;
+		Map<String, Integer> map = Stream.of(
+				new AbstractMap.SimpleEntry<String, Integer>("I",1),
+				new AbstractMap.SimpleEntry<String, Integer>("IV",4),
+				new AbstractMap.SimpleEntry<String, Integer>("V",5),
+				new AbstractMap.SimpleEntry<String, Integer>("IX",9),
+				new AbstractMap.SimpleEntry<String, Integer>("X",10),
+				new AbstractMap.SimpleEntry<String, Integer>("XL",40),
+				new AbstractMap.SimpleEntry<String, Integer>("L",50),
+				new AbstractMap.SimpleEntry<String, Integer>("XC",90),
+				new AbstractMap.SimpleEntry<String, Integer>("C",100),
+				new AbstractMap.SimpleEntry<String, Integer>("CD",400),
+				new AbstractMap.SimpleEntry<String, Integer>("D",500),
+				new AbstractMap.SimpleEntry<String, Integer>("CM",900),
+				new AbstractMap.SimpleEntry<String, Integer>("M",1000)
+				).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+		
+		for(int i = 0; i < s.length();) {
+			if(i+1 < s.length()) { // not the last index
+				String temp = s.substring(i,i+2);
+				if(map.containsKey(temp)) {
+					val += map.get(temp);
+					i += 2;
+				}
+				else {
+					val += map.get("" + s.charAt(i));
+					++i;
+				}
+			}
+			else { // last index
+				val += map.get("" + s.charAt(s.length()-1));
+				++i;
+			}
+		}
+		
+        return val;
+    }
+	
+	public static int romanToIntOpt(String s) {
+		if(s.isEmpty()) {
+			return 0;
+		}
+
+		Map<Character, Integer> map = Stream.of(
+				new AbstractMap.SimpleEntry<Character, Integer>('I',1),
+				new AbstractMap.SimpleEntry<Character, Integer>('V',5),
+				new AbstractMap.SimpleEntry<Character, Integer>('X',10),
+				new AbstractMap.SimpleEntry<Character, Integer>('L',50),
+				new AbstractMap.SimpleEntry<Character, Integer>('C',100),
+				new AbstractMap.SimpleEntry<Character, Integer>('D',500),
+				new AbstractMap.SimpleEntry<Character, Integer>('M',1000)
+				).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+		int val = map.get(s.charAt(0));
+		int prev = map.get(s.charAt(0));
+		
+		for(int i = 1; i < s.length(); ++i) {
+			int current = map.get(s.charAt(i));
+			val = current <= prev ? val + current : val + current - 2*prev;
+			prev = current;
+		}
+		
+        return val;
+	}
+	
+	/**
+	 *  Write a function to find the longest common prefix string amongst an array of strings.
+	 *  Input: ["flower","flow","flight"]
+	 *  Output: "fl"
+	 *  Input: ["dog","racecar","car"]
+	 *  Output: ""
+	 */
+	public static String longestCommonPrefix(String[] strs) {
+		if(strs.length == 0) {
+			return "";
+		}
+		if(strs.length == 1) {
+			return strs[0];
+		}
+		
+		String comPre = strs[0];
+		
+		for(int j = 1; j < strs.length; ++j) {
+			int iterLen = Math.min(comPre.length(), strs[j].length());
+			while(true) {
+				if(iterLen == 0) {
+					return "";
+				}
+				if(comPre.substring(0, iterLen).equals(strs[j].substring(0, iterLen))) {
+					comPre = comPre.substring(0, iterLen);
+					break;
+				}
+				--iterLen;
+			}
+		}
+		
+		return comPre; 
+    }
+	
+	/**
+	 * Implement atoi which converts a string to an integer.
+	 * Input: "42"
+	 * Output: 42
+	 * Input: "   -42"
+	 * Output: -42
+	 * Input: "4193 with words"
+	 * Output: 4193
+	 * Input: "-91283472332"
+	 * Output: -2147483648 => Since input is out of Int32 range and is negative, return INT_MIN
+	 */
+	public static int myAtoi(String str) {
+		int retVal = 0;
+		boolean isNegative = false;
+		boolean isInitialized = false;
+		
+		for(int i = 0; i < str.length(); ++i) {
+			if(str.charAt(i) == ' ') {
+				if(isInitialized) { // For case when +/- is followed by a space
+					return isNegative ? retVal*-1 : retVal;
+				}
+				else {
+					continue;
+				}
+			}
+			if(str.charAt(i) == '-' || str.charAt(i) == '+') {
+				if(!isInitialized) {
+					if(str.charAt(i) == '-') {
+						isNegative = true;
+					}
+					isInitialized = true;
+					continue;
+				}
+				else {
+					return isNegative ? retVal*-1 : retVal;
+				}
+			}
+			if(str.charAt(i) < 48 || str.charAt(i) > 57) {
+				return isNegative ? retVal*-1 : retVal;
+			}
+			
+			int val = str.charAt(i) % 48;
+			int retValNew = retVal*10 + val;
+			if(retValNew/10 !=  retVal) { // Int32 buffer exceeded.
+				return isNegative ? Integer.MIN_VALUE : Integer.MAX_VALUE;
+			}
+			else {
+				retVal = retValNew;
+			}
+			
+			if(str.charAt(i) != ' ' && !isInitialized) {
+				isInitialized = true;
+			}
+		}
+		
+        return isNegative ? retVal*-1 : retVal;
+    }
+	
+	/**
+	 * The string "PAYPALISHIRING" is written in a zigzag pattern on a given number of rows like this: 
+	 * (you may want to display this pattern in a fixed font for better legibility)
+	 * Input: s = "PAYPALISHIRING", numRows = 4
+	 * Output: "PINALSIGYAHRPI"
+	 * Explanation:
+	 * 	P     I    N
+	 * 	A   L S  I G
+	 * 	Y A   H R
+	 * 	P     I
+	 */
+	public static String convert(String s, int numRows) {
+		if(numRows == 1) {
+			return s;
+		}
+		
+		StringBuilder retStr = new StringBuilder();
+		
+		for(int i = 0; i < numRows; ++i) {
+			int start = i, end = s.length()-1, jump = 0;
+			if(i == 0 || i == numRows-1) {
+				jump = 2*numRows - 2;
+				while(start <= end) {
+					retStr.append(s.charAt(start));
+					start += jump;
+				}
+			}
+			else {
+				boolean bottomToTop = true;
+				while(start <= end) {
+					retStr.append(s.charAt(start));
+					if(bottomToTop) {
+						jump = 2*numRows - 2*i - 2;
+						start += jump;
+					}
+					else {
+						jump = 2*i;
+						start += jump;
+					}
+					bottomToTop = !bottomToTop;
+				}
+			}
+		}
+		
+		return retStr.toString();
+	}
+	
+	/**
+	 * <p>
+	 * Suppose an array sorted in ascending order is rotated at some pivot unknown to you beforehand.
+	 * (i.e., [0,1,2,4,5,6,7] might become [4,5,6,7,0,1,2]).
+	 * You are given a target value to search.
+	 * If found in the array return its index, otherwise return -1.
+	 * You may assume no duplicate exists in the array.
+	 * Your algorithm's runtime complexity must be in the order of O(log n).
+	 * Input: nums = [4,5,6,7,0,1,2], target = 0
+	 * Output: 4
+	 * Input: nums = [4,5,6,7,0,1,2], target = 3
+	 * Output: -1
+	 * </p>
+	 */
+	public static int search(int[] nums, int target) {
+        if(nums.length == 0) {
+        	return -1;
+        }
+        if(nums.length == 1) {
+        	if(nums[0] == target) {
+        		return 0;
+        	}
+        	return -1;
+        }
+        
+        int left = 0, right = nums.length-1; 
+        
+        while(left <= right) {
+        	int mid = (left + right)/2;
+        	if(nums[mid] == target) {
+        		return mid;
+        	}
+        	else if(nums[mid] >= nums[0]) { // This part is not skewed
+        		if(nums[mid] > target && nums[0] <= target ) {
+        			right = mid-1;
+        		}
+        		else {
+        			left = mid+1;
+        		}
+        	}
+        	else { // This is not skewed.
+        		if(nums[mid] < target && nums[nums.length-1] >= target) {
+        			left = mid+1;
+        		}
+        		else {
+        			right = mid-1;
+        		}
+        	}
+        }
+        
+        return -1;
+    }
+	
 }
+
 

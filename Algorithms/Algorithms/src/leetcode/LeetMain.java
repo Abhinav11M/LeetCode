@@ -112,6 +112,32 @@ public class LeetMain {
 		ListNodeWithRandom.printList(l);
 		ListNodeWithRandom cloned = LeetAlgos.cloneListWithRandom(l);
 		ListNodeWithRandom.printList(cloned);
+		
+		// Longest pelindrome substring
+//		System.out.println(LeetAlgos.largestPelindrome1("aabcdddd"));
+//		System.out.println(LeetAlgos.largestPelindrome1("aba"));
+//		System.out.println(LeetAlgos.manacherAlgo("abcba"));
+//		System.out.println(LeetAlgos.reverse(-321));
+//		System.out.println(LeetAlgos.reverse(123));
+//		System.out.println(LeetAlgos.isPalindrome(12321));
+		System.out.println(LeetAlgos.maxAreaOpt(new int[] {1,8,6,2,5,4,8,3,7}));
+		System.out.println(LeetAlgos.intToRoman(1249));
+		System.out.println(LeetAlgos.romanToInt("MCCXLIX"));
+		System.out.println(LeetAlgos.romanToIntOpt("MCCXLIX"));
+//		System.out.println(LeetAlgos.romanToInt("MI"));
+		System.out.println(LeetAlgos.longestCommonPrefix(new String[] {"flower","flow","flight"}));
+		System.out.println(LeetAlgos.longestCommonPrefix(new String[] {"dog","racecar","car"}));
+//		System.out.println(LeetAlgos.myAtoi("-1234 1234"));	
+//		System.out.println(LeetAlgos.myAtoi("+-2"));	
+//		System.out.println(LeetAlgos.myAtoi("  -0012a42"));
+//		System.out.println(LeetAlgos.myAtoi("+-2"));
+		System.out.println(LeetAlgos.convert("PAYPALISHIRING", 3));
+//		System.out.println(LeetAlgos.search(new int[] {4,5,6,7,0,1,2}, 0));
+//		System.out.println(LeetAlgos.search(new int[] {4,5,6,7,0,1,2}, 3));
+//		System.out.println(LeetAlgos.search(new int[] {1,3}, 0));
+//		System.out.println(LeetAlgos.search(new int[] {1,3}, 3));
+		System.out.println(LeetAlgos.search(new int[] {3,1}, 1));
+//		System.out.println(LeetAlgos.search(new int[] {3,5,1}, 3));
 	}
 
 	private static ListNodeWithRandom creteLinkedListWithRandow() {
