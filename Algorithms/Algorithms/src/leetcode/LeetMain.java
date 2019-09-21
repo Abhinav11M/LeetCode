@@ -136,8 +136,19 @@ public class LeetMain {
 //		System.out.println(LeetAlgos.search(new int[] {4,5,6,7,0,1,2}, 3));
 //		System.out.println(LeetAlgos.search(new int[] {1,3}, 0));
 //		System.out.println(LeetAlgos.search(new int[] {1,3}, 3));
-		System.out.println(LeetAlgos.search(new int[] {3,1}, 1));
+//		System.out.println(LeetAlgos.search(new int[] {3,1}, 1));
 //		System.out.println(LeetAlgos.search(new int[] {3,5,1}, 3));
+		
+//		System.out.println(LeetAlgos.searchRange(new int[] {5,7,7,8,8,10}, 8));
+//		System.out.println(LeetAlgos.searchInsert(new int[] {1,3,5,6}, 0));
+//		List<List<Integer>> resComb = LeetAlgos.combinationSum(new int[] {2,3,6,7}, 7);
+//		List<List<Integer>> resComb = LeetAlgos.combinationSum(new int[] {2,3,5}, 8);
+//		List<List<Integer>> resComb = LeetAlgos.combinationSum(new int[] {2,3,6,7}, 7);
+		List<List<Integer>> resComb = LeetAlgos.combinationSum(new int[] {8,7,4,3}, 11);
+//		List<List<Integer>> resComb1 = LeetAlgos.combinationSum(new int[] {3,4,7,8}, 11);
+		for(List<Integer> t : resComb) {
+			System.out.println(t);
+		}
 	}
 
 	private static ListNodeWithRandom creteLinkedListWithRandow() {

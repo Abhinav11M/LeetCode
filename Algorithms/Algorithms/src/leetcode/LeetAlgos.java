@@ -1752,6 +1752,119 @@ public class LeetAlgos {
         return -1;
     }
 	
+	/*
+	 * Given an array of integers nums sorted in ascending order, 
+	 * find the starting and ending position of a given target value.
+	 * Your algorithm's runtime complexity must be in the order of O(log n).
+	 * If the target is not found in the array, return [-1, -1].
+	 */
+	public static int[] searchRange(int[] nums, int target) {
+		int lIdx = findLeftMostIndex(nums, target);
+		int rIdx = findRightMostIndex(nums, target);
+		
+		return new int[] {lIdx, rIdx};
+	}
+	
+	private static int findLeftMostIndex(int[] nums, int target) {
+		
+		int left = 0, right = nums.length-1;
+		int sIdx = -1;
+		
+		while(left <= right) {
+			int mid = (left+right)/2;
+			if(target < nums[mid]) {
+				right = mid-1;
+			}
+			else if(target > nums[mid]) {
+				left = mid+1;
+			}
+			else {
+				sIdx = mid;
+				right = mid-1;
+			}
+		}
+		
+		return sIdx;
+	}
+	
+	private static int findRightMostIndex(int[] nums, int target) {
+		
+		int left = 0, right = nums.length-1;
+		int sIdx = -1;
+		
+		while(left <= right) {
+			int mid = (left+right)/2;
+			if(target < nums[mid]) {
+				right = mid-1;
+			}
+			else if(target > nums[mid]) {
+				left = mid+1;
+			}
+			else {
+				sIdx = mid;
+				left = mid+1;
+			}
+		}
+		
+		return sIdx;
+	}
+	
+	/**
+	 * Given a sorted array and a target value, return the index if the target is found. 
+	 * If not, return the index where it would be if it were inserted in order.
+	 * You may assume no duplicates in the array.
+	 * Input: [1,3,5,6], 5
+	 * Output: 2
+	 * Input: [1,3,5,6], 2
+	 * Output: 1
+	 */
+	public static int searchInsert(int[] nums, int target) {
+		int left = 0, right = nums.length-1;
+		
+		while(left <= right) {
+			int mid = (left+right)/2;
+			if(target == nums[mid]) {
+				return mid;
+			}
+			else if(target > nums[mid]) {
+				left = mid + 1;
+			}
+			else {
+				right = mid - 1;
+			}
+		}
+		
+		return left;
+	}
+	
+	public static List<List<Integer>> combinationSum(int[] nums, int target) {
+		Arrays.sort(nums);
+		List<List<Integer>> finalResults = new ArrayList<>();
+		for(int i = 0; i < nums.length; ++i) {
+			List<Integer> l = new ArrayList<>();
+			l.add(nums[i]);
+			check(nums, i, nums[i], target, l, finalResults);
+		}
+		return finalResults;
+	}
+
+	private static void check(int[] nums, int index, int sum, int target, List<Integer> l, List<List<Integer>> finalResults) {
+		if(sum == target) {
+			finalResults.add(l);
+		}
+		else {
+			for(int i = index; i < nums.length; ++i) {
+				if(sum+nums[i] > target) {
+//					break;
+					return;
+				}
+				List<Integer> ll = new ArrayList<>(l);
+				ll.add(nums[i]);
+				check(nums, i, sum + nums[i], target, ll, finalResults);
+			}
+		}
+		
+	}
 }
 
 
