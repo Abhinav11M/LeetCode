@@ -144,11 +144,30 @@ public class LeetMain {
 //		List<List<Integer>> resComb = LeetAlgos.combinationSum(new int[] {2,3,6,7}, 7);
 //		List<List<Integer>> resComb = LeetAlgos.combinationSum(new int[] {2,3,5}, 8);
 //		List<List<Integer>> resComb = LeetAlgos.combinationSum(new int[] {2,3,6,7}, 7);
-		List<List<Integer>> resComb = LeetAlgos.combinationSum(new int[] {8,7,4,3}, 11);
+//		List<List<Integer>> resComb = LeetAlgos.combinationSum(new int[] {8,7,4,3}, 11);
 //		List<List<Integer>> resComb1 = LeetAlgos.combinationSum(new int[] {3,4,7,8}, 11);
-		for(List<Integer> t : resComb) {
-			System.out.println(t);
-		}
+
+//		List<List<Integer>> resComb = LeetAlgos.combinationSum2(new int[] {2,3,6,7}, 7);
+//		List<List<Integer>> resComb = LeetAlgos.combinationSum2(new int[] {2,3,4,7}, 7);
+//		List<List<Integer>> resComb = LeetAlgos.combinationSum2(new int[] {2,5,2,1,2}, 5);
+//		for(List<Integer> t : resComb) {
+//			System.out.println(t);
+//		}
+		
+		/*
+		 * Find the first missing positive integer.
+		System.out.println(LeetAlgos.firstMissingPositive(new int[] {3,4,-1,1}));
+		System.out.println(LeetAlgos.firstMissingPositive(new int[] {1,2,0}));
+		System.out.println(LeetAlgos.firstMissingPositive(new int[] {7,8,9,11,12}));
+		System.out.println(LeetAlgos.firstMissingPositive(new int[] {1}));
+		System.out.println(LeetAlgos.firstMissingPositive(new int[] {1,2,0}));
+		System.out.println(LeetAlgos.firstMissingPositive(new int[] {1,1}));
+		*/
+		
+//		System.out.println(LeetAlgos.multiply("12", "34"));
+//		System.out.println(LeetAlgos.multiply("44", "55"));
+		System.out.println(LeetAlgos.multiply("0", "0"));
+		System.out.println(LeetAlgos.permute(new int[] {1,2,3}));
 	}
 
 	private static ListNodeWithRandom creteLinkedListWithRandow() {

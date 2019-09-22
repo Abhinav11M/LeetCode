@@ -1855,7 +1855,6 @@ public class LeetAlgos {
 		else {
 			for(int i = index; i < nums.length; ++i) {
 				if(sum+nums[i] > target) {
-//					break;
 					return;
 				}
 				List<Integer> ll = new ArrayList<>(l);
@@ -1863,7 +1862,201 @@ public class LeetAlgos {
 				check(nums, i, sum + nums[i], target, ll, finalResults);
 			}
 		}
+	}
+	
+	/**
+	 * Given a collection of candidate numbers (candidates) and a target number (target), 
+	 * find all unique combinations in candidates where the candidate numbers sums to target.
+	 * Each number in candidates may only be used once in the combination.
+	 * Note:
+	 * All numbers (including target) will be positive integers.
+	 * The solution set must not contain duplicate combinations.
+	 * Input: candidates = [10,1,2,7,6,1,5], target = 8,
+	 * A solution set is:
+	 * [
+	 * [1, 7],
+	 * [1, 2, 5],
+	 * [2, 6],
+	 * [1, 1, 6]
+	 * ]
+	 * Input: candidates = [2,5,2,1,2], target = 5,
+	 * A solution set is:
+	 * [
+	 * [1,2,2],
+	 * [5]
+	 * ]
+	 */
+	public static List<List<Integer>> combinationSum2(int[] candidates, int target) {
+		Arrays.sort(candidates);
+		List<List<Integer>> finalResults = new ArrayList<>();
+		for(int i = 0; i < candidates.length; ++i) {
+			List<Integer> l = new ArrayList<>();
+			l.add(candidates[i]);
+			check2(candidates, i, candidates[i], target, l, finalResults);
+		}
+		return finalResults;
+    }
+	
+	private static void check2(int[] nums, int index, int sum, int target, List<Integer> l, List<List<Integer>> finalResults) {
+		if(sum == target) {
+			finalResults.add(l);
+		}
+		else {
+			for(int i = index+1; i < nums.length; ++i) {
+				if(sum+nums[i] > target) {
+					return;
+				}
+				List<Integer> ll = new ArrayList<>(l);
+				ll.add(nums[i]);
+				check(nums, i+1, sum + nums[i], target, ll, finalResults);
+			}
+		}
+	}
+	
+	/**
+	 * Given an unsorted integer array, find the smallest missing positive integer.
+	 * Input: [1,2,0]
+	 * Output: 3
+	 * Input: [3,4,-1,1]
+	 * Output: 2
+	 * Input: [7,8,9,11,12]
+	 * Output: 1
+	 */
+	public static int firstMissingPositive(int[] nums) {
+		// Move the negatives to the left and positives to the right
+		int posIndex = moveNegativesToLeft(nums);
 		
+		if(posIndex == nums.length) { // All negatives
+			return 1;
+		}
+		
+		// Change the values at indices to negatives.
+		for(int i= posIndex; i < nums.length; ++i) {
+			if(Math.abs(nums[i])+posIndex-1 < nums.length) {
+				nums[Math.abs(nums[i])+posIndex-1] *= (-1);
+			}
+		}
+	  
+	    // Return the first index value at which is positive 
+		for(int i = posIndex; i < nums.length; ++i) {
+			if(nums[i] > 0) {
+				return i-posIndex+1;
+			}
+		}
+		
+		return nums.length - posIndex +1;
+	}
+
+	private static int moveNegativesToLeft(int[] nums) {
+		int negIndex = 0;
+		
+		for(int i = 0; i < nums.length; ++i) {
+			if(nums[i] <= 0) {
+				// Swap
+				int temp = nums[i];
+				nums[i] = nums[negIndex];
+				nums[negIndex++] = temp;
+			}
+		}
+		
+		return negIndex;
+	}
+	
+	/**
+	 * Given two non-negative integers num1 and num2 represented as strings, 
+	 * return the product of num1 and num2, also represented as a string.
+	 */
+	public static String multiply(String num1, String num2) {
+		if(num1.length() == 0 || num2.length() == 0) {
+			return "0";
+		}
+		if(num1.equals("0") || num2.equals("0")) {
+			return "0";
+		}
+		
+		int res[] = new int[num1.length()+num2.length()];
+		
+		for(int i = num1.length()-1; i >= 0; --i) {
+			int carry = 0;
+			int d1 = charToInt(num1.charAt(i));
+			int j = num2.length()-1;
+			for(j = num2.length()-1; j >= 0; --j) {
+				int d2 = charToInt(num2.charAt(j));
+				int product = d1*d2;
+				//Set this in the array;
+				int dRes = product + carry + res[i+j+1];
+				int idxRes = dRes%10;
+				carry = dRes/10;
+				res[i+j+1] = idxRes;
+			}
+			res[i+j+1] = carry;
+		}
+		
+		return convertToString(res);
+	}
+
+	private static String convertToString(int[] res) {
+		if(res.length == 0) {
+			return "";
+		}
+		
+		int startIndex = 0;
+		for(int i = 0; i < res.length; ++i) {
+			if(res[i] != 0) {
+				startIndex = i;
+				break;
+			}
+		}
+		
+		
+		StringBuilder str = new StringBuilder();
+		for(int i = startIndex; i < res.length; ++i) {
+			
+			str.append(res[i]);
+		}
+		
+		return str.toString();
+	}
+
+	private static int charToInt(char digit) {
+		if(digit =='0') {
+			return 0;
+		}
+		
+		return digit%48;
+	}
+	
+	/**
+	 * Given a collection of distinct integers, return all possible permutations.
+	 */
+	public static List<List<Integer>> permute(int[] nums) {
+		List<Integer> numsList = Arrays.stream(nums).boxed().collect(Collectors.toList());
+		List<List<Integer>> res = new ArrayList<>();
+		
+//		for(int i = 0; i < numsList.size(); ++i) {
+//			List<Integer> source = new ArrayList<>(numsList);
+//			List<Integer> dest = new ArrayList<>();
+//			int s = source.remove(i);
+//			dest.add(s);
+//			permute(source, dest, res);
+//		}
+		permute(numsList, new ArrayList<Integer>(), res);
+		
+		return res;
+    }
+
+	private static void permute(List<Integer> source, List<Integer> dest, List<List<Integer>> res) {
+		if(source.size() == 0) {
+			res.add(dest);
+		}
+		
+		for(int i = 0; i < source.size(); ++i) {
+			List<Integer> source1 = new ArrayList<>(source);
+			List<Integer> dest1 = new ArrayList<>(dest);
+			int temp = source1.remove(i);
+			dest1.add(temp);
+			permute(source1, dest1, res);
+		}
 	}
 }
 
