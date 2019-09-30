@@ -166,8 +166,47 @@ public class LeetMain {
 		
 //		System.out.println(LeetAlgos.multiply("12", "34"));
 //		System.out.println(LeetAlgos.multiply("44", "55"));
-		System.out.println(LeetAlgos.multiply("0", "0"));
-		System.out.println(LeetAlgos.permute(new int[] {1,2,3}));
+//		System.out.println(LeetAlgos.multiply("0", "0"));
+//		System.out.println(LeetAlgos.permute(new int[] {1,2,3}));
+//		LeetAlgos.rotate(new int[][] { {1,2,3}, {4,5,6} , {7,8,9} });
+		
+//		List<List<String>> res1 = LeetAlgos.groupAnagrams(new String[] {"eat", "tea", "tan", "ate", "nat", "bat"});
+		
+//		System.out.println(LeetAlgos.isAnagram1("tan", "nat"));
+//		System.out.println(LeetAlgos.isAnagram2("tan", "net"));
+//		System.out.println(LeetAlgos.isAnagram3("tan", "nat"));
+//		System.out.println(LeetAlgos.isAnagram3("pit", "pro"));
+		
+//		List<List<String>> res1 = LeetAlgos.groupAnagramsOpt(new String[] {"eat", "tea", "tan", "ate", "nat", "bat"});
+//		List<List<String>> res2 = LeetAlgos.groupAnagramsOpt(new String[] {"",""});
+//		List<List<String>> res3 = LeetAlgos.groupAnagramsOpt(new String[] {"tao","pit","cam","aid","pro","dog"});
+//		System.out.println(LeetAlgos.myPow(2, -2));
+//		System.out.println(LeetAlgos.myPow(2, 10));
+//		System.out.println(LeetAlgos.myPow(0.00001, 2147483647));
+//		System.out.println(LeetAlgos.maxSubArray(new int[] {-2,-1}));
+//		System.out.println(LeetAlgos.maxSubArray(new int[] {2}));
+		printArr(LeetAlgos.maxSubArray1(new Integer[] {-2,-1}));
+		printArr(LeetAlgos.maxSubArray1(new Integer[] {2}));
+		printArr(LeetAlgos.maxSubArray1(new Integer[] {-2,1,-3,4,-1,2,1,-5,4}));
+		System.out.println(LeetAlgos.lengthOfLastWord("Hello World"));
+		System.out.println(LeetAlgos.lengthOfLastWord("a "));
+		printArr(LeetAlgos.plusOne(new int[] {1,2,3}));
+		printArr(LeetAlgos.plusOne(new int[] {9,9,9}));
+		
+	}
+	
+	public static void printArr(int[] arr) {
+		for(int data : arr) {
+			System.out.print(data + ",");
+		}
+		System.out.println();
+	}
+	
+	public static<T> void printArr(T[] arr) {
+		for(T data : arr) {
+			System.out.print(data + ",");
+		}
+		System.out.println();
 	}
 
 	private static ListNodeWithRandom creteLinkedListWithRandow() {

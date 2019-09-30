@@ -3,6 +3,7 @@ package leetcode;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -12,6 +13,7 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.Stack;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import datastructures.ListNode;
@@ -2056,6 +2058,334 @@ public class LeetAlgos {
 			int temp = source1.remove(i);
 			dest1.add(temp);
 			permute(source1, dest1, res);
+		}
+	}
+	
+	/**
+	 * ou are given an n x n 2D matrix representing an image.
+	 * Rotate the image by 90 degrees (clockwise).
+	 * Note : DO NOT allocate another 2D matrix
+	 */
+	public static void rotate(int[][] matrix) {
+		int n = matrix.length-1;
+		
+		printMatrix(matrix);
+		System.out.println(matrix[n-1][0]);
+		for(int i = 0; i <= matrix.length/2; ++i) { // Number of rotation cycles will be N/2
+			for(int j = i; j < n-i; ++j) {
+				int temp = matrix[i][j];
+				matrix[i][j] = matrix[n-j][i];
+				matrix[n-j][i] = matrix[n-i][n-j];
+				matrix[n-i][n-j] = matrix[j][n-i];
+				matrix[j][n-i] = temp;
+			}
+		}
+		
+		printMatrix(matrix);
+	}
+
+	public static void printMatrix(int[][] matrix) {
+		StringBuilder str = new StringBuilder();
+		str.append("[\n");
+		for(int i = 0; i < matrix.length; ++i) {
+			str.append("  [");
+			for(int j = 0; j < matrix[i].length; ++j) {
+				str.append(matrix[i][j] + ",");
+			}
+			str.append("]\n");
+		}
+		str.append("]");
+		System.out.println(str.toString());
+	}
+	
+	/**
+	 * Given an array of strings, group anagrams together.
+	 */
+	public static List<List<String>> groupAnagrams(String[] strs) {
+		List<String> sorted = new ArrayList<>(strs.length);
+		for(String s : strs) {
+			sorted.add(s.chars().sorted().collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append).toString());
+		}
+		Map<String, List<String>> res = new HashMap<>();
+
+		for(int i = 0; i < sorted.size(); ++i) {
+			res.computeIfAbsent(sorted.get(i), x -> new ArrayList<String>()).add(strs[i]);
+		}
+		
+		return res.values().stream().collect(Collectors.toList());
+    }
+	
+	public static List<List<String>> groupAnagramsOpt(String[] strs) {
+		if(strs.length == 0) {
+			return null;
+		}
+		
+		int[] traversed = new int[strs.length];
+		for(int i = 0; i < traversed.length; ++i) {
+			traversed[i] = -1;
+		}
+		
+		int curIdx = 0;
+		while(true) {
+			if(curIdx >= strs.length-1) {
+				break;
+			}
+			traversed[curIdx] = curIdx;
+
+			for(int i = curIdx+1; i < strs.length; ++i) {
+				if(isAnagram3(strs[curIdx] ,strs[i])) {
+					traversed[i] = curIdx;
+				}
+			}
+			// find the next curIdx
+			int i = 0;
+			for(i = curIdx + 1; i < strs.length; ++i) {
+				if(traversed[i] == -1) {
+					break;
+				}
+			}
+			curIdx = i;
+		}
+		
+		Map<Integer, List<String>> retVal = new HashMap<>();
+		for(int i = 0; i < traversed.length; ++i) {
+			retVal.computeIfAbsent(traversed[i], x -> new ArrayList<>()).add(strs[i]);
+		}
+		
+		return retVal.values().stream().collect(Collectors.toList());
+	}
+	
+	/**
+	 * Check if two strings are anagram or not
+	 * Method 1 : Sort the strings and compare
+	 */
+	public static boolean isAnagram1(String str1, String str2) {
+		if(str1.length() != str2.length()) {
+			return false;
+		}
+		String sortedStr1 = str1.chars().sorted()
+				.collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append).toString();
+		String sortedStr2 = str2.chars().sorted()
+				.collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append).toString();
+		
+		
+		return sortedStr1.equals(sortedStr2);
+	}
+	
+	/**
+	 * Check if two strings are anagram or not
+	 * Method 2 : Create an 2 arrays of possible chars and add to both iterating over the strings.
+	 * 				If both arrays are same then return true.
+	 * 				We can have only one array and we can add and subtract from the same array.
+	 * 				Then we need to check if the array is all 0s.
+	 */
+	public static boolean isAnagram2(String str1, String str2) {
+		if(str1.length() != str2.length()) {
+			return false;
+		}
+		
+		int arr[] = new int[256];
+		
+		for(int i = 0; i < str1.length(); ++i) {
+			arr[str1.charAt(i)]++;
+			arr[str2.charAt(i)]--;
+		}
+		
+		for(int i = 0; i < 256; ++i) {
+			if(arr[i] != 0) {
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
+	/**
+	 * Check if two strings are anagram or not
+	 * Method 3: Using bit manipulation
+	 * 			If we XOR all the characters of both the strings, we should get 0 (a XOR a = 0)
+	 */
+	public static boolean isAnagram3(String str1, String str2) {
+		if(str1.length() != str2.length()) {
+			return false;
+		}
+		
+		int value = 0;
+		for(int i = 0; i < str1.length(); ++i) {
+			value = value ^ (int)str1.charAt(i);
+			value = value ^ (int)str2.charAt(i);
+		}
+		
+		return value == 0;
+	}
+	
+	// TODO: Write a more optimized algo for pow.
+	/**
+	 * Implement pow(x, n), which calculates x raised to the power n (xn).
+	 * Input: 2.00000, 10
+	 * Output: 1024.00000
+	 * Input: 2.10000, 3
+	 * Output: 9.26100
+	 * Input: 2.00000, -2
+	 * Output: 0.25000
+	 * Explanation: 2-2 = 1/22 = 1/4 = 0.25
+	 */
+	public static double myPow(double x, int n) {
+		double xOrig = x;
+		
+		if(x == 0) {
+			return 0;
+		}
+		if(n == 0) {
+			return 1;
+		}
+		if(n == 1) {
+			return x;
+		}
+		
+		if(n > 0) {
+			int i = 2;
+			for(i = 2; i <= n; i = i*2) {
+				if(i*2 < i) {
+					break; // bit overflow
+				}
+				x = x*x;
+			}
+			
+			for(; i <=n; ++i) {
+				if(i+1 < i) {
+					break; // bit overflow;
+				}
+				x = x*xOrig;
+			}
+//			while(n > 1) {
+//				x *= xOrig;
+//				--n;
+//			}
+		}
+		else {
+			while(n <= 0) {
+				x /= xOrig;
+				++n;
+			}
+		}
+		
+		return x;
+    }
+	
+	/**
+	 * Given an integer array nums, find the contiguous subarray 
+	 * (containing at least one number) which has the largest sum and return its sum.
+	 * Input: [-2,1,-3,4,-1,2,1,-5,4],
+	 * Output: 6
+	 * Explanation: [4,-1,2,1] has the largest sum = 6.
+	 */
+	public static int maxSubArray(int[] nums) {
+		int maxSum = Integer.MIN_VALUE;
+		int sum = 0;
+		
+		int i = 0;
+		while(i < nums.length) {
+			sum = sum + nums[i];
+			if(sum > maxSum) {
+				maxSum = sum;
+			}
+			if(sum < 0) { // Restart summing
+				sum = 0;
+			}
+			++i;
+		}
+		
+		return maxSum;
+	}
+	
+	/**
+	 * Same as above algo, just instead of the sum, it returns the subarray.
+	 */
+	public static Integer[] maxSubArray1(Integer[] nums) {
+		int fStart = 0;
+		int fEnd = 0;
+		
+		int start = 0;
+		int maxSum = Integer.MIN_VALUE;
+		int sum = 0;
+		
+		int i = 0;
+		while(i < nums.length) {
+			sum += nums[i];
+			if(sum > maxSum) {
+				fStart = start;
+				maxSum = sum;
+				fEnd = i;
+			}
+			if(sum < 0) {
+				sum = 0;
+				start = i+1; // Reset the start index to next element in the array.
+			}
+			++i;
+		}
+		
+		return Arrays.copyOfRange(nums, fStart, fEnd+1);
+	}
+	
+	/**
+	 * Given a string s consists of upper/lower-case alphabets and empty space characters ' ', 
+	 * return the length of last word in the string.
+	 */
+	public static int lengthOfLastWord(String s) {
+		if(s.isEmpty()) {
+			return 0;
+		}
+		
+		int i = s.length()-1; // last index
+		int count = 0;
+		boolean foundAlpha = false;
+		while(i >= 0) {
+			if(!foundAlpha && s.charAt(i) != ' ') { // Mark the first occurence of an alphabet
+				foundAlpha = true;
+			}
+			if(foundAlpha && s.charAt(i) == ' ') { // If already encountered a character and reached the end of that word, break.
+				break;
+			}
+			
+			if(s.charAt(i) != ' ') {
+				count++;
+			}
+			--i;
+		}
+		return count; 
+	}
+	
+	/**
+	 * Given a non-empty array of digits representing a non-negative integer, add one to the integer.
+	 */
+	public static int[] plusOne(int[] digits) {
+		if(digits.length == 0) {
+			return new int[] {1};
+		}
+		
+		boolean isUnit = true;
+		
+		int carry = 0;
+		for(int i = digits.length-1; i >=0; --i) {
+			if(isUnit) {
+				digits[i] = digits[i] + 1 + carry;
+				isUnit = !isUnit;
+			}
+			else {
+				digits[i] = digits[i] + carry;
+			}
+			carry = digits[i]/10;
+			digits[i] = digits[i]%10;
+		}
+		if(carry == 0) {
+			return digits;
+		}
+		else {
+			int[] retArr = new int[digits.length+1];
+			retArr[0] = carry;
+			Arrays.copyOfRange(digits, 1, digits.length+1);
+			return retArr;
 		}
 	}
 }
