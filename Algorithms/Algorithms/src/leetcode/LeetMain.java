@@ -185,13 +185,22 @@ public class LeetMain {
 //		System.out.println(LeetAlgos.myPow(0.00001, 2147483647));
 //		System.out.println(LeetAlgos.maxSubArray(new int[] {-2,-1}));
 //		System.out.println(LeetAlgos.maxSubArray(new int[] {2}));
-		printArr(LeetAlgos.maxSubArray1(new Integer[] {-2,-1}));
-		printArr(LeetAlgos.maxSubArray1(new Integer[] {2}));
-		printArr(LeetAlgos.maxSubArray1(new Integer[] {-2,1,-3,4,-1,2,1,-5,4}));
-		System.out.println(LeetAlgos.lengthOfLastWord("Hello World"));
-		System.out.println(LeetAlgos.lengthOfLastWord("a "));
-		printArr(LeetAlgos.plusOne(new int[] {1,2,3}));
-		printArr(LeetAlgos.plusOne(new int[] {9,9,9}));
+//		printArr(LeetAlgos.maxSubArray1(new Integer[] {-2,-1}));
+//		printArr(LeetAlgos.maxSubArray1(new Integer[] {2}));
+//		printArr(LeetAlgos.maxSubArray1(new Integer[] {-2,1,-3,4,-1,2,1,-5,4}));
+//		System.out.println(LeetAlgos.lengthOfLastWord("Hello World"));
+//		System.out.println(LeetAlgos.lengthOfLastWord("a "));
+//		printArr(LeetAlgos.plusOne(new int[] {1,2,3}));
+//		printArr(LeetAlgos.plusOne(new int[] {9,9,9}));
+		
+//		System.out.println(LeetAlgos.mySqrt(2147395600));
+//		System.out.println(LeetAlgos.mySqrtOpt(2147395600));
+//		System.out.println(LeetAlgos.mySqrtOpt(6));
+//		System.out.println(LeetAlgos.mySqrtOpt(8));
+		
+		System.out.println(LeetAlgos.climbStairs(3));
+		System.out.println(LeetAlgos.climbStairsDP(3));
+		
 		
 	}
 	

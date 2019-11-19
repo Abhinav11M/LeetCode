@@ -2388,6 +2388,121 @@ public class LeetAlgos {
 			return retArr;
 		}
 	}
+	
+	/**
+	 * Implement int sqrt(int x).
+	 * Compute and return the square root of x, where x is guaranteed to be a non-negative integer.
+	 * Since the return type is an integer, the decimal digits are truncated 
+	 * and only the integer part of the result is returned.
+	 */
+	public static int mySqrt(int x) {
+		if(x == 1 || x == 0) {
+			return x;
+		}
+		
+		int root = 2;
+		while(Math.pow(root, 2) < x) {
+			++root;
+		}
+		
+		return Math.pow(root, 2) == x ? root : root-1;
+	}
+	
+	// Using binary search
+	public static int mySqrtOpt(int x) {
+		if(x == 0 || x == 1) {
+			return x;
+		}
+		
+		int start = 0, end = x, ans=start;
+		
+		int mid = 0;
+		while(start <= end) {
+			mid = (start+end)/2;
+			
+			if(mid*mid == x) {
+				return mid;
+			}
+			if(Integer.MAX_VALUE/mid < mid) { // mid^2 will surpass int length. So number should be less that mid.
+				end = mid-1;
+			}
+			else if(mid*mid < x) {// square root of x lies on the right side.
+				start = mid+1;
+				ans = mid;
+			}
+			else {
+				end = mid-1; // square root of x lies on the left side.
+			}
+		}
+		
+		return ans;
+	}
+	
+	/**
+	You are climbing a stair case. It takes n steps to reach to the top.
+
+	Each time you can either climb 1 or 2 steps. In how many distinct ways can you climb to the top?
+
+	Note: Given n will be a positive integer.
+
+	Example 1:
+
+	Input: 2
+	Output: 2
+	Explanation: There are two ways to climb to the top.
+	1. 1 step + 1 step
+	2. 2 steps
+	*/
+	
+	static int stairsCount = 0;
+	public static int climbStairs(int n) {
+		climbStairsAlgo(n);
+		return stairsCount;
+    }
+	
+	public static void climbStairsAlgo(int sum) {
+		if(sum == 0) {
+			++stairsCount;
+			return;
+		}
+		
+		if(sum < 0) {
+			return;
+		}
+		
+		climbStairsAlgo(sum-1);
+		climbStairsAlgo(sum-2);
+	}
+	
+	/**
+	 * The previos algo will create a huge recursion stack.
+	 * Using DP memoization technique to optimize.
+	 * @param n
+	 * @return
+	 */
+	public static int climbStairsDP(int n) {
+		Map<Integer, Integer> map = new HashMap<>();
+		return climbStairsDP(n, map);
+	}
+
+	private static int climbStairsDP(int sum, Map<Integer, Integer> map) {
+		if(sum < 0) {
+			return 0; // There is no possible way
+		}
+		if(sum == 0) {
+			return 1; // Only one way i.e. take one stairs
+		}
+		
+		if(map.containsKey(sum)) {
+			return map.get(sum);
+		}
+		
+		// Calculate the number of possible ways to take step
+		int numWays = climbStairsDP(sum-1, map) + climbStairsDP(sum-2, map); // Take 1 step or two steps.
+		map.put(sum, numWays);
+		
+		return numWays;
+	}
 }
 
 
