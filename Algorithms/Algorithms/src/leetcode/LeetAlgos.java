@@ -3,7 +3,7 @@ package leetcode;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -13,11 +13,11 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.Stack;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import datastructures.ListNode;
 import datastructures.ListNodeWithRandom;
+import datastructures.TreeNode;
 
 public class LeetAlgos {
 	
@@ -2503,6 +2503,795 @@ public class LeetAlgos {
 		
 		return numWays;
 	}
+	
+	// TODO: Needs fixing
+	public static String simplifyPath(String path) {
+		
+		Stack<Character> stack = new Stack<>();
+		if(path.isEmpty()) {
+			return "";
+		}
+		
+		char[] arr = path.toCharArray();
+		
+		for(int i = 0; i < arr.length; ++i) {
+			if(stack.isEmpty()) {
+				stack.push(arr[i]);
+				continue;
+			}
+			
+			if(arr[i] == '/' && stack.peek() == '/') { // Only need to push 1 / // Not working => Test
+				while(i < arr.length && arr[i] == '/') {
+					++i;
+					continue;
+				}
+				if(i == arr.length) {
+					break;
+				}
+			}
+			if(arr[i] == '.' && stack.peek() == '.') { // go one folder back
+				stack.pop();
+				while(!stack.isEmpty() && !Character.isAlphabetic(stack.peek())) { // check this
+					stack.pop();
+				}
+				if(!stack.isEmpty()) {
+					stack.pop(); // pop the character
+				}
+				continue;
+			}
+			if(stack.peek() == '.' && arr[i] == '/') {
+				stack.pop();
+				continue;
+			}
+			stack.push(arr[i]);
+		}
+		
+		String retVal = "";
+		
+		while(!stack.isEmpty()) {
+			retVal = stack.pop() + retVal;
+		}
+		if(retVal.length() != 1 && retVal.charAt(retVal.length()-1) == '/' ) {
+			return retVal.substring(0, retVal.length()-1);
+		}
+		return retVal;
+	}
+	
+	
+	/*
+	 * Given two sorted integer arrays nums1 and nums2, merge nums2 into nums1 as one sorted array.
+	 * 
+	 * The number of elements initialized in nums1 and nums2 are m and n respectively.
+	 * You may assume that nums1 has enough space (size that is greater or equal to m + n) 
+	 * to hold additional elements from nums2.
+	 * 
+	 * Input:
+	 * nums1 = [1,2,3,0,0,0], m = 3
+	 * nums2 = [2,5,6],       n = 3
+	 * 
+	 * Output: [1,2,2,3,5,6]
+	 */
+	public static int[] merge(int[] nums1, int m, int[] nums2, int n) {
+		int size1 = m; // larger array
+		int idx2 = 0; // smaller array
+		
+		while(idx2 != nums2.length) {
+			// Search for the appropriate index
+			int insIndex = 0;
+			while(nums2[idx2] >= nums1[insIndex] && insIndex < size1) {
+				insIndex++;
+			}
+			if(insIndex == size1) { // Insert at the last
+				nums1[insIndex] = nums2[idx2++];
+				++size1;
+				continue;
+			}
+			
+			if(insIndex >= m+idx2) {
+				// All elements of nums1 are less that nums2 element being searched
+				for(int i = idx2; i < n; ++i) {
+					nums1[insIndex++] = nums2[idx2++];
+				}
+			}
+			else {
+				// Shift to create space
+				for(int i = m+idx2; i > insIndex; --i) {
+					nums1[i] = nums1[i-1];
+				}
+				nums1[insIndex] = nums2[idx2++];
+			}
+			++size1;
+		}
+		return nums1;
+	}
+	
+	/**
+	 * Optimized : Fill from right to left.
+	 */
+	public static int[] mergeOpt(int[] nums1, int m, int[] nums2, int n) { 
+		int idx1 = m-1;
+		int idx2 = n-1;
+		int idxRes = nums1.length-1;
+		
+		while(idxRes >= 0) {
+			if (idx1 < 0) {
+				nums1[idxRes--] = nums2[idx2--];
+			} else if (idx2 < 0) {
+				nums1[idxRes--] = nums1[idx1--];
+			} else if (nums1[idx1] < nums2[idx2]) {
+				nums1[idxRes--] = nums2[idx2--];
+			} else {
+				nums1[idxRes--] = nums1[idx1--];
+			}
+		}
+		return nums1;
+	}
+	
+	/**
+	 * Given a sorted linked list, delete all duplicates such that each element appear only once.
+	 * Input: 1->1->2
+	 * Output: 1->2
+	 * 
+	 * Input: 1->1->2->3->3
+	 * Output: 1->2->3
+	 */
+	public static ListNode deleteDuplicates(ListNode head) {
+		
+		if(head == null) {
+			return null;
+		}
+		
+		ListNode tempHead = head;
+
+		while(tempHead != null) {
+			int data = tempHead.val;
+			ListNode nextNode = tempHead.next;
+			while(nextNode != null && nextNode.val == data) {
+				nextNode = nextNode.next;
+			}
+			tempHead.next = nextNode;
+			tempHead = nextNode;
+		}
+		
+		return head;
+	}
+	
+	/**
+	 * Given a collection of candidate numbers (candidates) and a target number (target), 
+	 * find all unique combinations in candidates where the candidate numbers sums to target.
+	 * Each number in candidates may only be used once in the combination
+	 * Note:
+	 * 	All numbers (including target) will be positive integers.
+	 *  The solution set must not contain duplicate combinations.
+	 *  
+	 *  Input: candidates = [10,1,2,7,6,1,5], target = 8,
+	 *  A solution set is:
+	 *  [
+  			[1, 7],
+  			[1, 2, 5],
+  			[2, 6],
+  			[1, 1, 6]
+		]
+	 */
+	public static List<List<Integer>> combinationSum2New(int[] candidates, int target) {
+		// Sort the array and remove duplicates.
+		Arrays.sort(candidates);
+		
+		List<List<Integer>> res = new ArrayList<>();
+		combinationSum2New(candidates, target, res, 0);
+		
+		return res;
+	}
+
+	private static void combinationSum2New(int[] candidates, int target, List<List<Integer>> res, int index) {
+		for(int i = index; i < candidates.length; ++i) {
+			if(i != 0 && candidates[i] == candidates[i-1]) {
+				continue;
+			}
+			
+			List<Integer> l = new ArrayList<>();
+			l.add(candidates[i]);
+			combinationSum(target-candidates[i], l, res, i+1, candidates);
+		}
+	}
+
+	private static void combinationSum(int target, List<Integer> l, List<List<Integer>> res, int index, int[] candidates) {
+		if(target == 0) {
+			if(!res.contains(l)) {
+				res.add(l);
+			}
+			return;
+		}
+		
+		for(int i = index; i < candidates.length; ++i) {
+			if(target-candidates[i] < 0) {
+				break;
+			}
+			List<Integer> ll = new ArrayList<>(l);
+			ll.add(candidates[i]);
+			
+			combinationSum(target-candidates[i], ll , res, i+1, candidates);
+		}
+	}
+	
+	/**
+	 * Given an array nums of n integers, are there elements a, b, c
+	 * in nums such that a + b + c = 0? Find all unique triplets in the array which gives the sum of zero.
+	 * Note: The solution set must not contain duplicate triplets.
+	 *
+	 * Given array nums = [-1, 0, 1, 2, -1, -4],
+	 *
+	 * A solution set is:
+	 * [
+	 *   [-1, 0, 1],
+	 *   [-1, -1, 2]
+	 * ]
+	 */
+	public static List<List<Integer>> threeSumNew1(int[] nums) {
+		// Sort the array
+		Arrays.sort(nums);
+		
+		List<List<Integer>> res = new ArrayList<>();
+		for(int i = 0; i < nums.length-2; ++i) {
+			if(i != 0 && nums[i] == nums[i-1]) {
+				continue;
+			}
+
+			int j = i+1;
+			int k = nums.length-1;
+			
+			while(j < k) {
+				if(nums[i] + nums[j] + nums[k] == 0) {
+					res.add(Arrays.asList(new Integer[] {nums[i], nums[j], nums[k]}));
+					j++;
+					k--;
+					
+					while(j < k && nums[j] == nums[j-1]) {
+						j++;
+					}
+					while(k > j && nums[k] == nums[k+1]) {
+						k--;
+					}
+				}
+				else if(nums[i] + nums[j] + nums[k] > 0) { // Need a smaller number
+					k--;
+				}
+				else { // Need a larger number.
+					j++;
+				}
+			}
+		}
+
+		return res;
+	}
+	
+	/**
+	 * Given a positive integer n, generate a square matrix filled with elements from 1 to n2 in spiral order.
+	 * 
+	 * Input: 3
+	 * Output:
+	 * [
+	 * 	[ 1, 2, 3 ],
+	 * 	[ 8, 9, 4 ],
+	 * 	[ 7, 6, 5 ]
+	 * ]
+	 */
+	public static int[][] generateMatrix(int n) {
+		if(n == 0) {
+			return new int[0][0];
+		}
+		
+		int[][] res = new int[n][n];
+		int counter = 1;
+		int i = 0, j = 0;
+		int nCycle = 0;
+		
+		boolean toRight = true;
+		boolean toLeft = false;
+		boolean toUp = false;
+		boolean toDown = false;
+		
+		
+		while(counter <= n*n) {
+			if(toRight) {
+				for(; j < n-nCycle; j++){
+					res[i][j] = counter++;
+				}
+				i++;
+				j--;
+				toDown = true;
+				toRight = false;
+				
+				if(counter > n*n) {
+					break;
+				}
+			}
+
+			if(toDown) {
+				for(;i < n-nCycle; ++i) {
+					res[i][j] = counter++;
+				}
+				
+				toLeft = true;
+				toDown = false;
+				j--;
+				i--;
+				
+				if(counter > n*n) {
+					break;
+				}
+			}
+			
+			if(toLeft) {
+				for (; j >= nCycle; --j) { // this should not be 0 but nCycle
+					res[i][j] = counter++;
+				}
+				
+				i--;
+				j++;
+				toLeft = false;
+				toUp = true;
+				nCycle++;
+				
+				if(counter > n*n) {
+					break;
+				}
+			}
+			
+			if(toUp) {
+				for(;i >= nCycle; --i) { // this should not be 0 but nCycle
+					res[i][j] = counter++;
+				}
+				
+				j++;
+				i++;
+				toUp = false;
+				toRight = true;
+			}
+		}
+
+		return res;
+	}
+	
+	/**
+	 * Next greater element in a array.
+	 * Input : [4, 5, 2, 25]
+	 * Output : 
+	 * 		4      -->   5
+	 * 		5      -->   25
+	 * 		2      -->   25
+	 * 		25     -->   -1
+	 */
+	public static Map<Integer, Integer> getNextLargestElement(int[] arr) {
+		Map<Integer, Integer> res = new HashMap<>();
+		
+		if(arr == null || arr.length == 0) {
+			return res;
+		}
+		
+		Stack<Integer> st = new Stack<>();
+		st.add(arr[0]);
+		
+		for(int i = 1; i < arr.length; ++i) {
+			if(st.peek() < arr[i]) { // found the next greater element
+				while(!st.isEmpty() && st.peek() < arr[i]) {
+					res.put(st.pop(), arr[i]);
+				}
+			}
+			st.push(arr[i]);
+		}
+		
+		while(!st.isEmpty()) {
+			res.put(st.pop(), -1);
+		}
+		
+		return res;
+	}
+	
+	/**
+	 * Given a collection of integers that might contain duplicates, nums, 
+	 * return all possible subsets (the power set).
+	 * Note: The solution set must not contain duplicate subsets.
+	 * Input: [1,2,2]
+	 * Output:
+	 * [
+	 * 	[2],
+	 * 	[1],
+	 *	[1,2,2],
+	 *	[2,2],
+	 *	[1,2],
+	 *	[]
+	 * ]
+	 */
+	public static List<List<Integer>> subsetsWithoutDuplicates(int[] nums) {
+		Arrays.sort(nums);
+		Set<List<Integer>> result = new HashSet<>();
+		
+		int nLoops = (int) Math.pow(2, nums.length);
+		
+		for(int i = 0; i < nLoops; ++i) {
+			List<Integer> l = new ArrayList<>();
+			
+			for(int j = 0; j < nums.length; ++j) {
+				if((i & (1 << j)) != 0) { // If the jth bit in i is set, add that digit to the list
+					l.add(nums[j]);
+				}
+			}
+			result.add(l);
+		}
+
+		return result.stream().collect(Collectors.toList());
+	}
+	
+	/**
+	 * Reverse a linked list from position m to n. Do it in one-pass.
+	 * Note : 1 <= m <= n <= length of list
+	 * Input: 1->2->3->4->5->NULL, m = 2, n = 4
+	 * Output: 1->4->3->2->5->NULL
+	 */
+	public static ListNode reverseBetween(ListNode head, int m, int n) {
+		
+		if(m == n) {
+			return head;
+		}
+		
+		ListNode l1 = null;
+		ListNode start = head;
+		for(int i = 1; i < m; ++i) {
+			l1 = start;
+			start = start.next;
+		}
+		if(l1 != null) {
+			l1.next = null;
+		}
+		
+		ListNode newList = null;
+		for(int i = m; i <= n; ++i) {
+			if(newList == null) {
+				newList = start;
+				start = start.next;
+				newList.next = null;
+			}
+			else {
+				ListNode temp = start.next;
+				start.next = newList;
+				newList = start;
+				start = temp;
+			}
+		}
+	
+		if(l1 != null) {
+			ListNode temp = head;
+			while(temp.next != null) {
+				temp = temp.next;
+			}
+			temp.next = newList;
+			newList = head;
+			
+		}
+		
+		ListNode temp = newList;
+		
+		while(temp.next != null) {
+			temp = temp.next;
+		}
+		temp.next = start;
+		
+        return newList;
+    }
+	
+	/**
+	 * Given two binary trees, write a function to check if they are the same or not.
+	 * Two binary trees are considered the same if they are structurally 
+	 * identical and the nodes have the same value.
+	 * 
+	 */
+	public boolean isSameTree(TreeNode p, TreeNode q) {
+		
+		if(p == null && q == null) {
+			return true;
+		}
+		
+		if((p == null && q != null) || (p != null && q == null)) {
+			return false;
+		}
+		
+		return (p.val == q.val) && isSameTree(p.left, q.left) && isSameTree(p.right, q.right);
+    }
+	
+	/**
+	 * Given a sorted array nums, remove the duplicates in-place such that duplicates 
+	 * appeared <b>at most twice</b> and return the new length.
+	 * Do not allocate extra space for another array, you must do this by 
+	 * modifying the input array in-place with O(1) extra memory.
+	 * Ex : Given nums = [1,1,1,2,2,3],
+	 * Your function should return length = 5, with the first five elements of nums being 1, 1, 2, 2 and 3 respectively.
+	 * It doesn't matter what you leave beyond the returned length.
+	 */
+	public static int removeDuplicates2(int[] nums) {
+		
+		if(nums == null || nums.length < 4) {
+			return countDuplicates(nums);
+		}
+		
+		int n = nums.length;
+		
+		int counter = 1;
+		
+		for(int i = 1; i < n; ++i) {
+			if(nums[i] != nums[i-1]) {
+				counter = 1; // Reset the counter
+				continue;
+			}
+			else {
+				if(counter < 2) {
+					++counter;
+					continue;
+				}
+				else {
+					// Find next different number
+					int index = findNextDifferentNum(i, nums);
+					int tempIdx = index;
+					if(index == nums.length) { // All numbers are the same
+						break;
+					}
+					else {
+						int extraRep = index - i;
+						// Swap till n
+						for(int j = i; j < n; ++j) {
+							swap(nums, j, index);
+							++index;
+							if(index == n) { // Reached the end of array, can't swap anymore.
+								break;
+							}
+						}
+						i = tempIdx-1;
+						counter = 0;
+						n = n - extraRep;
+					}
+				}
+			}
+		}
+		
+		return countDuplicates(nums);
+	}
+
+	private static int countDuplicates(int[] nums) {
+		
+		int counter = 0;
+		int totalCount = 0;
+
+		while(counter < nums.length-2) {
+			if(nums[counter] == nums[counter+2]) {
+				return totalCount;
+			}
+			totalCount += 2;
+			counter += 2;
+		}
+		
+		counter = counter - 1;
+		while(counter++ < nums.length) {
+			++totalCount;
+		}
+
+		return totalCount;
+	}
+
+	private static void swap(int[] arr, int i, int j) {
+		int temp = arr[i];
+		arr[i] =  arr[j];
+		arr[j] = temp;
+	}
+
+	private static int findNextDifferentNum(int idx, int[] nums) {
+		for(int i = idx+1; i < nums.length; ++i) {
+			if(nums[i] != nums[idx]) {
+				return i;
+			}
+		}
+		// Return next to last index
+		return nums.length;
+	}
+	
+	/**
+	 * 
+	 */
+	public static List<List<Integer>> permuteUnique(int[] nums) {
+		List<Integer> numsList = Arrays.stream(nums).boxed().collect(Collectors.toList());
+		
+		Set<List<Integer>> res = new HashSet<>();
+		
+		permuteUnique(numsList, new ArrayList<Integer>(),  res);
+		
+		return res.stream().collect(Collectors.toList());
+	}
+
+	private static void permuteUnique(List<Integer> numsList, List<Integer> arrayList, Set<List<Integer>> res) {
+		if(numsList.isEmpty()) {
+			res.add(arrayList);
+			return;
+		}
+		
+		int prev = Integer.MIN_VALUE;
+		for(int i = 0; i < numsList.size(); ++i) {
+			if(numsList.get(i) == prev) {
+				continue;
+			}
+
+			List<Integer> l = new ArrayList<>(arrayList);
+			List<Integer> newNumList = new ArrayList<Integer>(numsList);
+			prev = newNumList.remove(i);
+			l.add(prev);
+			permuteUnique(newNumList, l, res);
+		}
+	}
+	
+	/**
+	 * Heap's Algorithm for getting permutation
+	 * <b><br/>
+	 * if k is even then<br/>
+	 * 		swap(A[i], A[k-1]) <br/>
+	 * else<br/>
+	 * 		swap(A[0], A[k-1])<br/>
+        </b>
+	 */
+	public static List<List<Integer>> heapsPermutation(int[] nums) {
+		List<List<Integer>> res = new ArrayList<>();
+		heapsPermutation(nums, nums.length, res);
+		
+		return res.stream().collect(Collectors.toList());
+	}
+	/**
+	 * Heap's algorithm to find all the permutations.
+	 * @param nums array of integers
+	 * @param size size of the array
+	 * @param res contains all the permutations of the array
+	 */
+	public static void heapsPermutation(int[] nums, int size, List<List<Integer>> res){
+		if(size == 1) {
+			res.add(Arrays.stream(nums).boxed().collect(Collectors.toList()));
+			return;
+		}
+		
+		for(int i = 0; i < size; ++i) {
+			heapsPermutation(nums, size-1, res);
+			
+			 // if size is odd, swap first and last element
+			if(size%2 == 1) {
+				swap(nums, 0, size-1);
+			}
+			// If size is even, swap ith and last element 
+			else {
+				swap(nums, i, size-1);
+			}
+		}
+	}
+	
+	/*
+	 public static List<Integer> spiralOrder(int[][] matrix) {
+		 
+		 List<Integer> res = new ArrayList<>();
+		 
+		 int nRows = matrix.length; // nrows
+		 int nCols = matrix[0].length; // nCols
+		 
+		 int i = 0, j = 0; // Pointers to traverse
+		 int c = 0; // Counter to number of elements
+		 boolean toRight = false, toDown = true, toLeft = false, toUp = false;
+		 int nCycles = 0;
+		 
+		 // Move to rightmost
+		 for(i = 0; i < nCols; ++i) {
+			 res.add(matrix[0][i]);
+			 c++;
+		 }
+		 --i;
+		 ++j;
+		 
+		 for(; c < nRows*nCols; ++c) {
+			 if(toDown) {
+				 while(j < nRows-nCycles) {
+					 res.add(matrix[j++][i]);
+				 }
+				 --j;
+				 --i;
+				 toDown = false;
+				 toLeft = true;
+			 }
+			 
+			 if(toLeft) {
+				 while(i >= nCycles) {
+					 res.add(matrix[j][i--]);
+				 }
+				 i++;
+				 j--;
+				 
+				 toLeft = false;
+				 toUp = true;
+				 nCycles++;
+			 }
+			 
+			 if(toUp) {
+				 while(j >= nCycles) {
+					 res.add(matrix[j--][i]);
+				 }
+				 j++;
+				 i++;
+				 toUp = false;
+				 toRight = true;
+			 }
+			 
+			 if(toRight) {
+				 while(i < nCols-nCycles ) {
+					 res.add(matrix[j][i++]);
+				 }
+				 i--;
+				 j++;
+				 toRight = false;
+				 toDown = true;
+				 nCycles++;
+			 }
+		 }
+		 
+		 return res;
+	 }*/
+	 
+	/**
+	 * Print the array in spiral sequence
+	 * 
+	 * [
+	 *  [ 1, 2, 3 ],
+	 *  [ 4, 5, 6 ],
+	 *  [ 7, 8, 9 ]
+	 * ]
+	 * Output: [1,2,3,6,9,8,7,4,5]
+	 */
+	 public static List<Integer> spiralPrint(int[][] matrix) {
+		 
+		 if(matrix.length == 0) {
+			 return Collections.emptyList();
+		 }
+		 
+		 List<Integer> res = new ArrayList<>();
+		 
+		 int k = 0; // starting row index
+		 int m = matrix.length-1; // ending row index
+		 int l = 0; // starting column index
+		 int n = matrix[0].length-1; // ending column index
+		 
+		 while(k <= m && l <= n) {
+			 // Print the first row of the remaining rows
+			 for(int i = l; i <= n; ++i) {
+				 res.add(matrix[k][i]);
+			 }
+			 k++;// Row traversed, so incrementing the index.
+			 
+			 //Print the last column of the remaining columns
+			 for(int i = k; i <= m; ++i) {
+				 res.add(matrix[i][n]);
+			 }
+			 n--; // column traversed, so incrementing the index.
+			 
+			 if(k <= m) {
+				 // Print the last row of the remaining rows
+				 for(int i = n; i >= l; --i) {
+					 res.add(matrix[m][i]);
+				 }
+				 m--;
+			 }
+			 
+			 if(l <= n) {
+				 // Print the first column column of the remaining columns
+				 for(int i = m; i >= k; --i) {
+					 res.add(matrix[i][l]);
+				 }
+				 l++;
+			 }
+		 }
+		 
+		 return res;
+	 }
+	
 }
 
 

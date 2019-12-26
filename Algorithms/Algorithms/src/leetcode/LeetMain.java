@@ -1,7 +1,11 @@
 package leetcode;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import datastructures.ListNode;
 import datastructures.ListNodeWithRandom;
@@ -198,12 +202,79 @@ public class LeetMain {
 //		System.out.println(LeetAlgos.mySqrtOpt(6));
 //		System.out.println(LeetAlgos.mySqrtOpt(8));
 		
-		System.out.println(LeetAlgos.climbStairs(3));
-		System.out.println(LeetAlgos.climbStairsDP(3));
+//		System.out.println(LeetAlgos.climbStairs(3));
+//		System.out.println(LeetAlgos.climbStairsDP(3));
+//		
+//		System.out.print(LeetAlgos.simplifyPath("/a/../../b/../c//.//"));
 		
+		/* ==== Testing merging of two sorted arrays.
+		int[] merged = LeetAlgos.mergeOpt(new int[] {4,5,6,0,0,0}, 3, new int[] {1,2,8}, 3);
+		merged = LeetAlgos.mergeOpt(new int[] {1,2,3,0,0,0}, 3, new int[] {5,6,7}, 3);
+
+		merged = LeetAlgos.mergeOpt(new int[] {2,4,6,0,0,0}, 3, new int[] {1,3,5}, 3);
+		*/
 		
+		// ========= Testing of removing duplicates from a sorted linked list
+		
+//		ListNode listNode = createSortedList();
+//		listNode = LeetAlgos.deleteDuplicates(listNode);
+//		System.out.println();
+		
+		// ========= Testing of removing duplicates from a sorted linked list
+		
+//		List<List<Integer>> rres = LeetAlgos.combinationSum2New(new int[] {1,2,3,4,5}, 7);
+//		rres = LeetAlgos.combinationSum2New(new int[] {10,1,2,7,6,1,5}, 8);
+		
+//		List<List<Integer>> rres = LeetAlgos.threeSumNew1(new int[] {-1, 0, 1, 2, -1, -4});
+//		rres = LeetAlgos.threeSumNew1(new int[] {0,0,0});
+//		rres = LeetAlgos.threeSumNew1(new int[] {-2,0,1,1,2});
+		
+		int[][] counterArr = LeetAlgos.generateMatrix(3);
+		counterArr = LeetAlgos.generateMatrix(4);
+		counterArr = LeetAlgos.generateMatrix(5);
+		
+		Map<Integer, Integer> resNLE = LeetAlgos.getNextLargestElement(new int[] {5,2,1,3,9});
+		System.out.println(resNLE.toString());
+		List<List<Integer>> resSubWithoutDup = LeetAlgos.subsetsWithoutDuplicates(new int[] {1,2,2});
+		resSubWithoutDup = LeetAlgos.subsetsWithoutDuplicates(new int[] {4,4,4,1,4});
+		System.out.println(resSubWithoutDup);
+		ListNode headRev = createListNodesForRev();
+//		ListNode headRevRes = LeetAlgos.reverseBetween(headRev, 1, 5);
+//		ListNode headRevRes = LeetAlgos.reverseBetween(headRev, 3, 4);
+		ListNode headRevRes = LeetAlgos.reverseBetween(headRev, 3, 3);
+		printListNode(headRevRes);
+		System.out.println();
+		System.out.println(LeetAlgos.removeDuplicates2(new int[] {1,1,1,1,2,2,3,3,3,3,3,4,4}));
+		
+		List<List<Integer>> resPU = LeetAlgos.heapsPermutation(new int[] {1,1,2});
+		resPU = LeetAlgos.heapsPermutation(new int[] {1,2,3,4});
+		
+		List<Integer> spiratRes = LeetAlgos.spiralPrint(new int[][] { {1,2,3},{4,5,6},{7,8,9} });
+		spiratRes = LeetAlgos.spiralPrint(new int[][] { {1,2,3,4}, {5,6,7,8}, {9,10,11,12}, {13,14,15,16} });
+		
+		System.out.println();
 	}
 	
+	private static ListNode createListNodesForRev() {
+		ListNode l = new ListNode(1);
+		l.next = new ListNode(2);
+		l.next.next = new ListNode(3);
+		l.next.next.next = new ListNode(4);
+		l.next.next.next.next = new ListNode(5);
+		
+		return l;
+	}
+
+	private static ListNode createSortedList() {
+		ListNode l = new ListNode(1);
+		l.next = new ListNode(1);
+		l.next.next = new ListNode(2);
+		l.next.next.next = new ListNode(3);
+		l.next.next.next.next = new ListNode(3);
+		
+		return l;
+	}
+
 	public static void printArr(int[] arr) {
 		for(int data : arr) {
 			System.out.print(data + ",");
