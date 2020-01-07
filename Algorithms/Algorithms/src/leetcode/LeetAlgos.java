@@ -13,6 +13,7 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.Stack;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import datastructures.ListNode;
@@ -3291,6 +3292,335 @@ public class LeetAlgos {
 		 
 		 return res;
 	 }
+	
+	 // Find all the permutations using rotation
+	 /**
+	  * <a>https://www.geeksforgeeks.org/permutations-of-a-given-string-using-stl/</a>
+	  */
+	 public static void getAllPermutations(String inp, String out) {
+		 if(inp == "") {
+			 System.out.println(out);
+			 return;
+		 }
+
+		 for(int i = 0; i < inp.length(); ++i) {
+			 String newOut = out + inp.charAt(i);
+			 String newInp = rotate(inp, i); //Remove the top index.
+			 getAllPermutations(newInp, newOut);
+		 }
+	 }
+
+	private static String rotate(String str, int center) {
+		String ret = "";
+		
+		for(int i = center+1; i < str.length(); ++i) {
+			ret+= str.charAt(i);
+		}
+		for(int i = 0; i < center; ++i) {
+			ret += str.charAt(i);
+		}
+		
+		return ret;
+	}
+
+	 /**
+	  * The set [1,2,3,...,n] contains a total of n! unique permutations.
+	  * By listing and labeling all of the permutations in order, we get the following sequence for n = 3:
+	  * "123" "132" "213" "231" "312" "321"
+	  * Given n and k, return the kth permutation sequence.
+	  * 
+	  * Input: n = 3, k = 3
+	  * Output: "213"
+	  * 
+	  * Input: n = 4, k = 9
+	  * Output: "2314"
+	  * This is based on the above algo, just that we don't need to rotate. It is only required to maintail lexicographic sequence
+	  */
+	 public static String getPermutation(int n, int k) {
+		 if(n == 0 ) {
+			 return "";
+		 }
+		 
+		 String number = IntStream.range(1, n+1).mapToObj(Integer::toString).collect(Collectors.joining());
+		 
+		 return getPermutation(number, "", new ArrayList<String>(), k);
+	 }
+
+	private static String getPermutation(String input, String output, List<String> permutations, int k) {
+		if(input.equals("")) {
+			permutations.add(output);
+			if(permutations.size() == k) {
+				return output;
+			}
+			else {
+				return "";
+			}
+		}
+		for (int i = 0; i < input.length(); ++i) {
+			String newOut = output + input.charAt(i);
+			String newInp = "";
+
+			if (i == 0) {
+				newInp = input.substring(i + 1);
+			} 
+			else if (i == input.length() - 1) {
+				newInp = input.substring(0, input.length() - 1);
+			} 
+			else {
+				newInp = input.substring(0, i) + input.substring(i + 1);
+			}
+			
+			String res = getPermutation(newInp, newOut, permutations, k);
+			if(!res.equals("") ) {
+				return res;
+			}
+		}
+		return "";
+	}
+	
+	/**
+	 * Optimized algo for numbers permutation.
+	 * <a>https://leetcode.com/problems/permutations/discuss/18444/new-approach-directly-find-the-kth-permutation-k-1n-with-a-simple-loop</a>
+	 * 
+	 */
+	public static String getPermutationOpt(int n, int k) {
+		List<Integer> input = IntStream.range(1, n+1).boxed().collect(Collectors.toList());
+		List<Integer> result = new ArrayList<>();
+		
+		getPermutation(input, result, k-1);
+		
+		return result.stream().map(x -> Integer.toString(x)).collect(Collectors.joining());
+	}
+	
+	private static void getPermutation(List<Integer> input, List<Integer> result, int k) {
+		while(!input.isEmpty()) {
+			int fact = factorial(input.size()-1);
+			int indexToPick = k/fact; // Pick the k/fact(n-1) index
+			result.add(input.remove(indexToPick));
+			// Since the input size reduced by 1, k should be updated to k%f
+			k = k%fact;
+		}
+	}
+
+	private static int factorial(int n) {
+		if(n == 0 || n == 1) {
+			return 1;
+		}
+		
+		return n*factorial(n-1);
+	}
+	
+	/**
+	 * Given a linked list, rotate the list to the right by k places, where k is non-negative.
+	 * Input: 1->2->3->4->5->NULL, k = 2
+	 * Output: 4->5->1->2->3->NULL
+	 * Explanation:
+	 * rotate 1 steps to the right: 5->1->2->3->4->NULL
+	 * rotate 2 steps to the right: 4->5->1->2->3->NULL
+	 * Input: 0->1->2->NULL, k = 4
+	 * Output: 2->0->1->NULL
+	 * Explanation:
+	 * rotate 1 steps to the right: 2->0->1->NULL
+	 * rotate 2 steps to the right: 1->2->0->NULL
+	 * rotate 3 steps to the right: 0->1->2->NULL
+	 * rotate 4 steps to the right: 2->0->1->NULL
+	 */
+	public static ListNode rotateRight(ListNode head, int k) {
+		
+		if(head == null || head.next == null) {
+            return head;
+        }
+		
+		// Count nodes
+		int n = countNodes(head);
+		
+		if(k > n) {
+			k = k%n;
+		}
+
+		if(k ==0 || k == n) { // No rotation reqd
+			return head;
+		}
+
+		// Find the breaking point
+		int bPoint = n-k;
+		ListNode secHalf = head;
+		
+		int count = 1;
+		while(count < bPoint) {
+			secHalf = secHalf.next;
+			++count;
+		}
+		
+		ListNode firHalf = secHalf.next;
+		secHalf.next = null;
+		secHalf = head;
+		
+		ListNode tempFHalf = firHalf;
+		while(tempFHalf.next != null) {
+			tempFHalf = tempFHalf.next;
+		}
+		
+		tempFHalf.next = secHalf;
+		
+		return firHalf;
+	}
+
+	private static int countNodes(ListNode head) {
+		if(head == null) {
+			return 0;
+		}
+		
+		int count = 1;
+		ListNode temp = head;
+		while(temp.next != null) {
+			++count;
+			temp = temp.next;
+		}
+		
+		return count;
+	}
+	
+	/**
+	 * A robot is located at the top-left corner of a m x n grid (marked 'Start' in the diagram below).
+	 * The robot can only move either down or right at any point in time. 
+	 * The robot is trying to reach the bottom-right corner of the grid (marked 'Finish' in the diagram below).
+	 * How many possible unique paths are there?
+	 */
+	public static int uniquePaths(int m, int n) {
+		List<Integer> counter = new ArrayList<>();
+		uniquePaths(m-1, n-1, 0, 0, counter);
+		
+		return counter.size();
+	}
+
+	private static void uniquePaths(int m, int n, int r, int c, List<Integer> counter) {
+		if(r > m || c > n) {
+			return;
+		}
+		
+		if(r == m && c == n) {
+			counter.add(1);
+			return;
+		}
+		
+		uniquePaths(m, n, r+1, c, counter); // Right
+		uniquePaths(m, n, r, c+1, counter); // Down
+	}
+	
+	public static int uniquePathsDP(int m, int n) {
+		int[][] memory = new int[m][n];
+		return uniquePathsDP(m-1, n-1, 0, 0, memory);
+	}
+
+	private static int uniquePathsDP(int m, int n, int r, int c, int[][] memory) {
+		if(r > m || c > n) {
+			return 0;
+		}
+		
+		if(r == m && c == n) {
+			return 1;
+		}
+		
+		if(memory[r][c] != 0) { // Calculated already
+			return memory[r][c];
+		}
+		
+		memory[r][c] += uniquePathsDP(m, n, r+1, c, memory); // Right
+		memory[r][c] += uniquePathsDP(m, n, r, c+1, memory); // Right
+		
+		return memory[r][c];
+	}
+	
+	// The above algo can be optimized using top down approach
+	public static int uniquePathsDP_TopDown(int m, int n) {
+		int memory[][] = new int[m][n];
+		
+		for(int i = 0; i < m; ++i) {
+			for(int j = 0; j < n; ++j) {
+				if(i == 0 && j == 0) {
+					memory[i][j] = 1;
+				}
+				else if(i == 0) {
+					memory[i][j] = memory[i][j-1];
+				}
+				else if(j == 0) {
+					memory[i][j] = memory[i-1][j];
+				}
+				else {
+					memory[i][j] = memory[i-1][j] + memory[i][j-1];
+				}
+			}
+		}
+		
+		return memory[m-1][n-1];
+	}
+	
+	/**
+	 * A robot is located at the top-left corner of a m x n grid (marked 'Start' in the diagram below).
+	 * The robot can only move either down or right at any point in time. 
+	 * The robot is trying to reach the bottom-right corner of the grid (marked 'Finish' in the diagram below).
+	 * Now consider if some obstacles are added to the grids. How many unique paths would there be?
+	 */
+	public static int uniquePathsWithObstacles(int[][] obstacleGrid) {
+		int m = obstacleGrid.length;
+		int n = obstacleGrid[0].length;
+
+		int[][] memory = new int[m][n];
+		
+		return uniquePathsWithObstacles(m-1, n-1, 0, 0, memory, obstacleGrid); 
+    }
+
+	private static int uniquePathsWithObstacles(int m, int n, int r, int c, int[][] memory, int[][] obstacleGrid) {
+		if(r > m || c > n || obstacleGrid[r][c] == 1) {
+			return 0;
+		}
+		
+		if(r == m && c == n) {
+			return 1;
+		}
+		
+		if(memory[r][c] != 0) { // Calculated already
+			return memory[r][c];
+		}
+		
+		memory[r][c] += uniquePathsWithObstacles(m, n, r+1, c, memory, obstacleGrid); // Right
+		memory[r][c] += uniquePathsWithObstacles(m, n, r, c+1, memory, obstacleGrid); // Right
+		
+		return memory[r][c];
+	}
+	
+	// The above algo can be optimized more using top-down approach
+	public static int uniquePathsWithObstacles_TopDown(int[][] obstacleGrid) {
+		
+		int m = obstacleGrid.length;
+		int n = obstacleGrid[0].length;
+
+		int[][] memory = new int[m][n];
+		
+		for(int i = 0; i < m; ++i) {
+			for(int j = 0; j < n; ++j) {
+				if(obstacleGrid[i][j] == 1) { //It's a obstacle
+					continue;
+				}
+				
+				if(i == 0 && j == 0) {
+					memory[i][j] = 1;
+				}
+				else if(i == 0) { // Nothing is up
+					memory[i][j] = memory[i][j-1]; // Only adding value at right
+				}
+				else if(j == 0) { //Nothing is left
+					memory[i][j] = memory[i-1][j]; // Only adding value at up
+				}
+				else {
+					memory[i][j] = memory[i-1][j] + memory[i][j-1];
+				}
+			} 
+		}
+
+		return memory[m-1][n-1];
+    }
 	
 }
 

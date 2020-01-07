@@ -252,6 +252,24 @@ public class LeetMain {
 		List<Integer> spiratRes = LeetAlgos.spiralPrint(new int[][] { {1,2,3},{4,5,6},{7,8,9} });
 		spiratRes = LeetAlgos.spiralPrint(new int[][] { {1,2,3,4}, {5,6,7,8}, {9,10,11,12}, {13,14,15,16} });
 		
+		LeetAlgos.getAllPermutations("123", "");
+		LeetAlgos.getAllPermutations("ABC", "");
+		
+		System.out.println(LeetAlgos.getPermutation(3, 4));
+		System.out.println(LeetAlgos.getPermutation(3, 3));
+		System.out.println(LeetAlgos.getPermutation(9, 353955));
+		System.out.println(LeetAlgos.getPermutationOpt(3, 3));
+		System.out.println(LeetAlgos.getPermutationOpt(3, 4));
+		
+		ListNode headToRotate = createListNodesForRev();
+		ListNode newHead = LeetAlgos.rotateRight(headToRotate, 10);
+		
+		System.out.println(LeetAlgos.uniquePaths(7, 3));
+		System.out.println(LeetAlgos.uniquePathsDP(7, 3));
+		System.out.println(LeetAlgos.uniquePathsDP_TopDown(7, 3));
+
+		System.out.println(LeetAlgos.uniquePathsWithObstacles_TopDown(new int[][] { {0,0,0}, {0,1,0}, {0,0,0} }));
+		
 		System.out.println();
 	}
 	
