@@ -269,6 +269,9 @@ public class LeetMain {
 		System.out.println(LeetAlgos.uniquePathsDP_TopDown(7, 3));
 
 		System.out.println(LeetAlgos.uniquePathsWithObstacles_TopDown(new int[][] { {0,0,0}, {0,1,0}, {0,0,0} }));
+
+		System.out.println(LeetAlgos.minPathSum(new int[][] { {1,3,1}, {1,5,1}, {4,2,1} }));
+		System.out.println(LeetAlgos.minPathSum_OptDP(new int[][] { {1,3,1}, {1,5,1}, {4,2,1} }));
 		
 		System.out.println();
 	}
