@@ -272,6 +272,13 @@ public class LeetMain {
 
 		System.out.println(LeetAlgos.minPathSum(new int[][] { {1,3,1}, {1,5,1}, {4,2,1} }));
 		System.out.println(LeetAlgos.minPathSum_OptDP(new int[][] { {1,3,1}, {1,5,1}, {4,2,1} }));
+		System.out.println(LeetAlgos.addBinary("111", "11"));
+		System.out.println(LeetAlgos.addBinary("1010", "1011"));
+		System.out.println(LeetAlgos.addBinary("1", "111"));
+		
+		System.out.println(LeetAlgos.addBinary2("111", "11"));
+		System.out.println(LeetAlgos.addBinary2("1010", "1011"));
+		System.out.println(LeetAlgos.addBinary2("1", "111"));
 		
 		System.out.println();
 	}

@@ -3689,6 +3689,102 @@ public class LeetAlgos {
 		
 		return cost[m-1][n-1];
 	}
+	
+	/**
+	 * Given two binary strings, return their sum (also a binary string).
+	 * The input strings are both non-empty and contains only characters 1 or 0.
+	 */
+	private static int carry = 0;
+	
+	public static String addBinary(String a, String b) {
+		carry = 0;
+		
+		String retVal = "";
+		
+		char[] bin1 = a.toCharArray();
+		char[] bin2 = b.toCharArray();
+		
+		int idx1 = bin1.length-1;
+		int idx2 = bin2.length-1;
+		
+		while(idx1 >= 0 || idx2 >=0) {
+			if(idx1 < 0) { // bin1 exhausted
+				//Copy the contents
+				while(idx2 >= 0) {
+					retVal = addBinary(Integer.parseInt(""+bin2[idx2--]), carry, retVal);
+				}
+			}
+			else if(idx2 < 0) { // bin2 exhausted
+				// Copy the contents
+				while(idx1 >= 0) {
+					retVal = addBinary(Integer.parseInt(""+bin1[idx1--]), carry, retVal);
+				}
+			}
+			else {
+				int temp = carry + Integer.parseInt(""+bin1[idx1--]) + Integer.parseInt(""+bin2[idx2--]);
+				if(temp == 3) {
+					retVal = '1'+retVal;
+					carry = 1;
+				}
+				else if(temp == 2) {
+					retVal = '0' + retVal;
+					carry = 1;
+				}
+				else {
+					retVal = temp + retVal;
+					carry = 0;
+				}
+			}
+		}
+		
+		return carry == 1 ? "1" + retVal : retVal;
+	}
+	
+	// return carry
+	private static String addBinary(int a, int b, String str) {
+		if(a == 1 && b == 1) {
+			str = '0'+str;
+			carry = 1;
+		}
+		else if(a == 0 && b == 0) {
+			str = '0' + str;
+			carry = 0;
+		}
+		else {
+			str = '1'+str;
+			carry = 0;
+		}
+		
+		return str;
+	}
+
+	
+	public static String addBinary2(String a, String b) {
+		
+		char[] str1 = a.toCharArray();
+		char[] str2 = b.toCharArray();
+		
+		int idxA = a.length()-1;
+		int idxB = b.length()-1;
+		
+		int c = 0;
+		
+		String res = "";
+		
+		while(idxA >= 0 || idxB >= 0) {
+			c += idxA >= 0 ? str1[idxA--] - '0' : 0;
+			c += idxB >= 0 ? str2[idxB--] - '0' : 0;
+			
+			// If c == 1 or 3, then we take 1, else 0
+			res = c%2+res;
+			
+			// carry should become 1 if c is 3 or 2 and 0 if c is 1
+			c /= 2;
+		}
+		
+		return c > 0 ? c+res : res;
+	}
+	
 }
 
 
