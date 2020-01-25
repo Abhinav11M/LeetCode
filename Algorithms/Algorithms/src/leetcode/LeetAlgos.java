@@ -3758,7 +3758,7 @@ public class LeetAlgos {
 		return str;
 	}
 
-	
+	// A more optimized add binary
 	public static String addBinary2(String a, String b) {
 		
 		char[] str1 = a.toCharArray();
@@ -3783,6 +3783,574 @@ public class LeetAlgos {
 		}
 		
 		return c > 0 ? c+res : res;
+	}
+	
+	/**
+	 * Given a m x n matrix, if an element is 0, set its entire row and column to 0. Do it in-place.
+	 * Input: 
+	 * [
+	 * 	[1,1,1],
+	 * 	[1,0,1],
+	 * 	[1,1,1]
+	 * ]
+	 * Output: 
+	 * [
+	 * 	[1,0,1],
+	 * 	[0,0,0],
+	 * 	[1,0,1]
+	 * ]
+	 */
+	public static void setZeroes(int[][] matrix) {
+		//Scan for all the positions for 0s
+		Set<Integer> rows = new HashSet<>();
+		Set<Integer> cols = new HashSet<>();
+		
+		for(int i = 0; i < matrix.length; ++i) {
+			for(int j = 0; j < matrix[0].length; ++j) {
+				if(matrix[i][j] == 0) {
+					rows.add(i);
+					cols.add(j);
+				}
+			}
+		}
+		
+		// Set values to 0
+		// For columns
+		for(int i = 0; i < matrix.length; ++i) {
+			for(int j : cols) {
+				matrix[i][j] = 0;
+			}
+		}
+		
+		//For rows
+		for(int i : rows) {
+			for(int j = 0; j < matrix[0].length; ++j) {
+				matrix[i][j] = 0;
+			}
+		}
+	}
+	
+	/**
+	 * Write an efficient algorithm that searches for a value in an m x n matrix. 
+	 * This matrix has the following properties:
+	 * 	Integers in each row are sorted from left to right.
+	 * 	The first integer of each row is greater than the last integer of the previous row.
+	 * Input:
+	 * matrix = 
+	 * [
+	 * 	[1,   3,  5,  7],
+	 * 	[10, 11, 16, 20],
+	 * 	[23, 30, 34, 50]
+	 * ]
+	 * target = 3
+	 * Output: true
+	 */
+	
+	public static boolean searchMatrix(int[][] matrix, int target) {
+		
+		if(matrix.length == 0 || matrix[0].length == 0) {
+			return false;
+		}
+		
+		if(matrix[0][0] == target) {
+			return true;
+		}
+
+		int idxXBeg = 0;
+		int idxYBeg = 0;
+		
+		int cols = matrix[0].length;
+
+		int idxXEnd = matrix.length-1;
+		int idxYEnd = matrix[0].length-1;
+		
+		int midX = 0;
+		int midY = 0;
+		
+	
+		int count = 0, mid = 0;
+		while((idxXEnd > idxXBeg) || (idxXBeg == idxXEnd && idxYEnd >= idxYBeg)) {
+			// Find mid
+			count = (idxXEnd-idxXBeg)*cols + idxYEnd-idxYBeg-1; // Number of elements between start and end
+			mid = count/2; // Move coordinates by how many positions
+			// Move xBeg and YBeg by mid to find find xMid and yMid
+			
+			int yMove = mid%cols;
+			int carry = 0;
+			midY = idxYBeg + yMove;
+			if(midY > cols-1) { // Crossed the last index
+				carry = 1;
+				midY = midY - cols;
+			}
+			
+			int xMove = mid/cols + carry;
+			midX = idxXBeg + xMove;
+			
+			if(matrix[midX][midY] == target) {
+				return true;
+			}
+			else if(matrix[midX][midY] < target) { // Move right
+				if(midY == cols-1) {
+					idxXBeg = midX+1;
+					idxYBeg = 0;
+				}
+				else {
+					idxXBeg = midX;
+					idxYBeg = midY+1;
+				}
+			}
+			else { // Move left
+				if(midY == 0) {
+					idxXEnd -= 1;
+					idxYEnd = cols-1;
+				}
+				else {
+					idxXEnd = midX;
+					idxYEnd = midY-1;
+				}
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Given two integers n and k, return all possible combinations of k numbers out of 1 ... n.
+	 * Input: n = 4, k = 2
+	 * Output:
+	 * [
+	 * 	[2,4],
+	 * 	[3,4],
+	 * 	[2,3],
+	 *  [1,2], 
+	 *  [1,3], 
+	 *  [1,4],
+	 * ]
+	 */
+	
+	public static List<List<Integer>> combine(int n, int k) {
+		
+		List<Integer> numbers = IntStream.range(1, n+1).boxed().collect(Collectors.toList());
+		
+		List<List<Integer>> ret = new ArrayList<>();
+		
+		if(numbers.size() == 1) {
+			ret.add(Arrays.asList(new Integer[] {numbers.get(0)}));
+			return ret;
+		}
+		
+		for(int i = 0; i < numbers.size(); ++i) {
+			List<Integer> l = new ArrayList<>();
+			l.add(numbers.get(i));
+			
+			for(int j = i+1 ; j < numbers.size(); j++) {
+				List<Integer> newList = new ArrayList<>(l);
+				for(int ll = j; ll < numbers.size() && newList.size() < k; ++ll) {
+					newList.add(numbers.get(ll));
+				}
+				ret.add(newList);
+			}
+		}
+		
+        return ret;
+    }
+	
+	public static List<List<Integer>> combineRec(int n, int k) {
+		List<Integer> numbers = IntStream.range(1, n+1).boxed().collect(Collectors.toList());
+		List<List<Integer>> res = new ArrayList<>();
+		List<Integer> l = new ArrayList<>();
+		combineRec(numbers, l, res, n, k, 0,0);
+		return res;
+	}
+
+	private static void combineRec(List<Integer> numbers, List<Integer> l, List<List<Integer>> res,
+			int n, int k, int startIdx, int nextIdx) {
+		
+		if(l.size() == k) {
+			res.add(l);
+			return;
+		}
+		
+		if(startIdx > numbers.size()-1) {
+			return;
+		}
+		
+		List<Integer> l1 = new ArrayList<>(l);
+		l1.add(numbers.get(startIdx));
+		combineRec(numbers, l1, res, n, k, startIdx+1, nextIdx);
+		
+		List<Integer> l2 = new ArrayList<>(l1);
+		l2.remove(l2.size()-1);
+		combineRec(numbers, l2, res, n, k, startIdx+1, nextIdx);
+	}
+	
+	// Removing one recursion with loop to optimize space
+	public static List<List<Integer>> combineRec2(int n, int k) {
+		List<Integer> numbers = IntStream.range(1, n+1).boxed().collect(Collectors.toList());
+		List<List<Integer>> res = new ArrayList<>();
+
+		combineRec2(numbers, k, new ArrayList<Integer>(), res, 0);
+		
+		return res;
+		
+	}
+
+	private static void combineRec2(List<Integer> numbers, int k, ArrayList<Integer> l, List<List<Integer>> res, int index) {
+		if(l.size() == k) {
+			res.add(new ArrayList<>(l));
+		}
+		
+		for(int i = index; i < numbers.size(); ++i) {
+			l.add(numbers.get(i));
+			combineRec2(numbers, k, l , res, i+1);
+			l.remove(l.size()-1);
+		}
+	}
+	
+	// More optimized from solution
+	/*
+	public static List<List<Integer>> combineTest(int n, int k) {
+	    
+	    List<List<Integer>> result=new ArrayList<>();
+	    dfs(n,1,k,new ArrayList<>(),result);
+	    return result;
+	}
+
+	public static void dfs(int n,int i,int k,List<Integer> t,List<List<Integer>> result){
+	    
+	    if(k==0){
+	        result.add(new ArrayList<>(t));
+	        return;
+	    }
+	    
+	    for(int j=i;j<=n-k+1;j++){
+	        t.add(j);
+	        dfs(n,j+1,k-1,t,result);
+	        t.remove(t.size()-1);
+	    }
+	    
+	}*/
+	
+	/**
+	 * Given a set of distinct integers, nums, return all possible subsets (the power set).
+	 * Note: The solution set must not contain duplicate subsets.
+	 * Input: nums = [1,2,3]
+	 * Output:
+	 * [ [3],
+	 * 	 [1], 
+	 * 	 [2], 
+	 *   [1,2,3], 
+	 *   [1,3], 
+	 *   [2,3], 
+	 *   [1,2], 
+	 *   [] 
+	 * ]
+	 */
+	public static List<List<Integer>> subsets(int[] nums) {
+		List<Integer> numbers = Arrays.stream(nums).boxed().collect(Collectors.toList());
+		List<List<Integer>> res = new ArrayList<>();
+		
+		for(int k = 0; k <= numbers.size(); ++k) {
+			combineRec2(numbers, k, new ArrayList<Integer>(), res, 0);
+		}
+		
+		return res;
+	}
+	
+	public static List<List<Integer>> subsetsOpt(int[] nums)
+	{
+		List<List<Integer>> res = new ArrayList<>();
+		
+		// pass nums, index, res and a new list
+		subsetsOpt(nums, 0, res, new ArrayList<Integer>());
+		
+		return res;
+	}
+
+	private static void subsetsOpt(int[] nums, int index, List<List<Integer>> res, List<Integer> list) {
+		if(index > nums.length) {
+			return;
+		}
+		
+		res.add(new ArrayList<>(list));
+		
+		for(int i = index; i < nums.length; ++i) {
+			list.add(nums[i]);
+			subsetsOpt(nums, i+1, res, list);
+			list.remove(list.size()-1);
+		}
+	}
+	
+	/**
+	 * Given a sorted array nums, remove the duplicates in-place such that duplicates 
+	 * appeared at most twice and return the new length.
+	 * Do not allocate extra space for another array, 
+	 * you must do this by modifying the input array in-place with O(1) extra memory.
+	 * Given nums = [1,1,1,2,2,3],
+	 * Your function should return length = 5, with the first five elements of nums being 1, 1, 2, 2 and 3 respectively.
+	 * It doesn't matter what you leave beyond the returned length.
+	 */
+	public static int removeDuplicates3(int[] nums) {
+		
+		int k = 2; // Number of repetitions allowed
+		if(nums.length <= k) {
+			return nums.length;
+		}
+		
+		int counter = 0;
+		int finalCount = 0;
+		int lastVal = nums[0];
+		
+		while(counter < nums.length) {
+			int rep = 0;
+			while(counter < nums.length && rep < k) {
+				if(nums[counter] == lastVal) {
+					rep++;
+					nums[finalCount++] = nums[counter++];
+				}
+				else {
+					rep = 1;
+					nums[finalCount++] = nums[counter++];
+					lastVal = nums[finalCount-1];
+				}
+			}
+			lastVal = nums[finalCount-1];
+			
+			// Find the next post
+			while(counter < nums.length && nums[counter] == lastVal) {
+				++counter;
+			}
+		}
+		
+		return finalCount;
+	}
+	
+	// Array Rotation (Juggling algorithm)
+	/**
+	 * <a>https://www.geeksforgeeks.org/array-rotation/</a>
+	 */
+	public static void leftRorateArray(int[] arr, int numRotations) {
+		int gcd = gcd(arr.length, numRotations);
+		
+		// Number of rotations is equal to GCD
+		for(int i = 0; i < gcd; ++i) {
+
+			int j = i;
+			int temp = arr[j];
+			// Juggling
+			while(true) {
+				int k = j+numRotations;
+				if(k >= arr.length) {
+					k = k-arr.length;
+				}
+
+				if(k == i) {
+					break;
+				}
+
+				arr[j] = arr[k];
+				j = k;
+			}
+			arr[j] = temp;
+		}
+	}
+	
+	// Calculate gcd
+	public static int gcd(int a, int b) {
+		if(a%b == 0) {
+			return b;
+		}
+		
+		return gcd(b, a%b);
+	}
+	
+	/**
+	 * Suppose an array sorted in ascending order is rotated at some pivot unknown to you beforehand.
+	 * (i.e., [0,0,1,2,2,5,6] might become [2,5,6,0,0,1,2]).
+	 * You are given a target value to search. If found in the array return true, otherwise return false.
+	 */
+	public static boolean searchRotatedArray(int[] nums, int target) {
+		
+		int left = 0, right = nums.length-1;
+		
+		while(left <= right) {
+			int mid = (left+right)/2;
+			
+			if(nums[mid] == target) {
+				return true;
+			}
+			
+			if(nums[mid] <= nums[left] || nums[mid] >= nums[right])  { 
+				// either or both sides are skewed (4,1,2,3)/(2,3,4,1) /(4,3,2,1)
+				if(nums[mid] < nums[left] && nums[mid] > nums[right]) { // both sides skewed
+					if(nums[mid] > target) { // target is towards right since it is skewed
+						left = mid+1;
+					}
+					else {
+						right = mid-1;
+					}	
+				}
+				else if(nums[mid] < nums[left]) { // left skewed
+					if(target > nums[mid] && target <= nums[right]) {
+						// Search in the sorted right
+						left = mid+1;
+					}
+					else {
+						right = mid-1;
+					}
+				}
+				else if(nums[mid] > nums[right]){// right skewed
+					if(nums[left] <= target && nums[mid] > target) {
+						// Search in the sorted left half
+						right = mid-1;
+					}
+					else {
+						left = mid+1;
+					}
+				}
+				else {
+					while(left <= right && nums[mid] == nums[left]) {
+						left++;
+					}
+					while(right >= left && nums[mid] == nums[right]) {
+						right--;
+					}
+				}
+			}
+			
+			// We have to check which side is skewed as well (7,8,1,2,3,4,5,6) or (5,6,7,8,1,2,3,4)
+			else if(nums[mid] > nums[left]) { // left side not skew check
+				if(target > nums[mid]) { // target is towards right
+					left = mid+1;
+				}
+				else { // target is towards left
+					right = mid-1;
+				}
+			}
+			else /*if(nums[mid] < nums[right])*/ { // right side not skewed
+				if(nums[mid] > target) { // target is towards left
+					right = mid-1;
+				}
+				else {
+					left = mid+1;
+				}
+			}
+		}
+		
+        return false;
+    }
+
+	public static boolean searchRotatedArray2(int[] nums, int target) {
+		int left = 0, right = nums.length-1;
+		
+		while(left <= right) {
+			int mid = (left+right)/2;
+			
+			if(nums[mid] == target) {
+				return true;
+			}
+			
+			if(nums[mid] > nums[left]) { //left part is sorted
+				if(nums[left] <= target && target < nums[mid]) {
+					right = mid-1;
+				}
+				else {
+					left = mid+1;
+				}
+			}
+			else if(nums[mid] < nums[left]) { //right part is sorted
+				if(nums[mid] < target && target <= nums[right]) {
+					left = mid+1;
+				}
+				else {
+					right = mid-1;
+				}
+			}
+			else {
+				left++;
+			}
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Given a sorted linked list, delete all nodes that have duplicate numbers, 
+	 * leaving only distinct numbers from the original list.
+	 * Input: 1->2->3->3->4->4->5
+	 * Output: 1->2->5
+	 */
+	public static ListNode deleteDuplicateNodes(ListNode head) {
+		
+		if(head == null || head.next == null) {
+			return head;
+		}
+		
+		ListNode prev = head;
+		ListNode tempHead = head.next;
+		
+		while(tempHead.next != null) {
+			while(tempHead != null && tempHead.val == prev.val) {
+				tempHead = tempHead.next;
+			}
+			prev.next = tempHead;
+			prev = tempHead;
+			
+			// Reached the end already
+			if(tempHead == null || tempHead.next == null) {
+				return head;
+			}
+			
+			tempHead = tempHead.next;
+		}
+		
+		if(prev.val == tempHead.val) {
+			prev.next = null;
+		}
+		else {
+			prev.next = tempHead;
+		}
+		
+		return head; 
+    }
+	
+	public static ListNode keepDistinct(ListNode head) {
+		if(head == null || head.next == null ) {
+			return head;
+		}
+		
+		ListNode tempHead = head.next;
+		ListNode prev = head;
+		ListNode finalHead = null;
+		ListNode headFinalList = null;
+		
+		while(tempHead != null) {
+			int counter = 1;
+
+			while(tempHead != null && tempHead.val == prev.val) {
+				counter++;
+				tempHead = tempHead.next;
+			}
+			if(counter == 1) { // no duplicates
+				if(finalHead == null) {
+					finalHead = prev;
+					headFinalList = finalHead;
+				}
+				else {
+					finalHead.next = prev;
+					finalHead = finalHead.next;
+				}
+			}
+			prev = tempHead;
+			tempHead = tempHead != null ? tempHead.next : null;
+		}
+		
+		if(finalHead == null) {
+			return prev;
+		}
+		
+		finalHead.next = prev;
+		
+		return headFinalList;
 	}
 	
 }
