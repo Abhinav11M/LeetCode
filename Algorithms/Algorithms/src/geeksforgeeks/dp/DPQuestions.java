@@ -99,5 +99,36 @@ public class DPQuestions {
 		return isUglyDP(num, factors, index, isUgly);
 	}
 	
+	// More optimized DP solution
+	public int getNthUglyNoDPOpt(int n) {
+		int[] ugly = new int[256];
+		ugly[0] = 1;
+		int idx2 = 0, idx3 = 0, idx5 = 0;
+		
+		for(int i = 1; i < n; ++i) {
+			int nextMulOf2 = ugly[idx2] * 2;
+			int nextMulOf3 = ugly[idx3] * 3;
+			int nextMulOf5 = ugly[idx5] * 5;
+			
+			int nextUgly = minimum(nextMulOf2, nextMulOf3, nextMulOf5);
+			ugly[i] = nextUgly;
+			
+			if(nextUgly == nextMulOf2) {
+				++idx2;
+			}
+			if(nextUgly == nextMulOf3) {
+				++idx3;
+			}
+			if(nextUgly == nextMulOf5) {
+				++idx5;
+			}
+		}
+		
+		return ugly[n-1];
+	}
+	
+	public int minimum(int a, int b, int c) {
+		return Math.min(Math.min(a, b),c);
+	}
 	
 }

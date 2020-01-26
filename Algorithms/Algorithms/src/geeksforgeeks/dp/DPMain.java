@@ -6,5 +6,6 @@ public class DPMain {
 		
 		System.out.println(dp.getNthUglyNo(10));
 		System.out.println(dp.getNthUglyNoDP(10));
+		System.out.println(dp.getNthUglyNoDPOpt(10));
 	}
 }
