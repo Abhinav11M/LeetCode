@@ -4353,6 +4353,35 @@ public class LeetAlgos {
 		return headFinalList;
 	}
 	
+	// Find the continuous sequence of numbers with max sum
+	public static int maxContSum(int[] arr, int n) {
+		// If the length of array less than length of subarray, return 0th index.
+		if(arr.length < n) {
+			return 0;
+		}
+		
+		int idx = 0, sum = 0;
+		for(;idx < n; ++idx) {
+			sum += arr[idx];
+		}
+		
+		int res[] = new int[arr.length-n+1];
+		res[0] = sum;
+		
+		for(int i = 0; i < arr.length-n; ++i) {
+			res[i+1] = res[i] - arr[i] + arr[idx++];
+		}
+		
+		int maxIdx = 0, max = res[0];
+		for(int i = 1; i < res.length; ++i) {
+			if(res[i] > max) {
+				maxIdx = i;
+			}
+		}
+		
+		return maxIdx;
+	}
+	
 }
 
 

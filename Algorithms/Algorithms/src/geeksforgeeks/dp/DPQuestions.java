@@ -169,4 +169,49 @@ public class DPQuestions {
 		return f[n];
 	}
 	
+	/**
+	 * Catalan numbers : n = 0, 1, 2, 3,... are 1, 1, 2, 5, 14, 42, 132, 429, 1430, 4862,...
+	 * Recurrence relation : C(0) = 1 and C(n+1) = Summation[0 to n](C(i)*C(n-i))
+	 */
+	public int catalan(int n) {
+		if(n == 0 || n == 1) {
+			return 1;
+		}
+		
+		int tab[] = new int[n];
+		
+		tab[0] = 1;
+		tab[1] = 1;
+		
+		for(int i = 2; i < n; ++i) {
+			int sum = 0;
+			for(int j = 0; j < i; ++j) {
+				sum += tab[j]*tab[i-1-j];
+			}
+			tab[i] = sum;
+		}
+		
+		return tab[n-1];
+	}
+	
+	/**
+	 * Binomial Coefficient
+	 * nCr = ((n-r+1)/r) * nCr-1
+	 * Also, nCr = (n-1)C(r-1) + (n-1)C(r)
+	 */
+	public int binomialCoeff(int n, int r) {
+		if(n == r || r == 0) { // nC0 and nCn is 1
+			return 1;
+		}
+		
+		int[] tab = new int[r+1];
+		tab[0] = 1; // saved nC0
+		
+		for(int i = 1; i <= r; ++i) {
+			tab[i] = ((n-i+1)*tab[i-1])/i;
+		}
+		
+		return tab[r];
+	}
+	
 }

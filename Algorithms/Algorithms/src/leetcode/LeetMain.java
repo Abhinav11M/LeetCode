@@ -323,6 +323,9 @@ public class LeetMain {
 		
 		listToTest = LeetAlgos.keepDistinct(llll);
 		
+		System.out.println(LeetAlgos.maxContSum(new int[] {3,4,1,9,7,2}, 3));
+		System.out.println(LeetAlgos.maxContSum(new int[] {9,8,7,1,2,3}, 3));
+		
 		System.out.println();
 	}
 
