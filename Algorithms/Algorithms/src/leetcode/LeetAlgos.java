@@ -16,6 +16,8 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import javax.naming.InitialContext;
+
 import datastructures.ListNode;
 import datastructures.ListNodeWithRandom;
 import datastructures.TreeNode;
@@ -4380,6 +4382,101 @@ public class LeetAlgos {
 		}
 		
 		return maxIdx;
+	}
+	
+	
+	/**
+	 * Grumpy Bookstore Owner
+	 */
+	public static int maxSatisfied(int[] customers, int[] grumpy, int X) {
+		// Find the max window for X
+		int start = 0;
+		int end = X-1;
+		int sum = IntStream.range(start, end + 1).map(x -> customers[x]).boxed()
+				.collect(Collectors.summingInt(Integer::intValue));
+		
+		int tempSt = start;
+		int tempSum = sum;
+		
+		for(int i = end+1; i < customers.length; ++i, tempSt++) {
+			
+			tempSum = tempSum - customers[tempSt] + customers[i];
+			
+			if(grumpy[start] == 1 && grumpy[i] == 0) {
+				continue; // since we are adding non grumpy to the window and removing grumpy from the window.
+			}
+			
+			else if(grumpy[start] == 0 && grumpy[i] == 1) { // Always update the windows as we are adding grumpy to the window 
+														// and removing non-grumpy from the window which anyways will count.
+				start = (i-X+1);
+				end = i;
+			}
+			else {
+//				int newSum = sum - customers[start] + customers[i];
+				if (tempSum > sum) { // Reset window
+					sum = tempSum;
+					start = (i - X + 1);
+					end = i;
+				} else {
+					continue;
+				}
+			}
+		}
+		
+		int satisfied = 0;
+		
+		for(int i = 0;i<customers.length;++i) {
+			if(i >= start && i <= end) {
+				satisfied += customers[i];
+			}
+			else {
+				if(grumpy[i] == 0) {
+					satisfied += customers[i];
+				}
+			}
+		}
+		
+		return satisfied;
+	}
+
+	public static int maxSatisfied1(int[] customers, int[] grumpy, int X) {
+		
+		int initialSum = 0;
+		for(int i = 0; i < X; ++i) {
+			initialSum += grumpy[i]*customers[i]; // We only care about the customers in grumpy time
+		}
+		
+		int[] sumArr = new int[customers.length-X+1];
+		sumArr[0] = initialSum;
+		
+		for(int i = X, j = 0; i < customers.length; ++i, j++) {
+			sumArr[j+1] = sumArr[j] - customers[j] * grumpy[j] + customers[i] * grumpy[i];
+		}
+		
+		int startIdx = 0;
+		int maxSum = sumArr[startIdx];
+		for(int i = 1; i < sumArr.length; ++i) {
+			if(maxSum < sumArr[i]) {
+				startIdx = i;
+				maxSum = sumArr[i];
+			}
+		}
+		int endIdx = startIdx + X - 1;
+		
+		int satisfied = 0;
+		
+		for(int i = 0; i<customers.length; ++i) {
+			if(i >= startIdx && i <= endIdx) {
+				satisfied += customers[i];
+			}
+			else {
+				if(grumpy[i] == 0) {
+					satisfied += customers[i];
+				}
+			}
+		}
+		
+		return satisfied;
 	}
 	
 }

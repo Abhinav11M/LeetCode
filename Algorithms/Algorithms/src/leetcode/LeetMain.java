@@ -326,6 +326,16 @@ public class LeetMain {
 		System.out.println(LeetAlgos.maxContSum(new int[] {3,4,1,9,7,2}, 3));
 		System.out.println(LeetAlgos.maxContSum(new int[] {9,8,7,1,2,3}, 3));
 		
+		System.out.println("********* Grumpy **********");
+//		System.out.println(LeetAlgos.maxSatisfied1(new int[]{4,10,10}, new int[]{1,1,0}, 2));
+//		System.out.println(LeetAlgos.maxSatisfied1(new int[]{1,0,1,2,1,1,7,5}, new int[]{0,1,0,1,0,1,0,1}, 3));
+//		System.out.println(LeetAlgos.maxSatisfied1(new int[]{7,8,8,6}, new int[]{0,1,0,1}, 3));
+//		System.out.println(LeetAlgos.maxSatisfied1(new int[]{5,10,2,2,3,8}, new int[]{1,1,1,1,0,1}, 2));
+//		System.out.println(LeetAlgos.maxSatisfied1(new int[]{7,3,2,5,1,6}, new int[]{0,1,1,1,0,0}, 1));
+//		System.out.println(LeetAlgos.maxSatisfied1(new int[]{6,10,2,1,7,9}, new int[]{1,0,0,0,0,1}, 3));
+		System.out.println(LeetAlgos.maxSatisfied1(new int[]{4,2,1,2,8,9,1}, new int[]{0,1,1,1,1,0,0}, 4));
+		System.out.println("********* Grumpy **********");
+		
 		System.out.println();
 	}
 

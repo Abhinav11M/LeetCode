@@ -428,4 +428,31 @@ public class DPQuestions {
 		// Including int at idx || excluding int at idx
 		return (isSubsetSum(arr, sum-arr[idx], idx+1) || isSubsetSum(arr, sum, idx+1));
 	}
+	
+	
+	
+	/**
+	 * Longest increasing subsequence
+	 */
+	public int lis(int[] arr) {
+		return lis(arr, 0, Integer.MIN_VALUE, 0);
+	}
+
+	private int lis(int[] arr, int index, int prevVal, int lis) {
+		if(index == arr.length-1) {
+			return 1;
+		}
+		
+		
+		if(prevVal < arr[index]) {
+			
+		}
+		
+		
+		return 0;
+	}
+	
+	
+	
+	
 }
