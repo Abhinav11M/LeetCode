@@ -2,12 +2,14 @@ package educative.slidingwindow;
 
 import java.util.Arrays;
 
+import helpers.Helpers;
+
 public class SlidingWindowMain {
 	public static void main(String[] args) {
 		SlidingWindow slidingWindow = new SlidingWindow();
 		
 		double[] aveArr = slidingWindow.findAveragesOfSubarrayOfSizeK(5, new int[] { 1, 3, 2, 6, -1, 4, 1, 8, 2 });
-		printArr(Arrays.stream(aveArr).boxed().toArray(Double[]::new));
+		Helpers.printArr(Arrays.stream(aveArr).boxed().toArray(Double[]::new));
 		
 		System.out.println(slidingWindow.findMaxSumSubArray(3, new int[] {2, 1, 5, 1, 3, 2}));
 		System.out.println(slidingWindow.findMaxSumSubArray(2, new int[] {2, 3, 4, 1, 5}));
@@ -61,12 +63,5 @@ public class SlidingWindowMain {
 		System.out.println(slidingWindow.findSubstring("aaflslflsldkalskaaa", "aaa"));
 		System.out.println(slidingWindow.findSubstring("abcabdebac", "cda"));
 		System.out.println(slidingWindow.findSubstring("of_characters_and_as", "aas"));
-	}
-	
-	public static <T> void printArr(T[] arr) { 
-		for(T data : arr) {
-			System.out.print(data+",");
-		}
-		System.out.println();
 	}
 }
