@@ -316,4 +316,193 @@ public class TwoPointers {
 		
 		return counter;
 	}
+	
+	/**
+	 * Dutch National Flag Problem 
+	 * Given an array containing 0s, 1s and 2s, sort the array in-place. 
+	 * You should treat numbers of the array as objects,
+	 * hence, we can’t count 0s, 1s, and 2s to recreate the array.
+	 * Algo : Shift the 0s to left and 2s to the right, leaving 1 in the middle.
+	 */
+	public void sort(int[] arr) {
+		int left = 0, right = arr.length-1;
+		for(int i = 0; i <= right;) {
+			if(arr[i] == 0) {
+				// Move this to the left extreme of the array.
+				swap(arr, i, left);
+				++i; // We won't do i++ when we move 2 to the right extreme 
+					// as we don't know the value we are swapping with. It might as be 
+					// another 2 which again needs swapping to the end
+				++left;
+			}
+			else if(arr[i] == 1) {
+				++i; // Just continue as this doesn't need swapping. Will stay in the middle.
+			}
+			else { // arr[i] == 2
+				swap(arr, i, right);
+				--right; // No increment in i
+			}
+		}
+		
+	}
+
+	private void swap(int[] arr, int i, int left) {
+		int temp = arr[i];
+		arr[i] = arr[left];
+		arr[left] = temp;
+	}
+	
+	
+	/**
+	 * Quadruple Sum to Target
+	 * Given an array of unsorted numbers and a target number, 
+	 * find all unique quadruplets in it, whose sum is equal to the target number.
+	 */
+	public List<List<Integer>> searchQuadruplets(int[] arr, int target) {
+		Arrays.sort(arr);
+		
+		List<List<Integer>> res = new ArrayList<>();
+		for(int i = 0; i < arr.length-3; ++i) {
+			if(i != 0 && arr[i] == arr[i-1]) { // Ignoring duplicates
+				continue;
+			}
+			for(int j = i+1; j < arr.length-2; ++j) {
+				if(arr[j] == arr[j-1]) { // Ignoring duplicates
+					continue;
+				}
+				int left = j+1;
+				int right = arr.length-1;
+				while(left < right) {
+					int sum = arr[i] + arr[j] + arr[left] + arr[right];
+					if(sum == target) {
+						res.add(Arrays.asList(new Integer[] {arr[i] ,arr[j] ,arr[left] ,arr[right]}));
+						++left;
+						while(left < right && arr[left] == arr[left-1]) {
+							++left;
+						}
+						--right;
+						while(right > left && arr[right] == arr[right+1]) {
+							--right;
+						}
+					}
+					else if(sum > target) {
+						--right;
+					}
+					else {
+						++left;
+					}
+				}
+			}
+		}
+
+		return res;
+	}
+	
+	/**
+	 * Given two strings containing backspaces (identified by the character ‘#’), check if the two strings are equal.
+	 */
+	public boolean backspaceCompare(String str1, String str2) {
+		
+		int right1 = str1.length()-1;
+		int right2 = str2.length()-1;
+		
+		while(right1 >= 0 || right2 >= 0) {
+			right1 = findNextValidIndex(str1, right1);
+			right2 = findNextValidIndex(str2, right2);
+			
+			if(right1 < 0 && right2 < 0 ) { // both Strings exhausted
+				return true;
+			}
+			else if(right1 < 0 || right2 < 0) { // Only one of the string exhausted
+				return false;
+			}
+			else if(str1.charAt(right1) != str2.charAt(right2)) {
+				return false;
+			}
+			
+			--right1;
+			--right2;
+		}
+		
+		return true;
+	}
+	
+	private int findNextValidIndex(String str, int index) {
+		int backspaceCount = 0;
+		while(index >= 0) {
+			if(str.charAt(index) == '#') {
+				++backspaceCount;
+			}
+			else if(backspaceCount > 0) {
+				--backspaceCount;
+			}
+			else {
+				break;
+			}
+			
+			--index;
+		}
+		
+		return index;
+	}
+	
+	/**
+	 * Minimum Window Sort
+	 * Given an array, find the length of the smallest subarray in it which when sorted will sort the whole array.
+	 * Ex : 
+	 * Input: [1, 3, 2, 0, -1, 7, 10]
+	 * Output: 5
+	 * Explanation: We need to sort only the subarray [1, 3, 2, 0, -1] to make the whole array sorted.
+	 * Algo : Here, [3, 2, 0, -1], is out of order, but the minimum of this subarray is smaller than the 
+	 * 		rest of the array from the start. So, we need to extend this subarray, to add elements that 
+	 * 		are bigger than -1 at the beginning. Same thing has to be done at the end as well.
+	 */
+	public int shortestWindowSort(int[] arr) {
+		int right = arr.length-1;
+		int left = 0;
+		
+		for(left = 0; left < arr.length-1 && arr[left] <= arr[left+1]; ++left); // Equals for duplicates
+		if(left == arr.length-1) {// All sorted already
+			return 0;
+		}
+		
+		for(right = arr.length-1; right > 0 && arr[right] >= arr[right-1]; --right);
+		
+		// Extending sub-array
+		int min = getMin(arr, left, right);
+		int max = getMax(arr, left, right);
+		
+		
+		int i = left-1;
+		while(i >= 0 && arr[i] > min) {
+			--i;
+		}
+		left = i+1;
+		
+		i = right+1;
+		while(i < arr.length && arr[i] < max) {
+			++i;
+		}
+		right = i-1;
+		
+		return right-left+1;
+	}
+
+	private int getMax(int[] arr, int left, int right) {
+		int max = Integer.MIN_VALUE;
+		
+		for(;left <= right; ++left) {
+			max = Math.max(arr[left], max);
+		}
+		return max;
+	}
+
+	private int getMin(int[] arr, int left, int right) {
+		int min = Integer.MAX_VALUE;
+
+		for(;left <= right; ++left) {
+			min = Math.min(arr[left], min);
+		}
+		return min;
+	}
 }
