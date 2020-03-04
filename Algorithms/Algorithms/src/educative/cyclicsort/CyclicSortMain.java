@@ -21,5 +21,7 @@ public class CyclicSortMain {
 //		System.out.println(cyclicSort.findFirstMissingPositiveInteger(new int[] {1,1}));
 //		System.out.println(cyclicSort.findFirstMissingPositiveInteger(new int[] {3,4,-1,1}));
 		System.out.println(cyclicSort.findFirstMissingPositiveInteger(new int[] {2147483647,2147483646,2147483645,3,2,1,-1,0,-2147483648}));
+		System.out.println(cyclicSort.firstKMissingIntegers(new int[] {3, -1, 4, 5, 5}, 3));
+//		System.out.println(cyclicSort.firstKMissingIntegers(new int[] {-2, -3, 4}, 2));
 	}
 }

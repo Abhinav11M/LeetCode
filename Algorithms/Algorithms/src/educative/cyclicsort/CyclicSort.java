@@ -2,7 +2,10 @@ package educative.cyclicsort;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class CyclicSort {
 	/**
@@ -176,6 +179,11 @@ public class CyclicSort {
 	 * Explanation: The smallest missing positive number is '3'
 	 */
 	public int findFirstMissingPositiveInteger(int[] nums) {
+		// For null or empty nums
+		if(nums == null || nums.length == 0) {
+            return 1;
+        }
+		
 		// Shift all the negative and 0s to the left
 		int i = 0;
 		for(int j = 0; j < nums.length; ++j) {
@@ -212,5 +220,65 @@ public class CyclicSort {
 		}
 		
 		return nums[nums.length-1] < 0 ? 1 : nums[nums.length-1] + 1;
+	}
+	
+	public List<Integer> firstKMissingIntegers(int[] nums, int k)  {
+				// For null or empty nums
+		if(nums == null || nums.length == 0) {
+            return Collections.emptyList();
+        }
+		
+		// Shift all the negative and 0s to the left
+		int i = 0;
+		for(int j = 0; j < nums.length; ++j) {
+			if(nums[j] <= 0) {
+				swap(nums, i, j);
+				++i;
+			}
+		}
+		
+		// i will be the index from where all the positives start
+		for(int j = i; j < nums.length;) {
+
+			int index = nums[j] + i-1;
+			if(index >= 0 && index < nums.length 
+					&& nums[j] != j-i+1 
+					&& nums[j] != nums[index]) { // Third condition is to avoid duplicates
+				//swap
+				swap(nums, index, j);
+			}
+			else {
+				++j;
+			}
+		}
+		
+		List<Integer> missingNumbers = new ArrayList<>();
+		Set<Integer> extraNumbers = new HashSet<>();
+		
+		int count = 0;
+		int value = 1;
+		while(i < nums.length && count < k) {
+			if(nums[i] != value) {
+				missingNumbers.add(value);
+				extraNumbers.add(nums[i]); // Since the array will not be sorted [-2,-1,5,5,3,4]
+				++count;
+			}
+			++i;
+			++value;
+		}
+		
+		if(count == k) {
+			return missingNumbers;
+		}
+		
+		while(count < k) {
+			if(!extraNumbers.contains(value)) {
+				missingNumbers.add(value);
+				++count;
+			}
+			value++;
+		}
+		
+		return missingNumbers;
 	}
 }
