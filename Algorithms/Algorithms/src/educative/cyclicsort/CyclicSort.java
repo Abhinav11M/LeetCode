@@ -222,6 +222,12 @@ public class CyclicSort {
 		return nums[nums.length-1] < 0 ? 1 : nums[nums.length-1] + 1;
 	}
 	
+	/**
+	 * Find k first missing positive integers
+	 * @param nums Number array
+	 * @param k Number of missing integers to be found
+	 * @return List of missing positive integers from the array
+	 */
 	public List<Integer> firstKMissingIntegers(int[] nums, int k)  {
 				// For null or empty nums
 		if(nums == null || nums.length == 0) {

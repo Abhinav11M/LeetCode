@@ -1,10 +1,10 @@
 package educative.fastandslowpointers;
 
-class ListNode {
-	int value = 0;
-	ListNode next;
+public class ListNode {
+	public int value = 0;
+	public ListNode next;
 
-	ListNode(int value) {
+	public ListNode(int value) {
 		this.value = value;
 	}
 
@@ -29,5 +29,13 @@ class ListNode {
 		}
 		
 		return retHead;
+	}
+	
+	public static void printList(ListNode head) {
+		while(head != null) {
+			System.out.print(head.value + "=>");
+			head = head.next;
+		}
+		System.out.println();
 	}
 }
