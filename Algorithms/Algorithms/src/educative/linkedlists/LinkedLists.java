@@ -184,4 +184,51 @@ public class LinkedLists {
 		return finalHead;
 	}
 
+	/**
+	 * Rotate a linked list
+	 */
+	public ListNode rotate(ListNode head, int rotations) {
+		if(head == null || head.next == null) {
+			return head;
+		}
+		
+		int numNodes = countNodes(head);
+		rotations = rotations % numNodes; // N rotations will give back the same list
+		
+		if(rotations == 0) {
+			return head;
+		}
+		
+		ListNode prev = null;
+		ListNode next = head;
+		
+		for(int i = 0; i < numNodes - rotations; ++i) {
+			prev = next;
+			next = next.next;
+		}
+		
+		prev.next = null;
+		ListNode newHead = next;
+		
+		while(next.next != null) {
+			next = next.next;
+		}
+		next.next = head;
+		
+		return newHead;
+	}
+
+	private int countNodes(ListNode head) {
+		if(head == null) {
+			return 0;
+		}
+		
+		int count = 0;
+		while(head != null) {
+			++count;
+			head = head.next;
+		}
+		
+		return count;
+	}
 }

@@ -18,5 +18,11 @@ public class LinkedListsMain {
 				ll.reverseAlternatingKElements(
 						ListNode.createLinkedList(new int[] {1,2,3,4,5,6,7,8}), 3)
 				);
+		
+		ListNode.printList(
+				ll.rotate(
+						ListNode.createLinkedList(new int[] {1,2,3,4,5}), 3
+						)
+				);
 	}
 }
