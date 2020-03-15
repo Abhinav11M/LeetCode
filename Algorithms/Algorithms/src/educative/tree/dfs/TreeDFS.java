@@ -1,7 +1,9 @@
 package educative.tree.dfs;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class TreeDFS {
 	/**
@@ -56,4 +58,60 @@ public class TreeDFS {
 		path.remove(path.size()-1);
 	}
 	
+	/**
+	 * Given a binary tree where each node can only have a digit (0-9) value, each root-to-leaf path will represent a number. 
+	 * Find the total sum of all the numbers represented by all paths.
+	 * (1 -> (7, (9 -> (2, 9))) => 408; 17 + 192 + 199
+	 */
+	public int findSumOfPathNumbers(TreeNode root) {
+		return findSumOfPathNumbers(root, 0, 0);
+	}
+
+	private int findSumOfPathNumbers(TreeNode root, Integer totalSum, int pathSum) {
+		if(root == null) {
+			return totalSum;
+		}
+		
+		pathSum = pathSum*10 + root.value;
+		if(root.left == null && root.right == null) { //Leaf node
+			totalSum += pathSum;
+		}
+		
+		totalSum = findSumOfPathNumbers(root.left, totalSum, pathSum);
+		totalSum = findSumOfPathNumbers(root.right, totalSum, pathSum);
+		
+		return totalSum;
+	}
+	
+	/**
+	 * Given a binary tree and a number sequence, find if the sequence is 
+	 * present as a root-to-leaf path in the given tree.
+	 * (1 -> (7, (9 -> (2, 9))), [1,9,9] => True
+	 */
+	public boolean findPath(TreeNode root, int[] sequence) {
+		return findPath(root, new ArrayList<Integer>(), Arrays.stream(sequence).boxed().collect(Collectors.toList()));
+	}
+
+	private boolean findPath(TreeNode root, ArrayList<Integer> path, List<Integer> sequence) {
+		if (root == null) {
+			return false;
+		}
+		path.add(root.value);
+		if (path.equals(sequence) && root.left == null && root.right == null) {
+			return true;
+		}
+	
+		boolean left = false;
+		if(root.left != null) {
+			left = findPath(root.left, path, sequence);
+			path.remove(path.size()-1);
+		}
+
+		boolean right = false;
+		if(root.right != null) {
+			right = findPath(root.right, path, sequence);
+			path.remove(path.size()-1);
+		}
+		return left || right;
+	}
 }
