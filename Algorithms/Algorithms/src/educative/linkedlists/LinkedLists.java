@@ -130,4 +130,58 @@ public class LinkedLists {
 		return finalList;
 	}
 		
+	/**
+	 * Reverse alternating K-element Sub-list 
+	 */
+	public ListNode reverseAlternatingKElements(ListNode head, int k) {
+		ListNode prev = null;
+		ListNode next = head;
+		ListNode finalHead = null;
+		
+		ListNode rev = null;
+		
+		boolean doReverse = true;
+		
+		while(head != null) {
+			if(!doReverse) {
+				for(int i = 0; i < k; ++i) {
+					prev = head;
+					head = head.next;
+				}
+				next = head;
+				doReverse = true;
+				continue;
+			}
+			
+			int count = 1;
+			while(count <= k && head != null) {
+				if(rev == null) {
+					rev = head;
+					head = head.next;
+					rev.next = null;
+				}
+				else {
+					ListNode temp = head;
+					head = head.next;
+					temp.next = rev;
+					rev = temp;
+				}
+				++count;
+			}
+			if(prev != null) {
+				prev.next = rev;
+			}
+			else {
+				finalHead = rev;
+			}
+			next.next = head;
+			prev = next;
+			next = head;
+			
+			doReverse = false;
+		}
+		
+		return finalHead;
+	}
+
 }
