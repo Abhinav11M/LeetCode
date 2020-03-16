@@ -2,7 +2,9 @@ package educative.tree.dfs;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.stream.Collectors;
 
 public class TreeDFS {
@@ -114,4 +116,100 @@ public class TreeDFS {
 		}
 		return left || right;
 	}
+	
+	/**
+	 * Given a binary tree and a number ‘S’, find all paths in the tree such 
+	 * that the sum of all the node values of each path equals ‘S’. Please note
+	 * that the paths can start or end at any node but all paths must follow direction 
+	 * from parent to child (top to bottom).
+	 */
+	public int countAllPathSum(TreeNode root, int target) {
+		return countAllPathSum(root, new LinkedList<Integer>(), target);
+	}
+
+	private int countAllPathSum(TreeNode root, LinkedList<Integer> path, int target) {
+		if(root == null) {
+			return 0;
+		}
+		
+		path.add(root.value);
+		// Add elements to see if the path has any target or not
+		int sum = 0, count = 0;
+		ListIterator<Integer> iter = path.listIterator(path.size());
+		
+		while(iter.hasPrevious()) {
+			sum+= iter.previous();
+			if(sum == target) {
+				++count;
+			}
+		}
+		
+		// recursively find in the left and right
+		count += countAllPathSum(root.left, path, target);
+		count += countAllPathSum(root.right, path, target);
+		
+		// Going up, we need to remove the last value inserted in the list
+		path.remove(path.size()-1);
+		
+		return count;
+	}
+	
+	/**
+	 * Tree Diameter
+	 */
+	 public int findDiameter(TreeNode root) {
+		 if(root == null) {
+			 return 0;
+		 }
+		 
+		 int lHeight = findHeightOfTree(root.left);
+		 int rHeight = findHeightOfTree(root.right);
+		 
+		 int diameter = lHeight+rHeight+1;
+		 
+		 return Math.max(diameter, Math.max(findDiameter(root.left), findDiameter(root.right)));
+	 }
+	 
+	 private int findHeightOfTree(TreeNode root) {
+		 if(root == null) {
+			 return 0;
+		 }
+		 
+		 return 1 + Math.max(findHeightOfTree(root.left), findHeightOfTree(root.right));
+	 }
+	 
+	 /**
+	  * Path with Maximum Sum
+	  * Find the path with the maximum sum in a given binary tree. 
+	  * Write a function that returns the maximum sum. 
+	  * A path can be defined as a sequence of nodes between any two 
+	  * nodes and doesn’t necessarily pass through the root
+	  */
+	 public int findMaximumPathSum(TreeNode root) {
+		 maxPathSum = Integer.MIN_VALUE;
+		 findMaxPathSumRecursive(root);
+		 return maxPathSum;
+	 }
+	 
+	 private int findMaxPathSumRecursive(TreeNode root) {
+		if(root == null) {
+			return 0;
+		}
+		
+		int leftSum = findMaxPathSumRecursive(root.left);
+		int rightSum = findMaxPathSumRecursive(root.right);
+		
+		// We don't want negative sums
+		leftSum = Math.max(leftSum, 0);
+		rightSum = Math.max(rightSum, 0);
+		
+		int localMaxPathSum = leftSum + rightSum + root.value;
+		
+		// Update maxPathSum
+		maxPathSum = Math.max(maxPathSum, localMaxPathSum);
+		
+		return Math.max(leftSum, rightSum) + root.value;
+ 	}
+
+	private static int maxPathSum;
 }
