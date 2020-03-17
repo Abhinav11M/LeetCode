@@ -2038,13 +2038,6 @@ public class LeetAlgos {
 		List<Integer> numsList = Arrays.stream(nums).boxed().collect(Collectors.toList());
 		List<List<Integer>> res = new ArrayList<>();
 		
-//		for(int i = 0; i < numsList.size(); ++i) {
-//			List<Integer> source = new ArrayList<>(numsList);
-//			List<Integer> dest = new ArrayList<>();
-//			int s = source.remove(i);
-//			dest.add(s);
-//			permute(source, dest, res);
-//		}
 		permute(numsList, new ArrayList<Integer>(), res);
 		
 		return res;
@@ -2065,7 +2058,7 @@ public class LeetAlgos {
 	}
 	
 	/**
-	 * ou are given an n x n 2D matrix representing an image.
+	 * We are given an n x n 2D matrix representing an image.
 	 * Rotate the image by 90 degrees (clockwise).
 	 * Note : DO NOT allocate another 2D matrix
 	 */
