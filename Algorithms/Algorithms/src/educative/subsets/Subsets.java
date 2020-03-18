@@ -197,4 +197,117 @@ public class Subsets {
 			}
 		}
 	}
+	
+	/**
+	 * String Permutations by changing case 
+	 */
+	public List<String> permutationByChangingCase(String str) {
+		Queue<String> result = new LinkedList<>();
+		
+		result.add(str);
+		
+		permutationByChangingCase(str, 0, result);
+		
+		return new ArrayList<String>(result);
+	}
+
+	private void permutationByChangingCase(String str, int index, Queue<String> result) {
+		if(index == str.length()) {
+			return;
+		}
+
+		if( (str.charAt(index) <= 90 && str.charAt(index) >= 65) || 
+				(str.charAt(index) <= 122 && str.charAt(index) >= 97) ) {
+
+			int n = result.size();
+			for(int i = 0; i < n; ++i) {
+				String temp = result.poll();
+				result.add(new String(temp));
+				char[] s = temp.toCharArray();
+				if(s[index] <= 90 && s[index] >= 65) { //Capital
+					s[index] += 32;
+				}
+				else {
+					s[index] -= 32;
+				}
+				
+				result.add(new String(s));
+			}
+		}
+		
+		permutationByChangingCase(str, index+1, result);
+		
+	}
+	
+	/**
+	 * For a given number ‘N’, write a function to generate all 
+	 * combination of ‘N’ pairs of balanced parentheses.
+	 * Input: N=2
+	 * Output: (()), ()()
+	 */
+	public List<String> generateValidParentheses(int num) {
+		if(num == 0) {
+			return new ArrayList<String>();
+		}
+		
+		List<String> result = new ArrayList<>();
+		
+		generateValidParentheses(new String("("), num-1, num, result);
+		
+		return result;
+	}
+
+	private void generateValidParentheses(String parentheses, int left, int right, List<String> result) {
+		if(left == 0 && right == 0) {
+			result.add(parentheses);
+			return;
+		}
+		
+		// Add a left paranthesis
+		if(left != 0) {
+			String s = new String(parentheses) + "(";
+			generateValidParentheses(s, left-1, right, result);
+		}
+		
+		if(right != 0 && right > left) { // Can't close before parenthesis opens
+			String s = new String(parentheses) + ")";
+			generateValidParentheses(s, left, right-1, result);
+		}
+	}
+	
+	public List<Integer> diffWaysToEvaluateExpression(String input) {
+		
+		List<Integer> result = new ArrayList<>();
+	   // Base case
+		if(!input.contains("+") && !input.contains("-") && !input.contains("*")) {
+			result.add(Integer.parseInt(input));
+			return result;
+		}
+		
+		for(int i = 0; i < input.length(); ++i) {
+			if(!Character.isDigit(input.charAt(i))) {
+				// Split the expression into two values and evaluate
+				char operator = input.charAt(i);
+				List<Integer> leftSide = diffWaysToEvaluateExpression(input.substring(0, i));
+				List<Integer> rightSide = diffWaysToEvaluateExpression(input.substring(i+1));
+				
+				
+				for(Integer leftVal : leftSide) {
+					for(Integer rightVal : rightSide) {
+						if(operator == '+') {
+							result.add(leftVal + rightVal);
+						}
+						else if(operator == '-') {
+							result.add(leftVal - rightVal);
+						}
+						else {
+							result.add(leftVal * rightVal);
+						}
+					}
+				}
+			}
+		}
+		
+		return result;
+	}
 }

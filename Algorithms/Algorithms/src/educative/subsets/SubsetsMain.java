@@ -23,6 +23,16 @@ public class SubsetsMain {
 
 		res = subsets.permuteRecursive(new int[] {1,2,3,4});
 
+		List<String> resStringCasePermutation = subsets.permutationByChangingCase("a2b");
+		resStringCasePermutation = subsets.permutationByChangingCase("ad52");
+		resStringCasePermutation = subsets.permutationByChangingCase("ab7c");
+		
+		List<String> parenthesis = subsets.generateValidParentheses(3);
+		parenthesis = subsets.generateValidParentheses(2);
+		
+//		List<Integer> expressionRes = subsets.diffWaysToEvaluateExpression("1+2*3");
+		List<Integer> expressionRes = subsets.diffWaysToEvaluateExpression("2*3-4-5");
+		
 		System.out.println();
 	}
 
