@@ -1,11 +1,11 @@
 package educative.tree.dfs;
 
 public class TreeNode {
-	int value;
-	TreeNode left;
-	TreeNode right;
+	public int value;
+	public TreeNode left;
+	public TreeNode right;
 
-	TreeNode(int x) {
+	public TreeNode(int x) {
 		value = x;
 	}
 }

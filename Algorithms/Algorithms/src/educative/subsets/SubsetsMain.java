@@ -2,6 +2,8 @@ package educative.subsets;
 
 import java.util.List;
 
+import educative.tree.dfs.TreeNode;
+
 public class SubsetsMain {
 
 	public static void main(String[] args) {
@@ -32,6 +34,9 @@ public class SubsetsMain {
 		
 //		List<Integer> expressionRes = subsets.diffWaysToEvaluateExpression("1+2*3");
 		List<Integer> expressionRes = subsets.diffWaysToEvaluateExpression("2*3-4-5");
+		
+		List<TreeNode> uniqueBST = subsets.findUniqueBST(4);
+		System.out.println(subsets.countNumUniqueBST(4));
 		
 		System.out.println();
 	}

@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Queue;
 import java.util.stream.Collectors;
 
+import educative.tree.dfs.TreeNode;
+
+
 public class Subsets {
 	/**
 	 * Given a set with distinct elements, find all of its distinct subsets.
@@ -309,5 +312,70 @@ public class Subsets {
 		}
 		
 		return result;
+	}
+	
+	/**
+	 * Structurally Unique Binary Search Trees
+	 * Given a number ‘n’, write a function to return all structurally unique 
+	 * Binary Search Trees (BST) that can store values 1 to ‘n
+	 * Input: 2
+	 * Output: 2
+	 * Input: 3
+	 * Output: 5
+	 * TODO : Look at the solution using DP.
+	 */
+	public List<TreeNode> findUniqueBST(int n) {
+		if(n == 0) {
+			return new ArrayList<>();
+		}
+		
+		return findUniqueBST(1, n);
+	}
+
+	private List<TreeNode> findUniqueBST(int start, int end) {
+		List<TreeNode> result = new ArrayList<>();
+		
+		if(start > end) {
+			result.add(null);
+			return result;
+		}
+		
+		for(int i = start; i <= end; ++i) {
+			List<TreeNode> leftSubtrees = findUniqueBST(start, i-1);
+			List<TreeNode> rightSubtrees = findUniqueBST(i+1, end);
+	
+			for(TreeNode left : leftSubtrees) {
+				for(TreeNode right : rightSubtrees) {
+					TreeNode root = new TreeNode(i);
+					root.left = left;
+					root.right = right;
+					result.add(root);
+				}
+			}
+		
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * Count of Structurally Unique Binary Search Trees
+	 * This is also equal to Catalan number(See DP Questions)
+	 */
+	public int countNumUniqueBST(int n) {
+		if(n <= 1) {
+			return 1;
+		}
+		
+		int count = 0;
+		for(int i = 1; i <= n; ++i) {
+			// i is the root node
+			int left = countNumUniqueBST(i-1); // Left subtree
+			int right = countNumUniqueBST(n-i); // Right subtree
+			
+			count += (left*right);
+		}
+		
+		return count;
 	}
 }
