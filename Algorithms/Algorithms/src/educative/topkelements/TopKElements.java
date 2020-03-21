@@ -270,4 +270,131 @@ public class TopKElements {
 		 }
 		 return left;
 	 }
+	 
+	 /**
+	  * Given an array of numbers and a number ‘K’, we need to remove ‘K’ numbers
+	  * from the array such that we are left with maximum distinct numbers.
+	  * Input: [7, 3, 5, 8, 5, 3, 3], and K=2
+	  * Output: 3
+	  * Explanation: We can remove two occurrences of 3 to be left with 3 distinct numbers [7, 3, 8], we have 
+	  */
+	 public int findMaximumDistinctElements(int[] nums, int k) {
+		 
+		 Map<Integer, Integer> freqMap = new HashMap<>();
+		 for(int i = 0; i < nums.length; ++i) {
+			 freqMap.put(nums[i], freqMap.getOrDefault(nums[i],0)+1);
+		 }
+		 
+		 PriorityQueue<Map.Entry<Integer, Integer>> minHeap = 
+				 new PriorityQueue<>((a,b) -> Integer.compare(a.getValue(), b.getValue()));
+		 
+		 int distictCount = 0;
+		 for(Map.Entry<Integer, Integer> val : freqMap.entrySet()) {
+			 if(val.getValue() == 1) {
+				 ++distictCount;
+			 }
+			 else {
+				 minHeap.add(val);
+			 }
+		 }
+		 
+		 // Start sutracting K
+		 while(k >= 0 && !minHeap.isEmpty()) {
+			 Entry<Integer, Integer> temp = minHeap.poll();
+			 if(temp.getValue() > k) {
+				 k = 0;
+				 break;
+			 }
+			 else {
+				 k -= temp.getValue()-1;
+				 ++distictCount;
+			 }
+		 }
+		 
+		 while(k > 0) {
+			 distictCount--;
+			 k--;
+		 }
+		 
+		 return distictCount;
+	 }
+	 
+	 /**
+	  * Given an array, find the sum of all numbers between the K1’th and K2’th 
+	  * smallest elements of that array.
+	  * Input: [1, 3, 12, 5, 15, 11], and K1=3, K2=6
+	  * Output: 23
+	  * Explanation: The 3rd smallest number is 5 and 6th smallest number 15. 
+	  * he sum of numbers coming between 5 and 15 is 23 (11+12).
+	  */
+	 public int findSumOfElements(int[] nums, int k1, int k2) {
+		 // Create a max heap of K1 elements to find out the K1th smallest element
+		 PriorityQueue<Integer> maxHeap = new PriorityQueue<>(Collections.reverseOrder());
+		 
+		 int i = 0;
+		 for(; i < k1; ++i) {
+			 maxHeap.add(nums[i]);
+		 }
+		 
+		 for(; i < nums.length; ++i) {
+			 if(nums[i] < maxHeap.peek()) {
+				 maxHeap.poll();
+				 maxHeap.add(nums[i]);
+			 }
+		 }
+		 
+		 int k1thSmallestNum = maxHeap.poll();
+		 
+		 int numOfElements = k2-k1-1;
+		 maxHeap.clear();
+		 
+		 i = 0;
+		 for(int j = 0; j < nums.length; ++j) {
+			 if(nums[j] <= k1thSmallestNum) {
+				 continue;
+			 }
+			 if(i < numOfElements) { // Simply add to the heap
+				 maxHeap.add(nums[j]);
+				 ++i;
+			 }
+			 else { // Remove the bigger from head and add a smaller one
+				 if(maxHeap.peek() > nums[j]) {
+					 maxHeap.poll();
+					 maxHeap.add(nums[j]);
+				 }
+			 }
+		 }
+		 
+		 int sum = 0;
+		 while(!maxHeap.isEmpty()) {
+			 sum+= maxHeap.poll();
+		 }
+		 
+		 return sum;
+	 }
+	 
+	 /**
+	  * Solution 2
+	  */
+	 public int findSumOfElements1(int[] nums, int k1, int k2) {
+		 PriorityQueue<Integer> minHeap = new PriorityQueue<>();
+		 
+		 // Push all the elements to the heap.
+		 for(int i = 0; i < nums.length; ++i) {
+			 minHeap.add(nums[i]);
+		 }
+		 
+		 // Remove the first k1 elements
+		 for(int i = 0; i < k1; ++i) {
+			 minHeap.poll();
+		 }
+		 
+		 // Get the next k2-k2-1 elements to find the required sum
+		 int sum = 0;
+		 for(int i = 0; i < k2-k1-1; ++i) {
+			 sum += minHeap.poll();
+		 }
+		 
+		 return sum;
+	 }
 }
