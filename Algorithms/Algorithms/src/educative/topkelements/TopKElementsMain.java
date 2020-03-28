@@ -50,6 +50,33 @@ public class TopKElementsMain {
 	    System.out.println(topKElements.findSumOfElements(new int[] {3, 5, 8, 7}, 1, 4));
 	    System.out.println(topKElements.findSumOfElements1(new int[] {1, 3, 12, 5, 15, 11}, 3, 6));
 	    System.out.println(topKElements.findSumOfElements1(new int[] {3, 5, 8, 7}, 1, 4));
+
+	    System.out.println(topKElements.rearrangeString("aappp"));
+	    System.out.println(topKElements.rearrangeString("Programming"));
+	    System.out.println(topKElements.rearrangeString("aapa"));
+	    
+	    System.out.println("***************");
+	    System.out.println(topKElements.reorganizeString("mmpp", 2));
+	    System.out.println(topKElements.reorganizeString("Programming", 3));
+	    System.out.println(topKElements.reorganizeString("aab", 2));
+	    System.out.println(topKElements.reorganizeString("aappa", 3));
+
+	    System.out.println(topKElements.scheduleTasks2(new char[] {'a', 'a', 'a', 'b', 'c', 'c'}, 2));
+	    System.out.println(topKElements.scheduleTasks2(new char[] {'a', 'b', 'a'}, 3));
+	    System.out.println(topKElements.scheduleTasks2(new char[] {'a', 'a', 'a'}, 3));
+
+	    System.out.println("***************");
+	    
+	    CustomStack frequencyStack = new CustomStack();
+	    frequencyStack.push(1);
+	    frequencyStack.push(2);
+	    frequencyStack.push(3);
+	    frequencyStack.push(2);
+	    frequencyStack.push(1);
+	    frequencyStack.push(2);
+	    frequencyStack.push(5);
+	    System.out.println(frequencyStack.pop());
+	    System.out.println(frequencyStack.pop());
+	    System.out.println(frequencyStack.pop());
 	}
-	
 }

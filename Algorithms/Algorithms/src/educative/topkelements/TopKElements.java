@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.PriorityQueue;
+import java.util.Queue;
 import java.util.stream.Collectors;
 
 public class TopKElements {
@@ -397,4 +398,145 @@ public class TopKElements {
 		 
 		 return sum;
 	 }
+	 
+	 /**
+	  * Given a string, find if its letters can be rearranged in 
+	  * such a way that no two same characters come next to each other.
+	  * Input: "aappp"
+	  * Output: "papap"
+	  * Explanation: In "papap", none of the repeating characters come next to each other.
+	  */
+	 public String rearrangeString(String str) {
+		 Map<Character, Integer> freqMap = new HashMap<>();
+		 
+		 for(int i = 0; i < str.length(); ++i) {
+			 char ch = str.charAt(i);
+			 freqMap.put(ch, freqMap.getOrDefault(ch, 0)+1);
+		 }
+		 
+		 PriorityQueue<Map.Entry<Character, Integer>> maxHeap = 
+				 new PriorityQueue<>((a,b) -> Integer.compare(b.getValue(), a.getValue()));
+		 
+		 for(Map.Entry<Character, Integer> val : freqMap.entrySet()) {
+			 maxHeap.add(val);
+		 }
+		 
+		 StringBuilder res = new StringBuilder();
+		 Map.Entry<Character, Integer> prevEntry = null;
+		 while(!maxHeap.isEmpty()) {
+			 Entry<Character, Integer> currEntry = maxHeap.poll();
+			 res.append(currEntry.getKey());
+			 
+			 if(prevEntry != null && prevEntry.getValue() > 0) {
+				 maxHeap.offer(prevEntry);
+			 }
+			 
+			 currEntry.setValue(currEntry.getValue()-1);
+			 prevEntry = currEntry;
+		 }
+		 
+		 return res.length() == str.length() ? res.toString() : "";
+		 
+			 
+		 }
+
+	 /**
+	  * Rearrange String K Distance Apart
+	  * Given a string and a number ‘K’, find if the string can be 
+	  * rearranged such that the same characters are at least ‘K’ 
+	  * distance apart from each other.
+	  * Input: "mmpp", K=2
+	  * Output: "mpmp" or "pmpm"
+	  * Explanation: All same characters are 2 distance apart.
+	  */
+	 public String reorganizeString(String str, int k) {
+		 // Create max heap of the frequencies
+		 Map<Character, Integer> freqMap = new HashMap<>();
+		 for(int i = 0; i < str.length(); ++i) {
+			 char ch = str.charAt(i);
+			 freqMap.put(ch, freqMap.getOrDefault(ch, 0)+1);
+		 }
+		 
+		 PriorityQueue<Map.Entry<Character, Integer>> maxHeap = 
+				 new PriorityQueue<>((a,b) -> Integer.compare(b.getValue(), a.getValue()));
+		 
+		 for(Map.Entry<Character, Integer> val : freqMap.entrySet()) {
+			 maxHeap.add(val);
+		 }
+		 
+		 Queue<Map.Entry<Character, Integer>> queue = new LinkedList<>();
+		 
+		 StringBuilder result = new StringBuilder();
+		 while(!maxHeap.isEmpty()) {
+			 Entry<Character, Integer> currEntry = maxHeap.poll();
+			 if(currEntry.getValue() > 0) {
+				 result.append(currEntry.getKey());
+			 }
+			 currEntry.setValue(currEntry.getValue()-1);
+			 
+			 if(currEntry.getValue() >= 0) {
+				 queue.add(currEntry);
+			 }
+
+			 if(queue.size() == k) {
+				 maxHeap.offer(queue.poll());
+			 }
+		 }
+		 
+		 return result.length() == str.length() ? result.toString() : "";
+	 }
+	 
+	/**
+	 * Scheduling Tasks
+	 * <p>
+	 * You are given a list of tasks that need to be run, 
+	 * in any order, on a server. Each task will take one CPU interval 
+	 * to execute but once a task has finished, it has a cooling period during 
+	 * which it can’t be run again. If the cooling period for all tasks 
+	 * is ‘K’ intervals, find the minimum number of CPU intervals that the 
+	 * server needs to finish all tasks. If at any time the server can’t 
+	 * execute any task then it must stay idle.
+	 * </p>
+	 * Input: [a, a, a, b, c, c], K=2
+	 * Output: 7
+	 * Explanation: a -> c -> b -> a -> c -> idle -> a
+	 */
+	public int scheduleTasks2(char[] tasks, int k) {
+		Map<Character, Integer> freqMap = new HashMap<>();
+		for (int i = 0; i < tasks.length; ++i) {
+			char ch = tasks[i];
+			freqMap.put(ch, freqMap.getOrDefault(ch, 0) + 1);
+		}
+
+		PriorityQueue<Map.Entry<Character, Integer>> maxHeap = new PriorityQueue<>(
+				(a, b) -> Integer.compare(b.getValue(), a.getValue()));
+
+		maxHeap.addAll(freqMap.entrySet());
+
+		int count = 0;
+
+		while (!maxHeap.isEmpty()) {
+			List<Map.Entry<Character, Integer>> waitingList = new ArrayList<>();
+			int n = k + 1; // tasks to be completed
+			for (; n > 0 && !maxHeap.isEmpty(); --n) {
+				++count;
+				Entry<Character, Integer> currentTask = maxHeap.poll();
+
+				if (currentTask.getValue() > 1) {
+					currentTask.setValue(currentTask.getValue() - 1);
+					waitingList.add(currentTask);
+				}
+			}
+
+			// Add back all the waiting tasks in the heap
+			maxHeap.addAll(waitingList);
+
+			// If there were not enough breaks, n will not be 0;
+			if (!maxHeap.isEmpty()) { // If maxHeap is already empty, tasks are completed
+				count += n;
+			}
+		}
+
+		return count;
+	}
 }
