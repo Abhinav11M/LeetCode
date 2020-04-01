@@ -1,5 +1,10 @@
 package algos;
 
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class Questions {
 
 	/*
@@ -31,5 +36,45 @@ public class Questions {
 			}
 		}
 		return index;
+	}
+	
+	
+	/**
+	 * 
+	 */
+	public static List<Integer> findPerm(final String str, int n) {
+		int arr[] = new int[str.length()];
+		
+		int i = 0;
+		int d = 0;
+		
+		for(int j = arr.length-1; j >= 0; j--) {
+			if(str.charAt(j) == 'D') {
+				d = i*(-1) + 1;
+				arr[j] = d;
+			}
+			else {
+				i = d*(-1) - 1;
+				arr[j] = i;
+			}
+		}
+		
+		List<Integer> res = new LinkedList<>();
+		// Starting from last
+		int val = 0;
+		for(int j = arr.length-1; j >=0; --j) {
+			if(j == arr.length-1) {
+				res.add(0, val);
+			}
+			else {
+				val += arr[j+1];
+				res.add(0, val);
+			}
+		}
+		res.add(0, val+arr[0]);
+		// Find min
+		int min = Collections.min(res);
+		// Add min+1 in each
+		return res.stream().map(x -> x+Math.abs(min)+1).collect(Collectors.toList());
 	}
 }
