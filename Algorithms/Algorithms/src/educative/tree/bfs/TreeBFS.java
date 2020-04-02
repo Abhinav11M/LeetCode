@@ -6,7 +6,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-import datastructures.ListNodeWithRandom;
 import datastructures.TreeNode;
 
 public class TreeBFS {
