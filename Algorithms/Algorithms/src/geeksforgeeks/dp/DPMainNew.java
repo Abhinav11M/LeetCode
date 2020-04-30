@@ -1,5 +1,7 @@
 package geeksforgeeks.dp;
 
+import java.util.List;
+
 public class DPMainNew {
 
 	public static void main(String[] args) {
@@ -35,6 +37,34 @@ public class DPMainNew {
 		System.out.println(dp.cutRodOpt(new int[] {1, 5, 8, 9, 10, 17, 17, 20}));
 
 		System.out.println(dp.countWays(3,2));
+		
+		int a[][] = {{4, 5, 3, 2}, 
+                {2, 10, 1, 4}}; 
+		int t[][] = {{0, 7, 4, 5}, 
+				{0, 9, 2, 8}}; 
+		int e[] = {10, 12}, x[] = {18, 7}; 
+		
+		System.out.println(dp.carAssembly(a,t,e,x));
+		System.out.println(dp.carAssemblyDP(a,t,e,x));
+		
+		int mat[][] = new int[][] { { 9, 6, 5, 2 }, { 8, 7, 6, 5 }, { 7, 3, 1, 6 }, { 1, 1, 1, 7 }, };
+		
+		dp.findSnakeSequence(mat);
+		dp.findSnakeSequenceRec2(mat);
+		List<MatCoordinates> snakePath = dp.findSnakeSequenceDP(mat);
+		
+		System.out.println(snakePath);
+		
+		dp.reverseFibonacci(8);
+		
+		System.out.println(dp.lcsRecursive("ABCDGH", "AEDFHR"));
+		System.out.println(dp.lcsRecursive("AGGTAB", "GXTXAYB"));
+		System.out.println(dp.lcsDP("ABCDGH", "AEDFHR"));
+		System.out.println(dp.lcsDP("AGGTAB", "GXTXAYB"));
+		
+		System.out.println(dp.lisDP(new int[] {10, 22, 9, 33, 21, 50, 41, 60, 80}));
+		System.out.println(dp.lisDP(new int[] {10, 9}));
+		
 	}
 
 }

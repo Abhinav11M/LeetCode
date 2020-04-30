@@ -704,4 +704,159 @@ public class LeetCode30DayChallenge {
         
         return s;
     }
+
+	/**
+	 * Search in Rotated Sorted Array
+	 */
+	public int search(int[] nums, int target) {
+		int left = 0, right = nums.length-1;
+		
+		while(left <= right) {
+			int mid = (left+right)/2;
+			if(nums[mid] == target) {
+				return mid;
+			}
+			
+			// Check which half is skewed
+			if(nums[0] <= nums[mid]) { // This part is not skewed
+				if(target < nums[mid] && target >= nums[0]) {
+					right = mid-1;
+				}
+				else {
+					left = mid+1;
+				}
+			}
+			else {
+				if(target > nums[mid] && target <= nums[nums.length-1]) {
+					left = mid+1;
+				}
+				else {
+					right = mid-1;
+				}
+			}
+		}
+		
+        return -1;
+    }
+	
+	/**
+	 * Construct Binary Search Tree from Preorder Traversal
+	 */
+	public TreeNode bstFromPreorder(int[] preorder) {
+		if(preorder.length == 0) {
+			return null;
+		}
+		
+        TreeNode tree = new TreeNode(preorder[0]);
+        for(int i = 1; i < preorder.length; ++i) {
+        	insert(tree, preorder[i]);
+        }
+        
+        return tree;
+        
+    }
+	
+	public void insert(TreeNode root, int val) {
+		
+		if(root.val > val && root.left == null) {
+			root.left = new TreeNode(val);
+		}
+		else if (root.val < val && root.right == null) {
+			root.right = new TreeNode(val);
+		}
+		
+		else {
+			if(root.val > val) {
+				insert(root.left, val);
+			}
+			else {
+				insert(root.right, val);
+			}
+		}
+	}
+	
+	/**
+	 * Subarray Sum Equals K
+	 * Given an array of integers and an integer k, you need to 
+	 * find the total number of continuous subarrays whose sum equals to k. 
+	 */
+	public int subarraySum(int[] nums, int k) {
+		
+		int count = 0;
+		int currSum = 0;
+		
+		Map<Integer, Integer> prevSum = new HashMap<>();
+		
+		for(int i = 0; i < nums.length; ++i) {
+			currSum += nums[i];
+			
+			if(currSum == k) {
+				++count;
+			}
+			
+			if(prevSum.containsKey(currSum - k)) {
+				count += prevSum.get(currSum-k);
+			}
+			
+			// Add the current sum to the map
+			prevSum.put(currSum, prevSum.getOrDefault(currSum, 0)+1);
+		}
+		
+		return count;
+	}
+	
+	/**
+	 * Backspace String Compare
+	 */
+	public boolean backspaceCompare2(String S, String T) {
+		
+		int i1 = S.length()-1;
+		int i2 = T.length()-1;
+		
+		int b1 = 0, b2 = 0;
+		while(i1 >= 0 || i2 >= 0) {
+			
+			while(i1 >= 0) {
+				if(S.charAt(i1) == '#') {
+					++b1;
+				}
+				else if(b1 > 0) {
+					--b1;
+				}
+				else {
+					break;
+				}
+				--i1;
+			}
+			
+			while(i2 >= 0) {
+				if(T.charAt(i2) == '#')  {
+					++b2;
+				}
+				else if(b2 > 0) {
+					--b2;
+				}
+				else {
+					break;
+				}
+				--i2;
+			}
+			
+			
+			if(i1 < 0 || i2 < 0) {
+				break;
+			}
+			
+			if(S.charAt(i1) == T.charAt(i2)) {
+				--i1;
+				--i2;
+			}
+			else {
+				return false;
+			}
+		}
+		
+		return (i1 < 0 && i2 < 0) ? true : false;
+	}
+	
 }

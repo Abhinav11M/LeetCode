@@ -52,5 +52,7 @@ public class ProgCreekAlgosMain {
 		algos.mergeSortedArrays(arr1, 1, arr2, 1);
 		Helpers.printArr(arr1);
 		
+		System.out.println(algos.medianOfSortedArrays(new int[] {1,12,15,26,38}, new int[] {2,13,17,30,45}));
+		
 	}
 }

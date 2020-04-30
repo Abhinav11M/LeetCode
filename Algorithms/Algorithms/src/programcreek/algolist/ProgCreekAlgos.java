@@ -556,5 +556,51 @@ public class ProgCreekAlgos {
 		}
 	}
 	
+	/**
+	 * Median of two sorted arrays
+	 */
+	public double medianOfSortedArrays(int[] nums1, int[] nums2) {
+		if(nums1.length == 0) {
+			return nums2.length%2 == 0 ? (nums2[(nums2.length/2)-1] + nums2[nums2.length/2])/2.0 : nums2[nums2.length/2];
+		}
+		if(nums2.length == 0) {
+			return nums1.length%2 == 0 ? (nums1[(nums1.length/2)-1] + nums1[nums1.length/2])/2.0 : nums1[nums1.length/2];
+		}
+		
+		int l1 = 0, l2 = 0;
+		int r1 = nums1.length-1, r2 = nums2.length-1;
+		
+		// Until both of length 2 or less
+		while((r1-l1) > 1 && (r2-l2) > 1) {
+			double m1 = getMedian(nums1, l1, r1);
+			double m2 = getMedian(nums2, l2, r2);
+			
+			if(m1 == m2) {
+				return m1; // median found
+			}
+			else if(m1 > m2) { // take the left half of nums1 and right half of nums2
+				r1 = (l1+r1)/2;
+				l2 = (l2+r2)/2;
+			}
+			else { // take the right half of nums1 and left half of nums2
+				l1 = (l1+r1)/2;
+				r2 = (l2+r2)/2;
+			}
+		}
+		
+		return (Math.max(nums1[l1], nums2[l2]) + Math.min(nums1[r1], nums2[r2]))/2.0;
+	}
+	
+	private double getMedian(int[] nums, int l, int r) {
+		double m = -1.0;
+		if((r-l) %2 == 0) {
+			m = nums[(r+l)/2];
+		}
+		else {
+			m = (nums[(r+l)/2] + nums[(r+l+1)/2])/2;
+		}
+		
+		return m;
+	}
 	
 }

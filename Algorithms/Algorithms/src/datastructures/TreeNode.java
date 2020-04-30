@@ -1,5 +1,8 @@
 package datastructures;
 
+import lombok.ToString;
+
+@ToString
 public class TreeNode {
 	public int val;
 	public TreeNode left;

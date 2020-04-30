@@ -88,5 +88,27 @@ public class LeetCode30DayChallengeMain {
 	    
 //	    System.out.println(leet.stringShift("abc", new int[][] { {0,1}, {1,2} }));
 	    System.out.println(leet.stringShift("abcdefg", new int[][] { {1,1}, {1,1}, {0,2}, {1,3} }));
+
+		System.out.println(leet.search(new int[] {4,5,6,7,0,1,2}, 0));
+		System.out.println(leet.search(new int[] {4,5,6,7,8,1,2,3}, 8));
+		System.out.println(leet.search(new int[] {4,5,6,7,0,1,2}, 3));
+		
+		TreeNode t = leet.bstFromPreorder(new int[] {8,5,1,7,10,12});
+		System.out.println();
+
+		System.out.println(leet.subarraySum(new int[] {1,1,1}, 2));
+		System.out.println(leet.subarraySum(new int[] {1,2,3}, 3));
+		System.out.println(leet.subarraySum(new int[] {1}, 0));
+		System.out.println(leet.subarraySum(new int[] {-1,-1,1}, 0));
+		System.out.println(leet.subarraySum(new int[] {-1,0,1}, 0));
+		System.out.println(leet.subarraySum(new int[] {28,54,7,-70,22,65,-6}, 100));
+		
+		System.out.println(leet.backspaceCompare2("ab##","cd##"));
+		System.out.println(leet.backspaceCompare2("ab#c","ad#c"));
+		System.out.println(leet.backspaceCompare2("a##c","#a#c"));
+		System.out.println(leet.backspaceCompare2("y#fo##f","y#f#o##f"));
+		System.out.println(leet.backspaceCompare2("a#c","b"));
+		System.out.println(leet.backspaceCompare2("bxj##tw","bxj###tw"));
+		System.out.println(leet.backspaceCompare2("nzp#o#g","b#nzp#o#g"));
 	}
 }

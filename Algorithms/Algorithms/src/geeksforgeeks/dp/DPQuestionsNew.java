@@ -1,6 +1,10 @@
 package geeksforgeeks.dp;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+
+import helpers.Helpers;
 
 public class DPQuestionsNew {
 	/**
@@ -384,6 +388,322 @@ public class DPQuestionsNew {
 		}
 		
 		return dp[n];
+	}
+
+	
+	/**
+	 * Car assembly
+	 */
+	public int carAssembly(int[][] a, int[][] t, int[] e, int[] x) {
+		int n = a[0].length;
+		
+		// f(1,n)
+		int f1n = x[0] + carAssembly(a, t, 0, a[0].length-1);
+		int f2n = x[1] + carAssembly(a, t, 1, a[0].length-1);
+		
+		int minValue = Math.min(f1n+e[0], f2n+e[1]);
+		
+		return minValue;
+	}
+
+	private int carAssembly(int[][] a, int[][] t, int level, int n) {
+		if(n == 0) {
+			return a[level][0];
+		}
+		
+		int f1 = carAssembly(a, t, level, n-1) + a[level][n];
+		int nextLevel = level == 1 ? 0 : 1;
+		int f2 = carAssembly(a, t, nextLevel, n-1) + t[1][n] + a[level][n];
+		
+		return Math.min(f1, f2);
+	}
+
+	public int carAssemblyDP(int[][] a, int[][] t, int[] e, int[] x) {
+		int n = a[0].length;
+		
+		int[] dp0 = new int[n];
+		int[] dp1 = new int[n];
+		
+		dp0[0] = e[0];
+		dp1[0] = e[1];
+		
+		dp0[0] = e[0] + a[0][0];
+		dp1[0] = e[1] + a[1][0];
+		
+		for(int i = 1; i < n; ++i) {
+			// Calculate f(0,n)
+			int up1 = dp0[i-1] + a[0][i]; // One coming from left
+			int up2 = dp1[i-1] + t[1][i] + a[0][i]; // One coming from down
+			dp0[i] = Math.min(up1, up2);
+			
+			//Calculate f(1,n)
+			int down1 = dp1[i-1] + a[1][i]; // Coming from left
+			int down2 = dp0[i-1] + t[0][i] + a[1][i]; // Coming from up
+			dp1[i] = Math.min(down1, down2);
+		}
+		
+		return Math.min(dp0[n-1]+x[0], dp1[n-1]+x[1]);
+	}
+	
+	/**
+	 * Find maximum length Snake sequence
+	 */
+	public int findSnakeSequence(int[][] mat) {
+		int m = mat.length;
+		int n = mat[0].length;
+		
+		int[][] result = new int[m][n];
+//		result[m-1][n-1] = 1;
+		
+		int res = findSnakeSequence(mat, result, 0, 0, m, n);
+		
+		return 0;
+	}
+
+	private int findSnakeSequence(int[][] mat, int[][] result, int i, int j, int m, int n) {
+		if(i == m-1 && j == n-1) { // Reached the end of matrix
+			result[i][j] = 1;
+			return 1;
+		}
+		
+		if(j == n-1 ) { // Can't go any right
+			if(Math.abs(mat[i+1][j] - mat[i][j]) != 1) {
+				result[i][j] = Math.max(1, result[i][j]);
+			}
+			else {
+				result[i][j] = Math.max(1+findSnakeSequence(mat, result, i+1, j, m, n), result[i][j]);
+			}
+		}
+		else if(i == m-1) { // Can't go any down
+			if(Math.abs(mat[i][j+1]-mat[i][j]) != 1) {
+				result[i][j] = Math.max(1, result[i][j]);
+			}
+			else {
+				result[i][j] = Math.max(1+findSnakeSequence(mat, result, i, j+1, m, n), result[i][j]);
+			}
+		}
+		else {
+			int temp1 = 0, temp2 = 0;
+			if(Math.abs(mat[i+1][j] - mat[i][j]) != 1) {
+				temp1 = 1;
+			}
+			else {
+				temp1 = 1+findSnakeSequence(mat, result, i+1, j, m, n);
+			}
+			
+			if(Math.abs(mat[i][j+1]-mat[i][j]) != 1) {
+				temp2 = 1;
+			}
+			else {
+				temp2 = 1+findSnakeSequence(mat, result, i, j+1, m, n);
+			}
+			
+			result[i][j] = Math.max(Math.max(temp1, temp2), result[i][j]);
+		}
+		
+		return result[i][j];
+	}
+	
+	// First element has 0 length
+	public int findSnakeSequenceRec2(int[][] mat) {
+		int r = mat.length;
+		int c = mat[0].length;
+		int maxLen = 0;
+		int maxX = 0, maxY = 0;
+		int[][] result = new int[r][c];
+		findSnakeSequenceRec2(mat, result, r-1, c-1, r-1, c-1, maxLen, maxX, maxY);
+		
+		return 0;
+	}
+	
+	private int findSnakeSequenceRec2(int[][] mat, int[][] res, int r, int c, int i, int j, int maxLen, int maxX, int maxY) {
+		if(i == 0 && j == 0) {
+			return 0;
+		}
+		
+		int up = 0; 
+		if(i > 0) { // Not the end of column
+			up = 1+findSnakeSequenceRec2(mat, res, r, c, i-1, j, maxLen, maxX, maxY);
+			if(Math.abs(mat[i][j] - mat[i-1][j]) == 1) {
+				res[i][j] = Math.max(res[i][j], up);
+			}
+		}
+		
+		int left = 0;
+		if(j > 0) {
+			left = 1+findSnakeSequenceRec2(mat, res, r, c, i, j-1, maxLen, maxX, maxY);
+			if(Math.abs(mat[i][j] - mat[i][j-1]) == 1) {
+				res[i][j] = Math.max(res[i][j], left);
+			}
+		}
+		
+		if(res[i][j] > maxLen) {
+			maxX = j;
+			maxY = i;
+			
+			maxLen = res[i][j];
+		}
+		
+		return res[i][j];
+	}
+	
+	public List<MatCoordinates> findSnakeSequenceDP(int[][] mat) {
+		
+		int nRows = mat.length;
+		int nCols = mat[0].length;
+		
+		int[][] result = new int[nRows][nCols];
+		
+		result[0][0] = 0;
+		int maxLen = 0;
+		int maxR = 0;
+		int maxC = 0;
+		
+		for(int i = 0; i < nRows; ++i) {
+			for(int j = 0; j < nCols; ++j) {
+				if(i == 0 && j == 0) {
+					continue;
+				}
+				
+				// coming from up
+				if(i > 0 && Math.abs(mat[i][j]-mat[i-1][j]) == 1) {
+					result[i][j] = Math.max(result[i][j], 1+result[i-1][j]);
+				}
+				
+				// Coming from left
+				if(j > 0 && Math.abs(mat[i][j]-mat[i][j-1]) == 1) {
+					result[i][j] = Math.max(result[i][j], 1+result[i][j-1]);
+				}
+				
+				if(result[i][j] > maxLen) {
+					maxLen = result[i][j];
+					maxR = i;
+					maxC = j;
+				}
+			}
+		}
+		
+		List<MatCoordinates> list = new ArrayList<>();
+		while( (maxR >= 0 || maxC >= 0) && maxLen >= 0) {
+			
+			list.add(new MatCoordinates(maxR, maxC));
+			
+			if(maxC > 0 && result[maxR][maxC-1] == maxLen-1) {
+				// Move left
+				--maxC;
+			}
+			else if(maxR > 0){
+				--maxR;
+			}
+			--maxLen;
+		}
+		
+		return list;
+	}
+	
+	/**
+	 * Print Fibonacci Series in reverse order
+	 */
+	void reverseFibonacci(int n) {
+		int[] fibo = new int[n];
+		
+		fibo[n-1] = 0;
+		fibo[n-2] = 1;
+		
+		int i = n-3;
+		while(i >= 0) {
+			fibo[i] = fibo[i+1] + fibo[i+2];
+			--i;
+		}
+		
+		Helpers.printArr(fibo);
+	}
+	
+	/**
+	 * Longest common substring
+	 */
+	public int lcsRecursive(String str1, String str2) {
+		return lcsRecursive(str1, str2, str1.length()-1, str2.length()-1);
+	}
+
+	private int lcsRecursive(String str1, String str2, int idx1, int idx2) {
+		
+		if(idx1 < 0 || idx2 < 0) {
+			return 0;
+		}
+		
+		// If last characters are a match
+		if(str1.charAt(idx1) == str2.charAt(idx2)) {
+			return 1 + lcsRecursive(str1, str2, idx1-1, idx2-1);
+		}
+		else {
+			return Math.max(lcsRecursive(str1, str2, idx1-1, idx2), lcsRecursive(str1, str2, idx1, idx2-1));
+		}
+	}
+	
+	public int lcsDP(String str1, String str2) {
+		int[][] dp = new int[str1.length()][str2.length()];
+		
+		int count = 0;
+		// Along str2 (row)
+		for(int i = 0; i < str2.length(); ++i) {
+			if(str2.charAt(i) == str1.charAt(0)) {
+				count = 1;
+			}
+			dp[0][i] = count;
+		}
+		
+		count = 0;
+		// Along str1 (col)
+		for(int i = 0; i < str1.length(); ++i) {
+			if(str1.charAt(i) == str2.charAt(0)) {
+				count = 1;
+			}
+			dp[i][0] = count;
+		}
+		
+		for(int i = 1; i < str1.length(); ++i) {
+			for(int j = 1; j < str2.length(); ++j) {
+				if(str1.charAt(i) == str2.charAt(j)) {
+					dp[i][j] = 1+dp[i-1][j-1];
+				}
+				else {
+					dp[i][j] = Math.max(dp[i][j-1], dp[i-1][j]);
+				}
+			}
+		}
+		
+		return dp[str1.length()-1][str2.length()-1];
+	}
+	
+	/**
+	 * Longest Increasing Subsequence
+	 */
+	public int lisDP(int[] nums) {
+		if(nums.length == 0 || nums.length == 1) {
+			return nums.length;
+		}
+		
+		int n = nums.length;
+		int[] dp = new int[n];
+		
+		for(int i = 0; i < n; ++i) {
+			dp[i] = 1; // Each number has atleast count 1
+		}
+		
+		int lis = Integer.MIN_VALUE;
+		
+		for(int i = 1; i < n; ++i) {
+			for(int j = 0; j < i; ++j) {
+				if(nums[j] < nums[i]) { // Increasing
+					dp[i] = Math.max(dp[j]+1, dp[i]);
+				}
+			}
+			
+			lis = Math.max(lis, dp[i]);
+		}
+		
+		return lis;
 	}
 	
 }
