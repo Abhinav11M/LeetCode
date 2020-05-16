@@ -706,4 +706,121 @@ public class DPQuestionsNew {
 		return lis;
 	}
 	
+	
+	public boolean canJump(int[] nums) {
+		if(nums.length == 0) {
+			return true;
+		}
+		if(nums.length == 1) {
+			if(nums[0] >= 0) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+		
+		int n = nums.length;
+		boolean[] dp = new boolean[n];
+		
+		for(int i = 0; i < n; ++i) {
+			if(nums[0] >= i) {
+				dp[i] = true;
+			}
+		}
+		
+		int trueIdx = 0;
+		for(int i = 1; i < n-1; ++i) {
+			for(int j = trueIdx; j < n; ++j) {
+				boolean bool2 = false;
+				
+				if(dp[i] == true && j-i-nums[i] <= 0) {
+					bool2 = true;
+				}
+				
+				dp[j] = dp[j]||bool2;
+				if(dp[j] == true) {
+					trueIdx = j;
+				}
+			}
+		}
+		
+        return dp[n-1];
+    }
+
+	public boolean canJumpGreedy(int[] nums) {
+		int lastIndexToReach = nums.length-1;
+		
+		for(int i = lastIndexToReach-1; i >= 0; i--) {
+			if(nums[i] + i >= lastIndexToReach) { // We can jump from i to last index
+				lastIndexToReach = i;
+			}
+		}
+		
+		return lastIndexToReach == 0;
+	}
+	
+	/**
+	 * Jump Game II : Given an array of non-negative integers, you are 
+	 * initially positioned at the first index of the array.
+	 */
+	public int minJump(int[] nums) {
+        
+        int[] jumps = new int[nums.length];
+        int indexToReach = nums.length-1;
+        int minJumps = Integer.MAX_VALUE;
+        
+        Arrays.fill(jumps, Integer.MAX_VALUE);
+        jumps[jumps.length-1] = 0;
+        
+        for(int i = indexToReach-1; i >= 0; --i) {
+        	if(nums[i] + i >= indexToReach) {
+        		jumps[i] = 1;
+        		minJumps = 1;
+        	}
+        	else {
+        		for(int j = 1; j <= nums[i]; ++j) {
+        			if(jumps[i+j] == minJumps) {
+        				jumps[i] = 1+minJumps;
+        				break;
+        			}
+        			else if(jumps[i+j] == Integer.MAX_VALUE) { // No possible jump from this index
+        				
+        			}
+        			else {
+        				jumps[i] = Math.min(jumps[i], 1+jumps[i+j]);
+        			}
+        		}
+        	}
+        	minJumps = Math.min(minJumps, jumps[i]);
+        }
+        
+        return jumps[0];
+    }
+	
+	/**
+	 * Jump Game III
+	 * Given an array of non-negative integers arr, you are initially 
+	 * positioned at start index of the array. 
+	 * When you are at index i, you can jump to i + arr[i] or i - arr[i], 
+	 * check if you can reach to any index with value 0.
+	 */
+	public boolean canReachRec(int[] arr, int start) {
+	
+		boolean[] traversed = new boolean[arr.length];
+		return canReachRec(arr, start, traversed);
+    }
+	
+	public boolean canReachRec(int[] arr, int start, boolean[] traversed) {
+		if(start > arr.length-1 || start < 0 || traversed[start] == true) {
+			return false;
+		}
+
+		if(arr[start] == 0) {
+			return true;
+		}
+		
+		traversed[start] = true;
+		return canReachRec(arr, start+arr[start], traversed) || canReachRec(arr, start-arr[start], traversed);
+    }
 }

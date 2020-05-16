@@ -603,4 +603,84 @@ public class ProgCreekAlgos {
 		return m;
 	}
 	
+	/**
+	 * Find Minimum in Rotated Sorted Array
+	 */
+	public int findMin(int[] nums) {
+		
+		if(nums.length == 1) {
+			return nums[0];
+		}
+		
+		int left = 0, right = nums.length-1;
+		int min = Integer.MAX_VALUE;
+		
+		while(left <= right) {
+			if(nums[left] < nums[right]) {
+				return Math.min(min, nums[left]);
+			}
+			
+			int mid = (left+right)/2;
+			// Check skewness
+			if(nums[mid] < nums[left]) { // right skewed
+				// Move to the right half
+				min = Math.min(min, nums[mid]);
+				right = mid - 1;
+			}
+			else if(nums[mid] > nums[right]) { // left skewed
+				min = nums[mid];
+				left = mid + 1;
+			}
+			else {
+				return Math.min(min, nums[left]); // no side skewed
+			}
+		}
+		
+        return Math.min(min, nums[left]);
+    }
+	
+	/**
+	 * Find Minimum in Rotated Sorted Array (With duplicates)
+	 */
+	public int findMinWithDup(int[] nums) {
+		
+		if(nums.length == 1) {
+			return nums[0];
+		}
+		
+		int left = 0, right = nums.length-1;
+		int min = Integer.MAX_VALUE;
+		
+		while(left <= right) {
+			if(nums[left] < nums[right]) {
+				return Math.min(min, nums[left]);
+			}
+			
+			int mid = (left+right)/2;
+			// Check skewness
+			if(nums[mid] < nums[left]) { // right skewed
+				// Move to the right half
+				min = Math.min(min, nums[mid]);
+				right = mid - 1;
+			}
+			else if(nums[mid] > nums[right]) { // left skewed
+				min = nums[mid];
+				left = mid + 1;
+			}
+			else if(nums[mid] == nums[left] && nums[right] == nums[mid]) {
+				while(mid > left && nums[left] == nums[mid]) {
+					++left;
+				}
+				while(mid < right && nums[right] == nums[mid]) {
+					--right;
+				}
+			}
+			else {
+				return Math.min(min, nums[left]); // no side skewed
+			}
+		}
+		
+        return Math.min(min, nums[left]);
+    }
+	
 }

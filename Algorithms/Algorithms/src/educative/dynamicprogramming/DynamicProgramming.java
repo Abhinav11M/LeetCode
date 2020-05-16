@@ -168,7 +168,7 @@ public class DynamicProgramming {
 	/**
 	 * canPartition using tabulation
 	 */
-	public boolean canPartitionMemoizationTabulation(int[] nums) {
+	public boolean canPartitionTabulation(int[] nums) {
 		int sum = Arrays.stream(nums).boxed().collect(Collectors.summingInt(x -> x));
 		
 		if(sum%2 != 0) {
@@ -199,6 +199,7 @@ public class DynamicProgramming {
 			for(int c = 1; c <= sum/2; ++c) {
 				boolean bool1 = false;
 				if(c - nums[i] > 0) {
+//					bool1 = dp[i][c] = dp[i-1][c-nums[i]];
 					bool1 = dp[i][c] = dp[i-1][c-nums[i]];
 				}
 				boolean bool2 = dp[i-1][c];

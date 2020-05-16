@@ -54,5 +54,14 @@ public class ProgCreekAlgosMain {
 		
 		System.out.println(algos.medianOfSortedArrays(new int[] {1,12,15,26,38}, new int[] {2,13,17,30,45}));
 		
+		// Min in rotated sorted array
+//		System.out.println(algos.findMin(new int[] {3,4,5,1,2}));
+//		System.out.println(algos.findMin(new int[] {4,5,6,7,0,1,2}));
+//		System.out.println(algos.findMin(new int[] {2,1}));
+//		System.out.println(algos.findMin(new int[] {2,3,4,5,1}));
+//		System.out.println(algos.findMin(new int[] {5,1,2,3,4}));
+//		System.out.println(algos.findMin(new int[] {2,2,2,0,1}));
+		System.out.println(algos.findMinWithDup(new int[] {3,3,1,3}));
+		
 	}
 }

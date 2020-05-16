@@ -29,4 +29,17 @@ public class EducativeExtras {
 		product = product * arr[index];
 		findSubArrays(arr, target, index+1, result, list, product);
 	}
+	
+	 public boolean subsetSumExists(int[] num, int sum) {
+		 boolean[] dp = new boolean[sum+1];
+		 
+		 // Sum 0 can be achieved by not choosing anything
+		 dp[0] = true;
+		 for(int i = 0; i <= sum; ++i) {
+//			 dp[i] = dp[]
+		 }
+		 
+		 
+		 return false;
+	 }
 }

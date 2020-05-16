@@ -65,6 +65,21 @@ public class DPMainNew {
 		System.out.println(dp.lisDP(new int[] {10, 22, 9, 33, 21, 50, 41, 60, 80}));
 		System.out.println(dp.lisDP(new int[] {10, 9}));
 		
+		System.out.println(dp.canJump(new int[] { 2,3,1,1,4 }));
+		System.out.println(dp.canJump(new int[] { 3,2,1,0,4 }));
+		System.out.println(dp.canJump(new int[] {0}));
+		System.out.println(dp.canJump(new int[] {1,2}));
+		// Greedy Approach
+		System.out.println(dp.canJumpGreedy(new int[] { 2,3,1,1,4 }));
+		System.out.println(dp.canJumpGreedy(new int[] { 3,2,1,0,4 }));
+		System.out.println(dp.canJumpGreedy(new int[] {0}));
+		System.out.println(dp.canJumpGreedy(new int[] {1,2}));
+		
+		System.out.println(dp.minJump(new int[] {2,3,1,1,4}));
+
+		System.out.println(dp.canReachRec(new int[] {4,2,3,0,3,1,2}, 5));
+		System.out.println(dp.canReachRec(new int[] {4,2,3,0,3,1,2}, 0));
+		System.out.println(dp.canReachRec(new int[] {3,0,2,1,2}, 2));
 	}
 
 }

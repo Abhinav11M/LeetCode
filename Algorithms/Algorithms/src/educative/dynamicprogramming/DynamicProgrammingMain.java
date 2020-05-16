@@ -30,9 +30,9 @@ public class DynamicProgrammingMain {
 		System.out.println(dp.canPartitionMemoization(new int[] {1, 1, 3, 4, 7}));
 		System.out.println(dp.canPartitionMemoization(new int[] {2, 3, 4, 6}));
 
-		System.out.println(dp.canPartitionMemoizationTabulation(new int[] {1, 2, 3, 4}));
-		System.out.println(dp.canPartitionMemoizationTabulation(new int[] {1, 1, 3, 4, 7}));
-		System.out.println(dp.canPartitionMemoizationTabulation(new int[] {2, 3, 4, 6}));
+		System.out.println(dp.canPartitionTabulation(new int[] {1, 2, 3, 4}));
+		System.out.println(dp.canPartitionTabulation(new int[] {1, 1, 3, 4, 7}));
+		System.out.println(dp.canPartitionTabulation(new int[] {2, 3, 4, 6}));
 		
 		
 		System.out.println("***Has Subset ***");
