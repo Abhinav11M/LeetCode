@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
 import com.google.common.collect.Lists;
 
@@ -613,30 +614,24 @@ public class ProgCreekAlgos {
 		}
 		
 		int left = 0, right = nums.length-1;
-		int min = Integer.MAX_VALUE;
 		
 		while(left <= right) {
-			if(nums[left] < nums[right]) {
-				return Math.min(min, nums[left]);
+			if(nums[left] <= nums[right]) { // Equal because they can come to the same index that might be min
+				return nums[left];
 			}
 			
 			int mid = (left+right)/2;
 			// Check skewness
-			if(nums[mid] < nums[left]) { // right skewed
+			if(nums[mid] < nums[left]) { // left skewed
 				// Move to the right half
-				min = Math.min(min, nums[mid]);
-				right = mid - 1;
+				right = mid;
 			}
-			else if(nums[mid] > nums[right]) { // left skewed
-				min = nums[mid];
+			else {// (nums[mid] > nums[right]) // right skewed
 				left = mid + 1;
-			}
-			else {
-				return Math.min(min, nums[left]); // no side skewed
 			}
 		}
 		
-        return Math.min(min, nums[left]);
+		return -1;
     }
 	
 	/**
@@ -649,38 +644,220 @@ public class ProgCreekAlgos {
 		}
 		
 		int left = 0, right = nums.length-1;
-		int min = Integer.MAX_VALUE;
 		
 		while(left <= right) {
 			if(nums[left] < nums[right]) {
-				return Math.min(min, nums[left]);
+				return nums[left];
+			}
+			
+			if(nums[left] == nums[right]) {
+				++left;
+				continue;
 			}
 			
 			int mid = (left+right)/2;
 			// Check skewness
 			if(nums[mid] < nums[left]) { // right skewed
 				// Move to the right half
-				min = Math.min(min, nums[mid]);
-				right = mid - 1;
+				right = mid;
 			}
-			else if(nums[mid] > nums[right]) { // left skewed
-				min = nums[mid];
+			else { // if(nums[mid] > nums[right]) { // left skewed
 				left = mid + 1;
 			}
-			else if(nums[mid] == nums[left] && nums[right] == nums[mid]) {
-				while(mid > left && nums[left] == nums[mid]) {
-					++left;
-				}
-				while(mid < right && nums[right] == nums[mid]) {
-					--right;
-				}
-			}
-			else {
-				return Math.min(min, nums[left]); // no side skewed
-			}
+			
 		}
 		
-        return Math.min(min, nums[left]);
+        return nums[right];
     }
 	
+    public int[] searchRange(int[] nums, int target) {
+    	
+    	if(nums.length == 1) {
+    		return nums[0] == target ? new int[] {0,0} : new int[] {-1,-1};
+    	}
+    	
+    	int left = 0, right = nums.length-1;
+    	
+    	while(left <= right) {
+    		int mid = (left+right)/2;
+    		
+    		if(nums[mid] == target) {
+    			while(nums[left] != nums[mid]) {
+    				++left;
+    			}
+    			
+    			while(nums[right] != nums[mid]) {
+    				--right;
+    			}
+    			
+    			return new int[] {left, right};
+    		}
+    		else if(nums[mid] > target) {
+    			right = mid-1;
+    		}
+    		else {
+    			left = mid+1;
+    		}
+    	}
+    	
+    	return new int[] {-1, -1};
+    }
+    
+    /**
+     * Search in rotated sorted array
+     */
+    public int searchInRotatedSortedArray(int[] nums, int target) {
+    	if(nums.length == 1) {
+    		return nums[0] == target ? 0 : -1;
+    	}
+
+    	int left = 0, right = nums.length-1;
+    	
+    	while(left <= right) {
+    		int mid = (left+right)/2;
+    		
+    		if(nums[mid] == target) {
+    			return mid;
+    		}
+    		
+    		if(nums[left] > nums[mid]) { // left skewed, right sorted
+    			// if the target is greater than mid, it can be in either half.
+    			// if the target is less than mid, it has to be in the left half.
+    			
+    			if(target < nums[mid]) {
+    				right = mid-1;
+    			}
+    			else {
+    				if(target > nums[right]) {
+    					right = mid-1;
+    				}
+    				else {
+    					left = mid+1;
+    				}
+    			}
+    		}
+    		else if(nums[right] < nums[mid]) { // right skewed, left sorted
+    			// If the target is less than mid, it can be in either halves.
+    			// But if the target is greater than mid, it has to be in the right half.
+    			if(target > nums[mid]) {
+    				left = mid+1;
+    			}
+    			else {
+    				if(target < nums[left]) {
+    					left = mid+1;
+    				}
+    				else {
+    					right = mid-1;
+    				}
+    			}
+    		}
+    		else { // no skew
+    			if(nums[mid] > target) {
+    				right = mid-1;
+    			}
+    			else {
+    				left = mid+1;
+    			}
+    		}
+    	}
+    	
+    	return -1;
+    }
+
+    public int searchInRotatedSortedArrayWithDup(int[] nums, int target) {
+    	if(nums.length == 1) {
+    		return nums[0] == target ? 0 : -1;
+    	}
+
+    	int left = 0, right = nums.length-1;
+    	
+    	while(left <= right) {
+    		int mid = (left+right)/2;
+    		
+    		if(nums[mid] == target) {
+    			return mid;
+    		}
+    		
+    		if(nums[mid] == nums[left]) {
+    			++left;
+    			continue;
+    		}
+    		
+    		if(nums[left] > nums[mid]) { // left skewed, right sorted
+    			// if the target is greater than mid, it can be in either half.
+    			// if the target is less than mid, it has to be in the left half.
+    			
+    			if(target < nums[mid]) {
+    				right = mid-1;
+    			}
+    			else {
+    				if(target > nums[right]) {
+    					right = mid-1;
+    				}
+    				else {
+    					left = mid+1;
+    				}
+    			}
+    		}
+    		else if(nums[right] < nums[mid]) { // right skewed, left sorted
+    			// If the target is less than mid, it can be in either halves.
+    			// But if the target is greater than mid, it has to be in the right half.
+    			if(target > nums[mid]) {
+    				left = mid+1;
+    			}
+    			else {
+    				if(target < nums[left]) {
+    					left = mid+1;
+    				}
+    				else {
+    					right = mid-1;
+    				}
+    			}
+    		}
+    		else { // no skew
+    			if(nums[mid] > target) {
+    				right = mid-1;
+    			}
+    			else {
+    				left = mid+1;
+    			}
+    		}
+    	}
+    	
+    	return -1;
+    }
+    
+    /**
+     * Reverse Polish Notation
+     */
+    public int evalRPN(String[] tokens) {
+        
+        Stack<Integer> stack = new Stack<>();
+    	for(String token : tokens) {
+    		if(token.equals("+") || token.equals("-") || token.equals("*") || token.equals("/")) {
+    			int operand1 = stack.pop();
+    			int operand2 = stack.pop();
+    			stack.push(evaluate(operand1, operand2, token));
+    		}
+    		else {
+    			stack.push(Integer.parseInt(token));
+    		}
+    	}
+    	return stack.pop();
+    }
+    
+    private int evaluate(int operand1, int operand2, String operator) {
+    	switch (operator) {
+		case "+":
+			return operand2 + operand1;
+		case "-":
+			return operand2 - operand1;
+		case "*":
+			return operand2 * operand1;
+		case "/":
+			return operand2 / operand1;
+		default:
+			return -1;
+		}
+    }
 }
