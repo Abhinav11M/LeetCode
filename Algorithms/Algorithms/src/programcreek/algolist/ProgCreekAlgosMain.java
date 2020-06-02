@@ -73,5 +73,7 @@ public class ProgCreekAlgosMain {
 		System.out.println(algos.evalRPN(new String[] {"4", "13", "5", "/", "+"}));
 		System.out.println(algos.evalRPN(new String[] {"10", "6", "9", "3", "+", "-11", "*", "/", "*", "17", "+", "5", "+"}));
 		
+		System.out.println(algos.longestValidParentheses("()"));
+		System.out.println(algos.longestValidParentheses(")()())"));
 	}
 }

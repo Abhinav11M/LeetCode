@@ -860,4 +860,42 @@ public class ProgCreekAlgos {
 			return -1;
 		}
     }
+    
+    /**
+     * Longest valid parentheses
+     */
+    public int longestValidParentheses(String s) {
+        
+        Stack<Integer[]> stack = new Stack<>();
+        int maxLength = 0;
+        
+        // Using 0 for '(' and 1 for ')'
+        for(int i = 0; i < s.length(); ++i) {
+        	char ch = s.charAt(i);
+        	if(ch == '(') {
+        		// (push index,0)
+        		stack.push(new Integer[] {i, 0});
+        	}
+        	else {
+        		// No '(' to be popped from the stack
+        		if(stack.isEmpty() || stack.peek()[1] == 1) {
+        			stack.push(new Integer[] {i, 1});
+        		}
+        		else {
+        			stack.pop(); // pop the balancing parenthesis
+        			int currLength = 0;
+        			if(stack.isEmpty()) {
+        				currLength = i+1; // All the parenthesis are consumed/balanced
+        			}
+        			else {
+        				currLength = i-stack.peek()[0];
+        			}
+        			
+        			maxLength = Math.max(maxLength, currLength);
+        		}
+        	}
+        }
+        
+        return maxLength;
+    }
 }
