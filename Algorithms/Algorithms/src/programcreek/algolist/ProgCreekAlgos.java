@@ -898,4 +898,197 @@ public class ProgCreekAlgos {
         
         return maxLength;
     }
+    
+    public int largestRectangleArea(int[] heights) {
+    	int i = 0;
+    	int max = 0;
+    	
+    	Stack<Integer> stack = new Stack<>();
+    	
+    	while(i < heights.length) {
+    		if(stack.isEmpty() || heights[i] >= heights[stack.peek()]) {
+    			stack.push(i++);
+    		}
+    		else { // Reached the end of increasing values. So the last histogram has come to an end
+    			int top = stack.pop();
+    			int l = heights[top];
+    			
+    			int w = stack.empty() ? i : i-1-stack.peek();
+    			
+    			max = Math.max(max, l*w);
+    		}
+    	}
+    	
+    	while(!stack.isEmpty()) {
+    		int top = stack.pop();
+    		int l = heights[top];
+    		int w = stack.empty() ? i : i-1-stack.peek();
+    		
+    		max = Math.max(max, l*w);
+    	}
+    	
+    	return max;
+    }
+    
+	public int largestRectangleArea2(int[] height) {
+		if (height == null || height.length == 0) {
+			return 0;
+		}
+		Stack<Integer> stack = new Stack<Integer>();
+		int max = 0;
+		int i = 0;
+		while (i < height.length) {
+			// push index to stack when the current height is larger than the previous
+			if (stack.isEmpty() || height[i] >= height[stack.peek()]) {
+				stack.push(i);
+				i++;
+			} else {
+				// calculate max value when the current height is less than the previous
+				int p = stack.pop();
+				int h = height[p];
+				int w = stack.isEmpty() ? i : i - stack.peek() - 1;
+				max = Math.max(h * w, max);
+			}
+		}
+		while (!stack.isEmpty()) {
+			int p = stack.pop();
+			int h = height[p];
+			int w = stack.isEmpty() ? i : i - stack.peek() - 1;
+			max = Math.max(h * w, max);
+		}
+		return max;
+	}
+	
+	/**
+	 * Broken Calculator : Still incomplete
+	 */
+	 public int brokenCalc(int X, int Y) {
+	   
+		 int count = 0;
+		 while(X < Y/2) {
+			 ++count;
+			 X *= 2;
+		 }
+		 
+		 return brokenCalc(X, Y, count);
+	     
+	 }
+
+	 private int brokenCalc(int x, int y, int count) {
+		 if(x == y) {
+			 return count;
+		 }
+		 
+		 int val1 = Integer.MAX_VALUE;
+		 // Bit overflow check
+		 if(x <= Integer.MAX_VALUE/2) {
+			 val1 = Math.abs(x*2-y);
+		 }
+		 
+		 int val2 = Math.abs((x-1)*2-y);
+		 
+		 if(val1 > val2) {
+			 return brokenCalc(x-1, y, count+1);
+		 }
+		 else {
+			 return brokenCalc(x*2, y, count+1);
+		 }
+	 }
+	 
+	public boolean isAnagram(String s1, String s2) {
+
+		if(s1.length() != s2.length()) {
+			return false;
+		}
+		
+		int[] count = new int[256];
+
+		for (int i = 0; i < s1.length(); ++i) {
+			++count[s1.charAt(i)];
+			--count[s2.charAt(i)];
+		}
+		
+		for(int i = 0; i < count.length; ++i) {
+			if(count[i] != 0) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+	
+	/**
+	 * Palindrome Pairs
+	 */
+	/*public List<List<Integer>> palindromePairs(String[] words) {
+		boolean[] isPalindrome = new boolean[words.length];
+		List<List<Integer>> pairs = new ArrayList<>();
+
+		for(int i = 0; i < words.length; ++i) {
+			if(isPalindrome[i] == true) {
+				continue;
+			}
+			
+			String word1 = words[i];
+			for(int j = i+1; j < words.length; ++j) {
+				String word2 = words[j];
+				
+				int i1 = 0;
+				int i2 = word2.length()-1;
+				while(i1 < word1.length() && i2 >= 0) {
+					if(word1.charAt(i1) != word2.charAt(i2)) {
+						break;
+					}
+					else {
+						++i1;
+						--i2;
+					}
+				}
+				
+				if(i1 == word1.length() && i2 == -1) {
+					pairs.add(Arrays.asList(new Integer[] {i,j}));
+					pairs.add(Arrays.asList(new Integer[] {j,i}));
+					continue;
+				}
+				
+				// If one of the words are exhausted.
+				// word1 exhausted but word2 has not
+				if(i1 == word1.length() && i2 != -1) {
+					i1 = 0;
+					while(i1 <= i2) {
+						if(word2.charAt(i1) != word2.charAt(i2)) {
+							break;
+						}
+						else {
+							++i1;
+							--i2;
+						}
+					}
+				}
+				
+				// word2 exhausted
+				if(i1 != word1.length() && i2 == -1) {
+					i2 = word1.length();
+					while(i1 <= i2) {
+						if(word1.charAt(i1) != word1.charAt(i2)) {
+							break;
+						}
+						else {
+							++i1;
+							--i2;
+						}
+					}
+				}
+				
+				if(i1 > i2) {
+					pairs.add(Arrays.asList(new Integer[] {i,j}));
+					isPalindrome[j] = true;
+				}
+			}
+		}
+		
+        return null;
+    }*/
+	
+	
 }

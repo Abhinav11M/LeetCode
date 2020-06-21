@@ -75,5 +75,18 @@ public class ProgCreekAlgosMain {
 		
 		System.out.println(algos.longestValidParentheses("()"));
 		System.out.println(algos.longestValidParentheses(")()())"));
+		
+//		System.out.println(algos.largestRectangleArea(new int[] {2,1,5,6,2,3}));
+//		System.out.println(algos.largestRectangleArea2(new int[] {4,2,0,3,2,5}));
+//		System.out.println(algos.largestRectangleArea2(new int[] {3,6,5,7,4,8,1,0}));
+		System.out.println(algos.largestRectangleArea2(new int[] {1,2,3,4,5,3,3,2}));
+
+		System.out.println("Broken Calc");
+//		System.out.println(algos.brokenCalc(2, 3));
+//		System.out.println(algos.brokenCalc(5, 8));
+//		System.out.println(algos.brokenCalc(3, 10));
+//		System.out.println(algos.brokenCalc(1, 1000000000));
+		
+//		System.out.println(algos.palindromePairs(new String[] {"abcd","dcba","lls","s","sssll"}));
 	}
 }
