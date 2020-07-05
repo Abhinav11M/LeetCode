@@ -1,5 +1,7 @@
 package programcreek.algolist;
 
+import java.util.Arrays;
+
 import helpers.Helpers;
 
 public class ProgCreekAlgosMain {
@@ -88,5 +90,72 @@ public class ProgCreekAlgosMain {
 //		System.out.println(algos.brokenCalc(1, 1000000000));
 		
 //		System.out.println(algos.palindromePairs(new String[] {"abcd","dcba","lls","s","sssll"}));
+		System.out.println(algos.lengthOfLongestSubstring("abcabcbb"));
+		System.out.println(algos.lengthOfLongestSubstring("bbbbb"));
+		System.out.println(algos.lengthOfLongestSubstring("pwwkew"));
+		System.out.println(algos.lengthOfLongestSubstring("tmmzuxt"));
+		System.out.println(algos.lengthOfLongestSubstring("bbtablud"));
+
+		System.out.println(algos.majorityElement2(new int[] {3,2,3}));
+		System.out.println(algos.majorityElement2(new int[] {1,1,1,3,3,2,2,2}));
+		System.out.println(algos.majorityElement2(new int[] {2,2}));
+		
+		System.out.println(algos.increasingTriplet(new int[] {1,1,1}));
+
+		// Rotate array
+		arr = new int[] {1,2,3,4,5,6,7}; 
+		algos.rotate(arr, 3);
+		Helpers.printArr(arr);
+		arr = new int[] {1,2,3,4,5}; 
+		algos.rotate(arr, 3);
+		Helpers.printArr(arr);
+
+		System.out.println(algos.reverseWords("the sky is blue"));
+		System.out.println(algos.reverseWords(" "));
+		
+		String s = "the sky is blue";
+		char[] cArr = s.toCharArray();
+		algos.reverseWords(cArr);
+		for(char ch : cArr) {
+			System.out.print(ch);
+		}
+		System.out.println();
+		
+		// ========== Group Anagrams =========
+		System.out.println(algos.groupAnagrams(new String[] {"eat", "tea", "tan", "ate", "nat", "bat"}));
+		System.out.println(algos.groupAnagramsOpt(new String[] {"eat", "tea", "tan", "ate", "nat", "bat"}));
+
+		/*
+		System.out.println(algos.isMatchDP("aa","a")); // false
+		System.out.println(algos.isMatchDP("aa","*a")); // true
+		System.out.println(algos.isMatchDP("cb","?a")); // false
+		System.out.println(algos.isMatchDP("adceb","a*c?b")); // true
+		System.out.println(algos.isMatchDP("aa","*")); // true
+		System.out.println(algos.isMatchDP("adceb","*a*b")); // true
+		System.out.println(algos.isMatchDP("zacabz","*a?b*")); // false
+		System.out.println(algos.isMatchDP("","")); // true*/
+		
+		System.out.println(algos.isMatch("aa","a")); // false
+		System.out.println(algos.isMatch("aa","*a")); // true
+		System.out.println(algos.isMatch("cb","?a")); // false
+		System.out.println(algos.isMatch("adceb","a*c?b")); // true
+		System.out.println(algos.isMatch("aa","*")); // true
+		System.out.println(algos.isMatch("adceb","*a*b")); // true
+		System.out.println(algos.isMatch("zacabz","*a?b*")); // false
+		System.out.println(algos.isMatch("","")); // true
+
+		System.out.println();
+		System.out.println(algos.isReachable(Arrays.asList(new Integer[] {1,2,3,4}), 21));
+		
+		System.out.println(algos.flipGameMtd2("++++"));
+		System.out.println(algos.flipGameMtd2("+++-++"));
+		System.out.println(algos.generatePossibleNextMoves("++++"));
+		System.out.println(algos.generatePossibleNextMoves("+++-++"));
+		System.out.println(algos.canWin("++++"));
+		
+		System.out.println(algos.wordPattern2("abba", "dog cat cat dog"));
+		System.out.println(algos.wordPattern2("abba", "dog cat cat fish"));
+		System.out.println(algos.wordPattern2("abba", "dog dog dog dog"));
 	}
+
 }
