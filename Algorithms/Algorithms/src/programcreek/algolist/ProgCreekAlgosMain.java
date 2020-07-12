@@ -1,6 +1,8 @@
 package programcreek.algolist;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 import helpers.Helpers;
 
@@ -156,6 +158,35 @@ public class ProgCreekAlgosMain {
 		System.out.println(algos.wordPattern2("abba", "dog cat cat dog"));
 		System.out.println(algos.wordPattern2("abba", "dog cat cat fish"));
 		System.out.println(algos.wordPattern2("abba", "dog dog dog dog"));
+
+		System.out.println(algos.wordPatternMatch("abab", "redblueredblue"));
+		System.out.println(algos.wordPatternMatch("aaaa", "asdasdasdasd"));
+//		System.out.println(algos.wordPatternMatch("aabb", "xyzabcxzyabc")); // Failing
+		
+		System.out.println(algos.findKthLargest(new int[] {3,2,1,5,6,4}, 2));
+		System.out.println(algos.findKthLargest(new int[] {3,2,3,1,2,4,5,5,6}, 4));
+
+		System.out.println(algos.topKFrequent(new int[] {1,1,1,2,2,3}, 2));
+		
+		System.out.println(algos.minMeetingRooms(new ProgCreekAlgos.Interval[] {
+				new ProgCreekAlgos.Interval(0, 30),
+				new ProgCreekAlgos.Interval(5, 10),
+				new ProgCreekAlgos.Interval(15, 20)
+		}));
+		
+		System.out.println(algos.minMeetingRooms(new ProgCreekAlgos.Interval[] {
+				new ProgCreekAlgos.Interval(7, 10),
+				new ProgCreekAlgos.Interval(2, 4)
+		}));
+
+		System.out.println(algos.minMeetingRooms(new ProgCreekAlgos.Interval[] {
+				new ProgCreekAlgos.Interval(0, 14),
+				new ProgCreekAlgos.Interval(6, 25),
+				new ProgCreekAlgos.Interval(12, 19),
+				new ProgCreekAlgos.Interval(13, 19),
+				new ProgCreekAlgos.Interval(5, 9)
+		}));
+		
 	}
 
 }

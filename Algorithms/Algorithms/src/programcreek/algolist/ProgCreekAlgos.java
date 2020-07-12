@@ -4,12 +4,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.PriorityQueue;
 import java.util.Stack;
 
 import com.google.common.collect.Lists;
+
+import lombok.AllArgsConstructor;
 
 public class ProgCreekAlgos {
 
@@ -1716,8 +1720,153 @@ public class ProgCreekAlgos {
 		
 		return true;
 	}
-}
+	
+	public boolean wordPatternMatch(String pattern, String str) {
+		return wordPattern(pattern, str, 0, 0, pattern.length(), str.length(), new HashMap<Character, String>(),
+				new HashSet<String>());
+	}
 
+	private boolean wordPattern(
+			String pattern, 
+			String str, 
+			int i, // pattern index
+			int j, // string index
+			int pLen, 
+			int sLen,
+			HashMap<Character, String> map, 
+			HashSet<String> set) {
+		
+		if(i == pLen && j == sLen) {
+			return true;
+		}
+		
+		if(i >= pLen || j >= sLen) {
+			return false;
+		}
+		
+		char ch = pattern.charAt(i);
+		
+		// If found in the map
+		if(map.containsKey(ch)) {
+			String s = map.get(ch);
+			int len = s.length();
+			// match the next len chars
+			if(!str.subSequence(j, j+len).equals(s)) {
+				return false;
+			}
+			return wordPattern(pattern, str, i+1, j+len, pLen, sLen, map, set);
+		}
+		
+		// If not found in the map, create all possible subsequences
+		for(int k = 1; k < sLen-j; ++k) {
+			String sub = str.substring(j, j+k);
+			if(set.contains(sub)) {
+				continue;
+			}
+			
+			map.put(ch, sub);
+			set.add(sub);
+			
+			if(wordPattern(pattern, str, i+1, j+k, pLen, sLen, map, set)) {
+				return true;
+			}
+			
+			map.remove(ch);
+			set.remove(sub);
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Kth largest element in an array
+	 */
+	public int findKthLargest(int nums[], int k) {
+		PriorityQueue<Integer> minHeap = new PriorityQueue<>(k, (a,b) -> Integer.compare(a, b));
+		
+		int i = 0;
+		for(; i < k; ++i) {
+			minHeap.add(nums[i]);
+		}
+		
+		for(; i < nums.length; ++i) {
+			if(minHeap.peek() < nums[i]) {
+				minHeap.poll();
+				minHeap.add(nums[i]);
+			}
+		}
+		
+		return minHeap.peek();
+	}
+	
+	private static class ItemFreq {
+		public int value;
+		public int freq;
+		
+		public ItemFreq(int value, int freq) {
+			this.value = value;
+			this.freq = freq;
+		}
+	}
+	
+	/**
+	 * Top K frequent elements
+	 */
+	public List<Integer> topKFrequent(int[] nums, int k) {
+		Map<Integer, Integer> map = new HashMap<>();
+		for(int val : nums) {
+			map.put(val, map.getOrDefault(val, 0)+1);
+		}
+		
+		PriorityQueue<ItemFreq> minHeap = new PriorityQueue<>((a,b) -> a.freq - b.freq);
+		
+		for(Map.Entry<Integer, Integer> entry : map.entrySet()) {
+			minHeap.add(new ItemFreq(entry.getKey(), entry.getValue()));
+			
+			if(minHeap.size() > k) {
+				minHeap.poll();
+			}
+		}
+		
+		List<Integer> results = new LinkedList<>();
+		while(!minHeap.isEmpty()) {
+			results.add(0, minHeap.poll().value);
+		}
+		
+		return results;
+	}
+	
+	@AllArgsConstructor
+	public static class Interval {
+		public int start;
+		public int end;
+	}
+	/**
+	 * Meeting Rooms II
+	 */
+	public int minMeetingRooms(Interval[] intervals) {
+		// Create a priority queue to the end time of intervals to identify which meeting is ending first
+		PriorityQueue<Interval> minHeap = new PriorityQueue<>((a,b) -> Integer.compare(a.end, b.end));
+		
+		Arrays.sort(intervals, (a,b) -> Integer.compare(a.start, b.start));
+		
+		for(int i = 0; i < intervals.length; ++i) {
+			Interval curr = intervals[i];
+			if(minHeap.isEmpty()) {
+				minHeap.offer(curr);
+				continue;
+			}
+			
+			if(minHeap.peek().end <= curr.start) { 
+				// Meeting ended and taken over by next meeting
+				minHeap.poll();
+			}
+			minHeap.offer(curr);
+		}
+		
+		return minHeap.size();
+	}
+}
 
 
 
