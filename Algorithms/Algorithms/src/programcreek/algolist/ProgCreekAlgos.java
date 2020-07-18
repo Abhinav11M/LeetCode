@@ -10,9 +10,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Stack;
+import java.util.TreeSet;
 
 import com.google.common.collect.Lists;
 
+import datastructures.ListNode;
 import lombok.AllArgsConstructor;
 
 public class ProgCreekAlgos {
@@ -1866,6 +1868,493 @@ public class ProgCreekAlgos {
 		
 		return minHeap.size();
 	}
+	
+	/**
+	 * Meeting Rooms
+	 */
+	public boolean canAttendMeetings(Interval[] intervals) {
+		if(intervals == null || intervals.length == 0) {
+			return true;
+		}
+		
+		// Sort intervals based on the start time
+		Arrays.sort(intervals, (a, b) -> Integer.compare(a.start, b.start));
+		
+		for(int i = 1; i < intervals.length; ++i) {
+			if(intervals[i].start < intervals[i-1].end) { // Next meeting starts before the prev ends
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
+	/**
+	 * Range Addition
+	 * updates[] : [[start, end, increment]]
+	 */
+	public int[] getModifiedArray(int length, int[][] updates) {
+		
+		int[] sum = new int[length];
+		int nQueries = updates.length;
+		
+		for(int i = 0; i < nQueries; ++i) {
+			int start = updates[i][0];
+			int end = updates[i][1];
+			int increment = updates[i][2];
+			
+			sum[start] += increment;
+			if(end+1 < length) {
+				sum[end+1] -= increment;
+			}
+		}
+		
+		for(int i = 1; i < length; ++i) {
+			sum[i] += sum[i-1];
+		}
+		
+		return sum;
+	}
+	
+	/**
+	 * Merge k sorted arrays
+	 */
+	public ListNode mergeKLists(ListNode[] lists) {
+		int len = lists.length;
+		
+		PriorityQueue<ListNode> minHeap = new PriorityQueue<>((a, b) -> Integer.compare(a.val, b.val));
+		
+		for(int i = 0; i < len; ++i) {
+			if(lists[i] != null) {
+				minHeap.offer(lists[i]);
+			}
+		}
+
+		ListNode head = null;
+		ListNode retHead = head;
+		
+		while(!minHeap.isEmpty()) {
+			ListNode curr = minHeap.poll();
+			if(head == null) {
+				head = new ListNode(curr.val);
+				head.next = null;
+				retHead = head;
+			}
+			else {
+				head.next = new ListNode(curr.val);
+				head = head.next;
+			}
+			
+			if(curr.next != null) {
+				minHeap.offer(curr.next);
+			}
+		}
+		// If all the arrays are empty, we will have a null head.
+		if(head != null) {
+			head.next = null;
+		}
+		
+		return retHead;
+	}
+	
+	/**
+	 * Contains Duplicate
+	 */
+	public boolean containsDuplicate(int[] nums) {
+		HashSet<Integer> set = new HashSet<>();
+		for(int i = 0; i < nums.length; ++i) {
+			if(set.contains(nums[i])) {
+				return true;
+			}
+			
+			set.add(nums[i]);
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Contains Duplicate II
+	 */
+	public boolean containsNearbyDuplicate(int[] nums, int k) {
+		
+		HashMap<Integer, Integer> map = new HashMap<>();
+		
+		for(int i = 0; i < nums.length; ++i) {
+			if(map.containsKey(nums[i]) && i-map.get(nums[i]) <= k) {
+				return true;
+			}
+			else {
+				map.put(nums[i], i);
+			}
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Contains Duplicate III
+	 * @param k Max index diff
+	 * @param t Max value diff
+	 */
+	public boolean containsNearbyAlmostDuplicate(int[] nums, int k, int t) {
+		TreeSet<Integer> set = new TreeSet<>();
+		
+		for(int i = 0; i < nums.length; ++i) {
+			int curr = nums[i];
+			int leftRange = -1, rightRange = -1;
+			if(t >= 0) {
+				leftRange = curr - t;
+				rightRange = curr + t+1; // Last value is exclusive
+			}
+			else {
+				leftRange = curr + t;
+				rightRange = curr - t + 1;
+			}
+			
+			if(set.subSet(leftRange, rightRange).size() > 0) {
+				return true;
+			}
+			
+			set.add(nums[i]);
+			if(i >= k) {
+				set.remove(nums[i-k]);
+			}
+		}
+		
+		return false;
+    }
+	
+	/**
+	 * Missing number
+	 */
+	public int missingNumber(int[] nums) {
+		int i = 0;
+		int retVal = nums.length;
+		while(i < nums.length) {
+			if(nums[i] == i) {
+				++i;
+			}
+			else {
+				if(nums[i] >= nums.length) {
+					retVal = i;
+					++i;
+				}
+				else { // Swap
+					int temp = nums[nums[i]];
+					nums[nums[i]] = nums[i];
+					nums[i] = temp;
+				}
+			}
+		}
+		return retVal;
+	}
+	
+	public int missingNumberMtd2(int[] nums) {
+		// Sort the array in place
+		int i = 0;
+		while(i < nums.length) {
+			if(nums[i] < nums.length && nums[i] != i) {
+				// Swap
+				int temp = nums[nums[i]];
+				nums[nums[i]] = nums[i];
+				nums[i] = temp;
+			}
+			else {
+				++i;
+			}
+		}
+		
+		// Check for the missing value
+		for(i = 0; i < nums.length; ++i) {
+			if(nums[i] != i) {
+				return i;
+			}
+		}
+		
+		return nums.length;
+	}
+	
+	public int missingNumberMtd3(int[] nums) {
+		int n = nums.length;
+		int sum = 0;
+		for(int i = 0; i < n; ++i) {
+			sum += nums[i];
+		}
+
+		return (n*(n+1))/2 - sum;
+	}
+
+	
+	/**
+	 * Find the duplicate number
+	 * This solution only expects one duplicate value.
+	 */
+	public int findDuplicate(int[] nums) {
+		int n = nums.length;
+		int sum = 0;
+		for(int i = 0; i < n; ++i) {
+			sum += nums[i];
+		}
+		
+		int expSum = n*(n+1)/2;
+		int expectedNum = expSum - sum;
+		int duplicate = n-expectedNum;
+		
+		return duplicate;
+	}
+	
+	/**
+	 * Here we are modifying the array. What if the array is read only and we only have O(1) space?
+	 * @param nums
+	 * @return
+	 */
+	public int findDuplicateLeet(int[] nums) {
+		int i = 0;
+		while(i < nums.length) {
+			if(nums[i] == i+1) {
+				++i;
+			}
+			else {
+				// Swap
+				if(nums[nums[i]-1] == nums[i]) {
+					return nums[i];
+				}
+				int temp = nums[nums[i]-1];
+				nums[nums[i]-1] = nums[i];
+				nums[i] = temp;
+			}
+		}
+		
+		return nums.length;
+	}
+	
+	/**
+	 * Find duplicate using Floyd's algorithm
+	 */
+	public int FindDuplicateFloyd(int[] nums) {
+		
+		int slow = nums[0];
+		int fast = nums[0];
+		
+		slow = nums[slow];
+		fast = nums[nums[fast]];
+		
+		while(slow != fast) {
+			slow = nums[slow];
+			fast = nums[nums[fast]];
+		}
+		
+		fast = nums[0];
+		while(slow != fast) {
+			slow = nums[slow];
+			fast = nums[fast];
+		}
+		
+		return fast;
+	}
+	
+	/**
+	 * First Missing Positive Number
+	 */
+	public int firstMissingPositive(int[] nums) {
+		int n = nums.length;
+		int i = 0;
+		
+		// We only need to swap +ve numbers and we will shift +ve numbers starting index 0.
+		while(i < n) {
+			if (nums[i] > 0 && nums[i] <= n //&& nums[i] - 1 != i && nums[nums[i] - 1] != i
+					&& nums[i] != nums[nums[i] - 1]) {
+				//swap
+				int temp = nums[nums[i]-1];
+				nums[nums[i]-1] = nums[i];
+				nums[i] = temp;
+			}
+			else {
+				++i;
+			}
+		}
+		
+		// The numbers {1,2...} are now arranged starting index 0.
+		for(i = 0; i < n; ++i) {
+			if(nums[i] != i+1) {
+				return i+1;
+			}
+		}
+		
+		return i+1;
+	}
+	
+	/**
+	 * H-Index
+	 */
+	public int hIndex(int[] citations) {
+		Arrays.sort(citations);
+		int len = citations.length;
+		int hIndex = 0;
+		
+		for(int i = 0; i < len; ++i) {
+			int val = citations[i];
+			if(len-i >= val) {
+				hIndex = val;
+			}
+			else {
+				hIndex = Math.max(hIndex, len-i);
+			}
+		}
+		
+		return hIndex;
+	}
+
+	/**
+	 * Just a more cleaner way for above algo
+	 */
+	public int hIndexClean(int[] citations) {
+		
+		Arrays.sort(citations);
+		
+		int hIndex = 0;
+		int len = citations.length;
+		
+		for(int i = 0; i < len; ++i) {
+			int possibleVal = Math.min(citations[i], len-i);
+			hIndex = Math.max(hIndex, possibleVal);
+		}
+		
+		return hIndex;
+	}
+	
+	/**
+	 * H-Index II (Citations are sorted in ascending order)
+	 * @param citations
+	 * @return
+	 */
+	public int hIndex2(int[] citations) {
+		
+		int hIndex = 0;
+		int len = citations.length;
+		
+		for(int i = len-1; i >= 0; --i) {
+			int possibleVal = Math.min(citations[i], len-i);
+			hIndex = Math.max(hIndex, possibleVal);
+		}
+		
+		return hIndex;
+	}
+	
+	/**
+	 * Use binary search to optimize
+	 * @param citations
+	 * @return
+	 */
+	public int hIndex2Opt(int[] citations) {
+	
+		if(citations == null || citations.length == 0) {
+			return 0;
+		}
+		
+		int left = 0, right = citations.length-1;
+		int len = citations.length;
+		
+		int hIndex = Integer.MIN_VALUE;
+		while(left <= right) {
+			int mid = (right+left)/2;
+			hIndex = Math.max(hIndex, Math.min(citations[mid], len-mid));
+			// check on the mid if we can move towards right
+			if(citations[mid] > len-mid) { // move left
+				right = mid-1;
+			}
+			else if(citations[mid] < len-mid) { // move right
+				left = mid+1;
+			}
+			else {
+				return hIndex;
+			}
+		}
+		
+		return hIndex;
+	}
+	
+	/**
+	 * Sliding Window Maximum
+	 */
+	public int[] maxSlidingWindow(int[] nums, int k) {
+		if(nums == null || nums.length < k) {
+			return new int[] {};
+		}
+		
+		if(k == 1) {
+			return nums;
+		}
+		
+		int[] res = new int[nums.length-k+1];
+		
+		// Save the indices and not the numbers
+		LinkedList<Integer> queue = new LinkedList<>();
+
+		int i = 0;
+		for(; i < nums.length; ++i) { 
+			// Queue cannot have elements from elements left to index i-k+1
+			while(!queue.isEmpty() && queue.peek() < i-k+1) {
+				queue.poll();
+			}
+			
+			// keep removing elements from until the head becomes max
+			// this will make sure that the queue is always in descending order
+			while(!queue.isEmpty() && nums[i] > nums[queue.peekLast()]) { 
+				queue.removeLast();
+			}
+			
+			// Push the index
+			queue.offer(i);
+			
+			if(i >= k-1) {
+				res[i-k+1] = nums[queue.peek()];
+			}
+		}
+		
+		return res;
+	}
+	
+	
+	public ArrayList<Integer> slidingMaximum12(final List<Integer> A, int B) {
+        if(A == null || A.size() < B) {
+			return new ArrayList<>();
+		}
+		
+		if(B == 1) {
+			return new ArrayList<Integer>(A);
+		}
+		
+		ArrayList<Integer> res = new ArrayList<>();
+		
+		// Save the indices and not the numbers
+		LinkedList<Integer> queue = new LinkedList<>();
+
+		int i = 0;
+		for(; i < A.size(); ++i) { 
+			// Queue cannot have elements from elements left to index i-k+1
+			while(!queue.isEmpty() && queue.peek() < i-B+1) {
+				queue.poll();
+			}
+			
+			// keep removing elements from until the head becomes max
+			// this will make sure that the queue is always in descending order
+			while(!queue.isEmpty() && A.get(i) > A.get(queue.peekLast())) { 
+				queue.removeLast();
+			}
+			
+			// Push the index
+			queue.offer(i);
+			
+			if(i >= B-1) {
+				res.add(A.get(queue.peek()));
+			}
+		}
+		
+		return res;
+    }
+	
 }
 
 

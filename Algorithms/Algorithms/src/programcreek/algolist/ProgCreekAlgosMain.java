@@ -1,9 +1,8 @@
 package programcreek.algolist;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 
+import datastructures.ListNode;
 import helpers.Helpers;
 
 public class ProgCreekAlgosMain {
@@ -187,6 +186,106 @@ public class ProgCreekAlgosMain {
 				new ProgCreekAlgos.Interval(5, 9)
 		}));
 		
+		System.out.println(algos.canAttendMeetings(new ProgCreekAlgos.Interval[] {
+				new ProgCreekAlgos.Interval(0, 4),
+				new ProgCreekAlgos.Interval(12, 19),
+				new ProgCreekAlgos.Interval(5, 9)
+		}));
+		
+		System.out.println(algos.canAttendMeetings(new ProgCreekAlgos.Interval[] {
+				new ProgCreekAlgos.Interval(4, 6),
+				new ProgCreekAlgos.Interval(8, 10),
+				new ProgCreekAlgos.Interval(6, 8)
+		}));
+
+		System.out.println(algos.canAttendMeetings(new ProgCreekAlgos.Interval[] {
+				new ProgCreekAlgos.Interval(4, 6),
+				new ProgCreekAlgos.Interval(8, 10),
+				new ProgCreekAlgos.Interval(5, 8)
+		}));
+		
+		Helpers.printArr(algos.getModifiedArray(4, new int[][] {
+			{0, 1, 1},
+			{0, 2, 3},
+		}));
+		
+		Helpers.printArr(algos.getModifiedArray(8, new int[][] {
+			{0, 3, 1},
+			{4, 5, 3},
+			{1, 4, 2},
+			{0, 1, 4},
+			{2, 5, 2}
+		}));
+		
+		ListNode head1 = new ListNode(1, new ListNode(4, new ListNode(5)));
+		ListNode head2 = new ListNode(1, new ListNode(3, new ListNode(4)));
+		ListNode head3 = new ListNode(2, new ListNode(6));
+		
+		ListNode res = algos.mergeKLists(new ListNode[] {head1, head2, head3});
+		res = algos.mergeKLists(new ListNode[] {});
+		
+		System.out.println(algos.containsDuplicate(new int[] {1,3,5,2,4,7}));
+		System.out.println(algos.containsDuplicate(new int[] {1,3,5,2,4,2}));
+		System.out.println("Duplicate II");
+		System.out.println(algos.containsNearbyDuplicate(new int[] {1,2,3,1}, 3));
+		System.out.println(algos.containsNearbyDuplicate(new int[] {1,0,1,1}, 1));
+		System.out.println(algos.containsNearbyDuplicate(new int[] {1,2,3,1,2,3}, 2));
+
+		System.out.println("Duplicate III");
+		System.out.println(algos.containsNearbyAlmostDuplicate(new int[] {1,2,3,1}, 3, 0));
+		System.out.println(algos.containsNearbyAlmostDuplicate(new int[] {1,0,1,1}, 1, 2));
+		System.out.println(algos.containsNearbyAlmostDuplicate(new int[] {1,5,9,1,5,9}, 2, 3));
+		System.out.println(algos.containsNearbyAlmostDuplicate(new int[] {1,-1}, 1, -1));
+		
+		System.out.println("Missing number");
+		System.out.println(algos.missingNumberMtd3(new int[] {3,0,1}));
+		System.out.println(algos.missingNumberMtd3(new int[] {9,6,4,2,3,5,7,0,1}));
+
+		System.out.println("Duplicate number");
+		System.out.println(algos.findDuplicateLeet(new int[] {1,3,4,2,2}));
+		System.out.println(algos.findDuplicateLeet(new int[] {3,1,3,4,2}));
+		System.out.println(algos.findDuplicateLeet(new int[] {1,3,4,2,1}));
+		System.out.println("Floyd");
+		System.out.println(algos.FindDuplicateFloyd(new int[] {1,3,4,2,2}));
+		System.out.println(algos.FindDuplicateFloyd(new int[] {3,1,3,4,2}));
+		System.out.println(algos.FindDuplicateFloyd(new int[] {1,3,4,2,1}));
+		
+		System.out.println("First Missing Positive Integer");
+//		System.out.println(algos.firstMissingPositive(new int[] {1,2,0}));
+//		System.out.println(algos.firstMissingPositive(new int[] {3,4,-1,1}));
+//		System.out.println(algos.firstMissingPositive(new int[] {7,8,9,11,12}));
+//		System.out.println(algos.firstMissingPositive(new int[] {1}));
+//		System.out.println(algos.firstMissingPositive(new int[] {1,1}));
+//		System.out.println(algos.firstMissingPositive(new int[] {2,2}));
+		System.out.println(algos.firstMissingPositive(new int[] { 
+						11, 1, 6, 11, 5, 5, -6, 9, -3, 9, 5, 4, 2, -8, 16, -6, -4, 2, 3 
+						}));
+		
+		System.out.println("H-Index");
+		System.out.println(algos.hIndex(new int[] {3,0,6,1,5}));
+		System.out.println(algos.hIndex(new int[] {100}));
+		System.out.println(algos.hIndex(new int[] {0,0,4,4}));
+
+		System.out.println("H-IndexOpt");
+		System.out.println(algos.hIndex2Opt(new int[] {0,1,3,5,6}));
+		System.out.println(algos.hIndex2Opt(new int[] {100}));
+		System.out.println(algos.hIndex2Opt(new int[] {0,0,4,4}));
+		System.out.println(algos.hIndex2Opt(new int[] {0}));
+		
+		System.out.println("Maximum Sliding Window");
+		Helpers.printArr(algos.maxSlidingWindow(new int[] {1,3,-1,-3,5,3,6,7}, 3));;
+		Helpers.printArr(algos.maxSlidingWindow(new int[] {1}, 1));;
+		Helpers.printArr(algos.maxSlidingWindow(new int[] {1,-1}, 1));;
+		Helpers.printArr(algos.maxSlidingWindow(new int[] {7,2,4}, 2));;
+		Helpers.printArr(algos.maxSlidingWindow(new int[] {1,3,1,2,0,5}, 3));;
+		
+		MovingAverage avg = new MovingAverage(3);
+		System.out.println(avg.next(1));
+		System.out.println(avg.next(2));
+		System.out.println(avg.next(3));
+		System.out.println(avg.next(4));
+		System.out.println(avg.next(5));
+		System.out.println(avg.next(6));
 	}
 
 }

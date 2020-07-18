@@ -13,4 +13,9 @@ public class ListNode {
 		val = x;
 		next = null;
 	}
+	
+	public ListNode(int x, ListNode n) {
+		val = x;
+		next = n;
+	}
 }
