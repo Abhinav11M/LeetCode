@@ -286,6 +286,59 @@ public class ProgCreekAlgosMain {
 		System.out.println(avg.next(4));
 		System.out.println(avg.next(5));
 		System.out.println(avg.next(6));
+		
+		System.out.println("Median Finder");
+		MedianFinder med = new MedianFinder();
+		med.addNum(2);
+		med.addNum(3);
+		med.addNum(4);
+		
+		System.out.println(med.findMedian());
+		
+		med = new MedianFinder();
+		med.addNum(2);
+		med.addNum(3);
+		
+		System.out.println(med.findMedian());
+		
+		System.out.println("Disjoint intervals");
+		SummaryRanges summRanges = new SummaryRanges();
+		summRanges.addNum(1);
+		summRanges.addNum(3);
+		summRanges.addNum(7);
+		summRanges.addNum(2);
+		summRanges.addNum(6);
+		
+		Helpers.printArr(summRanges.getIntervals());
+		
+		System.out.println("Largest Numbers");
+		System.out.println(algos.largestNumber(new int[] {10, 2}));
+		System.out.println(algos.largestNumber(new int[] {3,30,34,5,9}));
+		
+		
+		ListNode slHead = new ListNode(4, new ListNode(1, new ListNode(3)));
+		SortLinkedList sl = new SortLinkedList();
+		ListNode sortedHead = sl.mergeSortList(slHead);
+		System.out.println(sortedHead);
+		slHead = new ListNode(4, new ListNode(1));
+		sortedHead = sl.mergeSortList(slHead);
+		System.out.println(sortedHead);
+		slHead = new ListNode(4, new ListNode(1, new ListNode(3, new ListNode(2, new ListNode(5)))));
+		sortedHead = sl.mergeSortList(slHead);
+		System.out.println(sortedHead);
 	}
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

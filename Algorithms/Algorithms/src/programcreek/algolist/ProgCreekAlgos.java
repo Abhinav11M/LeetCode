@@ -3,6 +3,8 @@ package programcreek.algolist;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -11,6 +13,7 @@ import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Stack;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import com.google.common.collect.Lists;
 
@@ -2355,6 +2358,33 @@ public class ProgCreekAlgos {
 		return res;
     }
 	
+	/**
+	 * Largest Number
+	 */
+	public String largestNumber(int[] nums) {
+		List<String> strNums = Arrays.stream(nums).boxed().map(x -> Integer.toString(x)).collect(Collectors.toList());
+		
+		Collections.sort(strNums, new Comparator<String>() {
+
+			@Override
+			public int compare(String o1, String o2) {
+				String s1 = o1+o2;
+				String s2 = o2+o1;
+				return s2.compareTo(s1);
+			}
+		});
+		
+		StringBuilder resStr = new StringBuilder();
+		for(String s : strNums) {
+			resStr.append(s);
+		}
+        
+        while(resStr.length() > 1 && resStr.charAt(0) == '0') {
+        	resStr.deleteCharAt(0);
+        }
+        
+        return resStr.toString();
+    }	
 }
 
 
