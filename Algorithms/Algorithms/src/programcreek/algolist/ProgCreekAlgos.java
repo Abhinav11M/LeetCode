@@ -2385,6 +2385,221 @@ public class ProgCreekAlgos {
         
         return resStr.toString();
     }	
+
+	/**
+	 * Sort Colors
+	 */
+	public void sortColors(int[] nums) {
+		int c0 = 0, c1 = 0;
+		for(int i = 0; i < nums.length; ++i) {
+			if(nums[i] == 0) {
+				++c0;
+			}
+			else if(nums[i] == 1) {
+				++c1;
+			}
+		}
+		
+		for(int i = 0; i < c0; ++i) {
+			nums[i] = 0;
+		}
+		for(int i = c0; i < c0+c1; ++i) {
+			nums[i] = 1;
+		}
+		for(int i = c0+c1; i < nums.length; ++i) {
+			nums[i] = 2;
+		}
+	}
+	
+	// Solved using counting sort
+	public void sortColors2(int[] nums) {
+		int[] counts = new int[3];
+		
+		// Save counts of 0,1,2
+		for(int i = 0; i < nums.length; ++i) {
+			counts[nums[i]]++;
+		}
+		
+		// Add prev value to get the indices
+		for(int i = 1; i < counts.length; ++i) {
+			counts[i] += counts[i-1];
+		}
+		
+		int res[] = new int[nums.length];
+		for(int i = 0; i < nums.length; ++i) {
+			int idx = counts[nums[i]]-1;
+			res[idx] = nums[idx];
+			counts[nums[i]]--;
+		}
+		
+		System.arraycopy(res, 0, nums, 0, nums.length);
+	}
+	
+	/**
+	 * Merge Intervals
+	 */
+	public int[][] merge(int[][] intervals) {
+		
+		if(intervals == null || intervals.length < 2) {
+			return intervals;
+		}
+		
+		// Sort on the start time
+		Arrays.sort(intervals, (a,b) -> Integer.compare(a[0], b[0]));
+
+		List<Integer[]> result = new ArrayList<>();
+		
+		int start = intervals[0][0];
+		int end = intervals[0][1];
+
+		for(int i = 1; i < intervals.length; ++i) {
+			// If the interval starts before the prev ends
+			if(intervals[i][0] <= end) {
+				end = Math.max(end, intervals[i][1]);
+			}
+			else {
+				// Add to the result and update start and end
+				result.add(new Integer[] {start, end});
+				start = intervals[i][0];
+				end = intervals[i][1];
+			}
+		}
+		// Add the last interval
+		result.add(new Integer[] {start, end});
+		
+		int[][] resArr = new int[result.size()][2];
+		for(int i = 0; i < result.size(); ++i) {
+			resArr[i] = new int[] { result.get(i)[0], result.get(i)[1] };
+		}
+		
+		return resArr;
+	}
+	
+	/**
+	 * Insert Interval
+	 */
+	public int[][] insert(int[][] intervals, int[] newInterval) {
+		
+		if(intervals == null || intervals.length == 0) {
+			return new int[][] {{newInterval[0], newInterval[1]}};
+		}
+		
+		List<Integer[]> res = new ArrayList<>();
+		
+		for(int i = 0; i < intervals.length;) {//int[] interval : intervals) {
+			// Interval end is before new Interval start
+			if(intervals[i][1] < newInterval[0]) {
+				res.add(new Integer[] {intervals[i][0], intervals[i][1]});
+				++i;
+			}
+			else if(newInterval[1] < intervals[i][0]) {
+				res.add(new Integer[] {newInterval[0], newInterval[1]});
+				res.add(new Integer[] {intervals[i][0], intervals[i][1]});
+				++i;
+			}
+			else {
+				// newInterval ends before interval starts
+				// find the interval
+				int start = intervals[i][0];
+				int end = newInterval[1];
+				while(i < intervals.length && intervals[i][0] <= newInterval[1]) {
+					end = Math.max(end, intervals[i][1]);
+					++i;
+				}
+				res.add(new Integer[] {start, end});
+			}
+		}
+		
+		if(!res.isEmpty() && res.get(res.size()-1)[1] < newInterval[0]) {
+			res.add(new Integer[] {newInterval[0], newInterval[1]});
+		}
+		
+		int[][] resArr = new int[res.size()][2];
+		for(int i = 0; i < res.size(); ++i) {
+			resArr[i] = new int[] { res.get(i)[0], res.get(i)[1] };
+		}
+		
+		return resArr;
+	}
+	
+	public int[][] insert1(int[][] intervals, int[] newInterval) {
+		
+		if(intervals == null || intervals.length == 0) {
+			return new int[][] {{newInterval[0], newInterval[1]}};
+		}
+		
+		List<Integer[]> res = new ArrayList<>();
+		int i = 0;
+		int start = Integer.MAX_VALUE, end = Integer.MIN_VALUE;
+		while(i < intervals.length) {
+			// Overlapping
+			if(intervals[i][0] <= newInterval[0] && intervals[i][1] >= newInterval[0] || 
+					newInterval[0] <= intervals[i][0] && newInterval[1] >= intervals[i][0]) {
+				start = Math.min(intervals[i][0], newInterval[0]);
+				end = Math.max(intervals[i][1], newInterval[1]);
+				++i;
+			}
+			else if(intervals[i][1] < newInterval[0]) {
+				res.add(new Integer[] {intervals[i][0], intervals[i][1]});
+				++i;
+			}
+			else {
+				res.add(new Integer[] {newInterval[0], newInterval[1]});
+				break;
+			}
+		}
+		
+		if(i == intervals.length) {
+			res.add(new Integer[] {start, end});
+		}
+		
+		while(i < intervals.length) {
+			res.add(new Integer[] {intervals[i][0], intervals[i][1]});
+		}
+		
+		int[][] resArr = new int[res.size()][2];
+		for(i = 0; i < res.size(); ++i) {
+			resArr[i] = new int[] { res.get(i)[0], res.get(i)[1] };
+		}
+		
+		return resArr;
+	}
+
+	public int[][] insert2(int[][] intervals, int[] newInterval) {
+		
+		if(intervals == null || intervals.length == 0) {
+			return new int[][] {{newInterval[0], newInterval[1]}};
+		}
+		
+		List<Integer[]> res = new ArrayList<>();
+		int i = 0;
+		//Add while no overlap
+		while(i < intervals.length && intervals[i][1] < newInterval[0]) {
+			res.add(new Integer[] {intervals[i][0], intervals[i][1]});
+			++i;
+		}
+		
+		// Merge all the overlapping
+		while(i < intervals.length && intervals[i][0] <= newInterval[1]) {
+			newInterval[0] = Math.min(intervals[i][0], newInterval[0]);
+			newInterval[1] = Math.max(intervals[i][1], newInterval[1]);
+			++i;
+		}
+		// Add the merged interval
+		res.add(new Integer[] {newInterval[0], newInterval[1]});
+		
+		while(i < intervals.length) {
+			res.add(new Integer[] {intervals[i][0], intervals[i][1]});
+			++i;
+		}
+		
+		int[][] resArr = new int[res.size()][2];
+		for(i = 0; i < res.size(); ++i) {
+			resArr[i] = new int[] { res.get(i)[0], res.get(i)[1] };
+		}
+		
+		return resArr;
+	}
 }
 
 

@@ -326,6 +326,44 @@ public class ProgCreekAlgosMain {
 		slHead = new ListNode(4, new ListNode(1, new ListNode(3, new ListNode(2, new ListNode(5)))));
 		sortedHead = sl.mergeSortList(slHead);
 		System.out.println(sortedHead);
+		
+		int[] arrSortCol = new int[] {2,0,2,1,1,0};
+		algos.sortColors(arrSortCol);
+		Helpers.printArr(arrSortCol);
+		algos.sortColors2(arrSortCol);
+		Helpers.printArr(arrSortCol);
+		
+		Helpers.printArr(algos.merge(new int[][] {{1,3},{2,6},{8,10},{15,18}}));
+		Helpers.printArr(algos.merge(new int[][] {{1,4},{4,5}}));
+		Helpers.printArr(algos.merge(new int[][] {{1,4},{0,4}}));
+		Helpers.printArr(algos.merge(new int[][] {{1,4},{2,3}}));
+		
+		System.out.println("Insert Interval");
+//		Helpers.printArr(algos.insert2(new int[][] {{1,3},{6,9}}, new int[] {2,5}));
+		Helpers.printArr(algos.insert2(new int[][] {{1,2},{3,5},{6,7},{8,10},{12,16}}, new int[] {4,8}));
+//		Helpers.printArr(algos.insert2(new int[][] {{1,2}}, new int[] {4,8}));
+//		Helpers.printArr(algos.insert2(new int[][] {{4,8}}, new int[] {1,2}));
+//		Helpers.printArr(algos.insert2(new int[][] {{1,5}}, new int[] {2,8}));
+//		Helpers.printArr(algos.insert2(new int[][] {}, new int[] {2,8}));
+		
+		System.out.println("MyStack");
+		MyStack<String> ss = new MyStack<>(3);
+		System.out.println(ss.push("A"));
+		System.out.println(ss.push("B"));
+		System.out.println(ss.push("C"));
+		System.out.println(ss.push("D"));
+		
+		System.out.println(ss.pop());
+		System.out.println(ss.pop());
+		System.out.println(ss.pop());
+		System.out.println(ss.pop());
+		
+		QueueFromStack qFS = new QueueFromStack();
+		qFS.push(1);
+		qFS.push(2);
+		System.out.println(qFS.peek());
+		System.out.println(qFS.pop());
+		System.out.println(qFS.empty());
 	}
 
 }
