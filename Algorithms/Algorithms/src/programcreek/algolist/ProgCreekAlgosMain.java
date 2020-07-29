@@ -364,6 +364,16 @@ public class ProgCreekAlgosMain {
 		System.out.println(qFS.peek());
 		System.out.println(qFS.pop());
 		System.out.println(qFS.empty());
+		
+		// ===== TRIE =====
+		System.out.println("==== TRIE ====");
+		Trie trie = new Trie();
+		trie.insert("abcd");
+		trie.insert("abgd");
+		System.out.println(trie.search("abcd"));
+		System.out.println(trie.search("abgd"));
+		System.out.println(trie.search("ab"));
+		System.out.println(trie.startsWith("ab"));
 	}
 
 }
