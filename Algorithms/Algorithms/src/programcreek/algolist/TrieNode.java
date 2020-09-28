@@ -24,6 +24,10 @@ public class TrieNode {
 		return children;
 	}
 	
+	public void setEndOfWord(boolean endOfWord) {
+		this.endOfWord = endOfWord;
+	}
+	
 	public boolean isEndOfWord() {
 		return endOfWord;
 	}

@@ -13,6 +13,9 @@ public class Trie {
 			char ch = word.charAt(i);
 			if(node.getChildren().containsKey(ch)) {
 				node = node.getChildren().get(ch);
+				if(i == word.length()-1) {
+					node.setEndOfWord(true);
+				}
 			}
 			else {
 				TrieNode newNode = new TrieNode(i == word.length()-1);

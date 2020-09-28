@@ -368,12 +368,40 @@ public class ProgCreekAlgosMain {
 		// ===== TRIE =====
 		System.out.println("==== TRIE ====");
 		Trie trie = new Trie();
-		trie.insert("abcd");
+		/*trie.insert("abcd");
 		trie.insert("abgd");
 		System.out.println(trie.search("abcd"));
 		System.out.println(trie.search("abgd"));
 		System.out.println(trie.search("ab"));
-		System.out.println(trie.startsWith("ab"));
+		System.out.println(trie.startsWith("ab"));*/
+		
+		trie.insert("apple");
+		System.out.println(trie.search("apple"));   // returns true
+		System.out.println(trie.search("app"));     // returns false
+		System.out.println(trie.startsWith("app")); // returns true
+		trie.insert("app");   
+		System.out.println(trie.search("app"));
+		
+		// ==== Segmented Tree ====
+		SegTree segTree = new SegTree(new int[] {1,3,5,7,9,11});
+		System.out.println(segTree.toString());
+		
+		SegTree segTree1 = new SegTree(new int[] {1,3,5,6,7,9,11});
+		System.out.println(segTree1.toString());
+		
+		SegTree segTree3 = new SegTree(new int[] {1,3,5});
+		System.out.println(segTree3.sumRange(0, 2));
+		segTree3.setValue(1, 2);
+		System.out.println(segTree3.sumRange(0, 2));
+
+		System.out.println("=================");
+		SegTree segTree4 = new SegTree(new int[] {9,-8});
+		segTree4.setValue(0, 3);
+		System.out.println(segTree4.sumRange(1, 1));
+		System.out.println(segTree4.sumRange(0, 1));
+		segTree4.setValue(1, -3);
+		System.out.println(segTree4.sumRange(0, 1));
+		// ==== Segmented Tree ====
 	}
 
 }
