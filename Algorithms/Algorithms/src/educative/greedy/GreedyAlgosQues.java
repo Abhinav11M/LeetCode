@@ -3,12 +3,15 @@ package educative.greedy;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.PriorityQueue;
 import java.util.TreeMap;
 
+import educative.greedy.Graph2.Edge;
 import lombok.AllArgsConstructor;
 
 public class GreedyAlgosQues {
@@ -333,6 +336,47 @@ public class GreedyAlgosQues {
 		
 		return minIdx;
 	}
+	
+	 /**
+	  * @apiNote Prim's algorithm to find the minimum spanning tree
+	  * @param g Input graph
+	  */
+	public void KruskalMST(Graph2 g) {
+		// Get all the graph edges
+		List<Edge> edges = g.getEdges();
+		
+		// Sort based on the weights
+		Collections.sort(edges, (a,b) -> Integer.compare(a.weight, b.weight));
+
+		int nVertices = g.getNVertices();
+		
+		List<Edge> result = new ArrayList<>();
+		
+		// Create disjoint sets for each vertex
+		DisjointSet ds = new DisjointSet();
+		for(int i = 0; i < nVertices; ++i) {
+			ds.makeSet(i);
+		}
+		
+		int i = 0;
+		// MST will always have n-1 edges
+		while(result.size() < nVertices-1) {
+			// find the parents of the disjoint sets containing start and end
+			int parent1 = ds.findSet(edges.get(i).start).value;
+			int parent2 = ds.findSet(edges.get(i).end).value;
+
+			// If both the edges are in the same disjoint set, we don't add that edge 
+			// as it will create a cycle
+			if(parent1 != parent2) { 
+				result.add(edges.get(i));
+				ds.union(parent1, parent2);
+			}
+			++i;
+		}
+		
+		result.forEach(System.out::println);
+	}
+	
 }
 
 
