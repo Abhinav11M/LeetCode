@@ -2,15 +2,19 @@ package educative.revision;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.PriorityQueue;
 
 import com.google.common.collect.Lists;
 
 import educative.fastandslowpointers.ListNode;
+import educative.twoheaps.Interval;
+import lombok.ToString;
 
 public class EducativeRevision {
 	
@@ -430,6 +434,7 @@ public class EducativeRevision {
 	 */
 	
 	// ======================================================================================================
+	// ======================================================================================================
 	
 	/**========================
 	 * ========================
@@ -799,6 +804,7 @@ public class EducativeRevision {
 	 */
 
 	// ======================================================================================================
+	// ======================================================================================================
 
 	/**========================
 	 * ========================
@@ -1019,7 +1025,6 @@ public class EducativeRevision {
 		return nextIdx;
 	}
 
-	
 	/**========================
 	 * ========================
 	 * = Fast & Slow pointers =
@@ -1027,5 +1032,332 @@ public class EducativeRevision {
 	 * ========================
 	 */
 	
+	// ======================================================================================================
+	// ======================================================================================================
+
+	/**========================
+	 * ========================
+	 * === Merge Intervals ====
+	 * ========================
+	 * ========================
+	 */
+	
+	/**
+	 * Merge Intervals (medium)
+	 */
+	public List<Interval> merge(List<Interval> intervals) {
+		List<Interval> res = new ArrayList<>();
+		
+		Collections.sort(intervals, (a,b) -> a.start - b.start);
+		int start = intervals.get(0).start;
+		int end = intervals.get(0).end;
+		
+		for(int i = 1; i < intervals.size(); ++i) {
+			Interval curr = intervals.get(i);
+			if(curr.start > end) {
+				res.add(new Interval(start, end));
+				start = curr.start;
+				end = curr.end;
+			}
+			else {
+				end = Math.max(end, curr.end);
+			}
+		}
+		
+		res.add(new Interval(start, end));
+		
+		return res;
+	}
+	
+	/**
+	 * Insert Interval (medium)
+	 * Given a list of non-overlapping intervals sorted by their start time
+	 */
+	public List<Interval> insertInterval(List<Interval> intervals, Interval newInterval) {
+		List<Interval> res = new ArrayList<>();
+		
+		// Copying non-overlapping
+		int i = 0;
+		for(; i < intervals.size(); ++i) {
+			if(intervals.get(i).end < newInterval.start) {
+				res.add(intervals.get(i));
+			}
+			else {
+				break;
+			}
+		}
+		
+		// Overlapping intervals
+		int start = newInterval.start;
+		int end = newInterval.end;
+		
+		while(i < intervals.size() && intervals.get(i).start <= end) {
+			start = Math.min(start, intervals.get(i).start);
+			end = Math.max(end, intervals.get(i).end);
+			++i;
+		}
+		
+		res.add(new Interval(start, end));
+		
+		while(i < intervals.size()) {
+			res.add(intervals.get(i++));
+		}
+
+		return res;
+	}
+	
+	/**
+	 * Intervals Union (Not educative)
+	 */
+	public List<Interval> mergeIntervalLists(Interval[] arr1, Interval[] arr2) {
+		List<Interval> res = new ArrayList<>();
+		
+		int i1 = 0, i2 = 0;
+		// Get the first merge interval to begin with
+		Interval merge = arr1[i1].start < arr2[i2].start ? arr1[i1++] : arr2[i2++];
+
+		while(i1 < arr1.length && i2 < arr2.length) {
+			Interval interval1 = arr1[i1];
+			Interval interval2 = arr2[i2];
+			
+			if(interval1.start <= merge.end) { // Overlap with first interval
+				mergeInterval(merge, interval1);
+				++i1;
+			}
+			else if(interval2.start <= merge.end) { // Overlap with the second interval
+				mergeInterval(merge, interval2);
+				++i2;
+			}
+			else { // No overlap
+				res.add(merge);
+				// Reset merge to the next interval with smallest start
+				merge = interval1.start < interval2.start ? arr1[i1] : arr2[i2];
+			}
+		}
+		
+		while(i1 < arr1.length) {
+			Interval curr = arr1[i1];
+			if(curr.start <= merge.end) {
+				mergeInterval(merge, curr);
+				++i1;
+			}
+			else {
+				res.add(merge);
+				merge = curr;
+			}
+		}
+		
+		while(i2 < arr2.length) {
+			Interval curr = arr2[i2];
+			if(curr.start <= merge.end) {
+				mergeInterval(merge, curr);
+				++i2;
+			}
+			else {
+				res.add(merge);
+				merge = curr;
+			}
+		}
+		
+		res.add(merge);
+		return res;
+	}
+
+	private void mergeInterval(Interval mergeInto, Interval interval) {
+		mergeInto.start = Math.min(mergeInto.start, interval.start);
+		mergeInto.end = Math.max(mergeInto.end, interval.end);
+	}
+	
+	/**
+	 * Interval Intersection
+	 */
+	public Interval[] intervalIntersection(Interval[] arr1, Interval[] arr2) {
+		List<Interval> res = new ArrayList<>();
+		
+		int i = 0, j = 0;
+
+		while(i < arr1.length && j < arr2.length) {
+			Interval i1 = arr1[i];
+			Interval i2 = arr2[j];
+
+			if ((i1.start <= i2.start && i1.end >= i2.end) || (i1.start >= i2.start && i1.start <= i2.end)) {
+				// Find intersection
+				int start = Math.max(i1.start, i2.start);
+				int end = Math.min(i1.end, i2.end);
+				res.add(new Interval(start, end));
+			}
+			
+			// Increment the counter
+			if(i1.end > i2.end) {
+				++j;
+			}
+			else {// if(i1.end < i2.end) {
+				++i;
+			}
+		}
+		
+		return res.toArray(new Interval[0]);
+	}
+	
+	/**
+	 * Conflicting Appointments (medium)
+	 */
+	public boolean canAttendAllAppointments(Interval[] intervals) {
+		// Sort based on start time
+		Arrays.sort(intervals, (a,b) -> Integer.compare(a.start, b.start));
+		
+		Interval prev = intervals[0];
+		int i = 1;
+		while(i < intervals.length) {
+			Interval curr = intervals[i];
+			
+			if(curr.start < prev.end) {
+				return false;
+			}
+			prev = curr;
+			++i;
+		}
+		
+		return true;
+	}
+	
+	/**
+	 * Minimum Meeting Rooms (hard)
+	 */
+	
+	public static class Meeting {
+		int start;
+		int end;
+
+		public Meeting(int start, int end) {
+			this.start = start;
+			this.end = end;
+		}
+	};
+	
+	public int findMinimumMeetingRooms(List<Meeting> meetings) {
+		Collections.sort(meetings, (a,b) -> Integer.compare(a.start, b.start));
+		
+		// MinHeap sorted based on min end time (So the meeting that gets over first will be at top)
+		PriorityQueue<Meeting> minHeap = new PriorityQueue<>((a,b) -> Integer.compare(a.end, b.end));
+		
+		int minRooms = 0;
+		for(Meeting meeting : meetings) {
+			// Remove all meetings that are over before current meeting begins
+			while(!minHeap.isEmpty() && minHeap.peek().end <= meeting.start) {
+				minHeap.poll();
+			}
+			// Add the current meeting to the heap.
+			minHeap.offer(meeting);
+			
+			minRooms = Math.max(minRooms, minHeap.size());
+		}
+		
+		return minRooms;
+	}
+	
+	/**
+	 * Maximum CPU Load
+	 */
+	@ToString
+	public static class Job {
+		int start;
+		int end;
+		int cpuLoad;
+
+		public Job(int start, int end, int cpuLoad) {
+			this.start = start;
+			this.end = end;
+			this.cpuLoad = cpuLoad;
+		}
+	};
+	
+	public int findMaxCPULoad(List<Job> jobs) {
+		// Sort jobs based on start time
+		Collections.sort(jobs, (a,b) -> Integer.compare(a.start, b.start));
+		// MinHeap sorted by min end time
+		PriorityQueue<Job> minHeap = new PriorityQueue<>((a,b) -> Integer.compare(a.end, b.end));
+		int maxCpuLoad = 0;
+		int currCpuLoad = 0;
+		
+		for(int i = 0; i < jobs.size(); ++i) {
+			Job curr = jobs.get(i);
+			while(!minHeap.isEmpty() && curr.start >= minHeap.peek().end) {
+				Job job = minHeap.poll();
+				currCpuLoad -= job.cpuLoad;
+			}
+			
+			minHeap.offer(curr);
+			currCpuLoad += curr.cpuLoad;
+			
+			maxCpuLoad = Math.max(maxCpuLoad, currCpuLoad);
+		}
+		
+		return maxCpuLoad;
+	}
+	
+	/**
+	 * Employee Free Time (hard)
+	 */
+	@ToString
+	public static class EmployeeInterval {
+		Interval interval;
+		int employeeIndex;
+		int intervalIndex;
+		
+		EmployeeInterval(Interval interval, int employeeIndex, int intervalIndex) {
+			this.interval = interval;
+			this.employeeIndex = employeeIndex;
+			this.intervalIndex = intervalIndex;
+		}
+	}
+	
+	public List<Interval> findEmployeeFreeTime(List<List<Interval>> schedule) {
+		List<Interval> res = new ArrayList<>();
+		
+		// Min heap to keep the employee interval information sorted on start time
+		PriorityQueue<EmployeeInterval> minHeap = new PriorityQueue<>((a,b) -> Integer.compare(a.interval.start, b.interval.start));
+		
+		// Push the first interval of each employee into the minHeap
+		for(int i = 0; i < schedule.size(); ++i) {
+			minHeap.offer(new EmployeeInterval(schedule.get(i).get(0), i, 0));
+		}
+		
+		// If we have a non-overlapping interval b/w any of the previous and the current interval,
+		// it means that, that interval is a free interval for all the employees.
+		Interval prev = minHeap.peek().interval;
+		
+		while(!minHeap.isEmpty()) {
+			EmployeeInterval curr = minHeap.poll();
+			
+			if(curr.interval.start > prev.end) { // no-overlap, so added to result
+				res.add(new Interval(prev.end, curr.interval.start));
+				prev = curr.interval;
+			}
+			else { // overlap
+				//update the prev with current only if end time of curr > end time of prev
+				if(curr.interval.end > prev.end) {
+					prev = curr.interval;
+				}
+			}
+			
+			// Add the next interval to the heap of the same employee that was removed from the heap.
+			List<Interval> empInterval = schedule.get(curr.employeeIndex);
+			if(curr.intervalIndex + 1 < empInterval.size()) {
+				minHeap.add(new EmployeeInterval(empInterval.get(curr.intervalIndex+1), curr.employeeIndex, curr.intervalIndex+1));
+			}
+		}
+		
+		return res;
+	}
+	
+	/**========================
+	 * ========================
+	 * === Merge Intervals ====
+	 * ========================
+	 * ========================
+	 */
+
+	// ======================================================================================================
 	// ======================================================================================================
 }

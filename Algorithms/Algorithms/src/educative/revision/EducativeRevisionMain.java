@@ -1,6 +1,14 @@
 package educative.revision;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.google.common.collect.Lists;
+
 import educative.fastandslowpointers.ListNode;
+import educative.revision.EducativeRevision.Job;
+import educative.revision.EducativeRevision.Meeting;
+import educative.twoheaps.Interval;
 import helpers.Helpers;
 
 public class EducativeRevisionMain {
@@ -158,5 +166,166 @@ public class EducativeRevisionMain {
 	    System.out.println(algos.circularArrayLoop(new int[] {2, 2, -1, 2}));
 	    System.out.println(algos.circularArrayLoop(new int[] {2, 1, -1, -2}));
 	    
+	    // =========================================================================================
+	    // =========================================================================================
+	    
+	    // Merge intervals
+	    ArrayList<Interval> intervals = Lists.newArrayList(
+	    		new Interval(1,4),
+	    		new Interval(2,5),
+	    		new Interval(7,9)
+	    		);
+	    System.out.println(algos.merge(intervals));
+	    
+	    // Insert interval
+	    intervals = Lists.newArrayList(
+	    		new Interval(1,3),
+	    		new Interval(5,7),
+	    		new Interval(8,12)
+	    		);
+	    
+	    System.out.println(algos.insertInterval(intervals, new Interval(4,6)));
+	    System.out.println(algos.insertInterval(intervals, new Interval(4,10)));
+
+	    intervals = Lists.newArrayList(
+	    		new Interval(2,3),
+	    		new Interval(5,7)
+	    		);
+	    
+	    System.out.println(algos.insertInterval(intervals, new Interval(1,4)));
+	    
+	    // Merge two intervals list
+	    Interval[] intervals1 = new Interval[] {
+	    		new Interval(1,3),
+	    		new Interval(5,6),
+	    		new Interval(5,9)
+	    };
+
+	     Interval[] intervals2 = new Interval[] {
+	    		new Interval(2,3),
+	    		new Interval(5,7)
+	     };
+	    System.out.println("Merge Intervals Lists");
+	    System.out.println(algos.mergeIntervalLists(intervals1, intervals2));
+	    
+	    // Find intersection of intervals b/w two list of intervals
+	    intervals1 = new Interval[] {
+	    		new Interval(1,3),
+	    		new Interval(5,6),
+	    		new Interval(7,9)
+	    };
+
+	    intervals2 = new Interval[] {
+	    		new Interval(2,3),
+	    		new Interval(5,7)
+	    };
+	    
+	    System.out.println("Intersection of intervals");
+	    Helpers.printArr(algos.intervalIntersection(intervals1, intervals2));
+	    
+	    intervals1 = new Interval[] {
+	    		new Interval(1,3),
+	    		new Interval(5,7),
+	    		new Interval(9,12)
+	    };
+
+	    intervals2 = new Interval[] {
+	    		new Interval(5,10)
+	    };
+
+	    Helpers.printArr(algos.intervalIntersection(intervals1, intervals2));
+	    
+	    // Conflicting Appointments
+	    System.out.println("Conflicting appointments");
+	    System.out.println(algos.canAttendAllAppointments(new Interval[] {
+	    		new Interval(1,4),
+	    		new Interval(2,5),
+	    		new Interval(7,9)
+	    }));
+	    
+	    System.out.println(algos.canAttendAllAppointments(new Interval[] {
+	    		new Interval(6,7),
+	    		new Interval(2,4),
+	    		new Interval(8,12)
+	    }));
+
+	    System.out.println(algos.canAttendAllAppointments(new Interval[] {
+	    		new Interval(4,5),
+	    		new Interval(2,3),
+	    		new Interval(3,6)
+	    }));
+	    
+	    // Minimum Meeting Rooms (hard)
+	    System.out.println("Minimum meeting rooms");
+	    ArrayList<Meeting> meetings = Lists.newArrayList(
+	    		new Meeting(1,4),
+	    		new Meeting(2,5),
+	    		new Meeting(7,9)
+	    		);
+	    System.out.println(algos.findMinimumMeetingRooms(meetings));
+
+	    meetings = Lists.newArrayList(
+	    		new Meeting(6,7),
+	    		new Meeting(2,4),
+	    		new Meeting(8,12)
+	    		);
+	    System.out.println(algos.findMinimumMeetingRooms(meetings));
+
+	    meetings = Lists.newArrayList(
+	    		new Meeting(1,4),
+	    		new Meeting(2,3),
+	    		new Meeting(3,6)
+	    		);
+	    System.out.println(algos.findMinimumMeetingRooms(meetings));
+
+	    meetings = Lists.newArrayList(
+	    		new Meeting(4,5),
+	    		new Meeting(2,3),
+	    		new Meeting(2,4),
+	    		new Meeting(3,5)
+	    		);
+	    System.out.println(algos.findMinimumMeetingRooms(meetings));
+
+	    // Maximum CPU Load
+	    System.out.println("Maximum CPU Load");
+	    ArrayList<Job> jobs = Lists.newArrayList(
+	    		new Job(1,4,3),
+	    		new Job(2,5,4),
+	    		new Job(7,9,6)
+	    		);
+	    System.out.println(algos.findMaxCPULoad(jobs));
+
+	    jobs = Lists.newArrayList(
+	    		new Job(6,7,10),
+	    		new Job(2,4,11),
+	    		new Job(8,12,15)
+	    		);
+	    System.out.println(algos.findMaxCPULoad(jobs));
+
+	    jobs = Lists.newArrayList(
+	    		new Job(1,4,2),
+	    		new Job(2,4,1),
+	    		new Job(3,6,5)
+	    		);
+	    System.out.println(algos.findMaxCPULoad(jobs));
+	    
+	    System.out.println("Employee Free Time");
+	    List<List<Interval>> schedule = Lists.newArrayList(
+	    		Lists.newArrayList(new Interval(1,3), new Interval(5,6)),
+	    		Lists.newArrayList(new Interval(2,3), new Interval(6,8))
+	    		);
+	    System.out.println(algos.findEmployeeFreeTime(schedule));
+
+	    schedule = Lists.newArrayList(
+	    		Lists.newArrayList(new Interval(1,3), new Interval(9,12)),
+	    		Lists.newArrayList(new Interval(2,4), new Interval(6,8))
+	    		);
+	    System.out.println(algos.findEmployeeFreeTime(schedule));
+
+	    schedule = Lists.newArrayList(
+	    		Lists.newArrayList(new Interval(1,3), new Interval(2,4)),
+	    		Lists.newArrayList(new Interval(3,5), new Interval(7,9))
+	    		);
+	    System.out.println(algos.findEmployeeFreeTime(schedule));
 	}
 }
