@@ -1360,4 +1360,172 @@ public class EducativeRevision {
 
 	// ======================================================================================================
 	// ======================================================================================================
+
+	/**========================
+	 * ========================
+	 * ===== Cyclic Sort ======
+	 * ========================
+	 * ========================
+	 */
+	
+	/**
+	 * Cyclic Sort (easy)
+	 */
+	public void cyclicSort(int[] nums) {
+		int i = 0;
+		while(i < nums.length) {
+			if(nums[i] == i+1) {
+				++i;
+			}
+			else {
+				swap(nums, i, nums[i]-1);
+			}
+		}
+	}
+	
+	/**
+	 * Find the Missing Number (easy)
+	 */
+	public int findMissingNumber(int[] nums) {
+		int i = 0;
+		while(i < nums.length) {
+			if(nums[i] == i || nums[i] >= nums.length) {
+				++i;
+			}
+			else {
+				swap(nums, i, nums[i]);
+			}
+		}
+		
+		for(int j = 0; j < nums.length; ++j) {
+			if(nums[j] != j) {
+				return j;
+			}
+		}
+		
+		return -1;
+	}
+	
+	/**
+	 * Find all Missing Numbers (easy)
+	 */
+	public List<Integer> findAllMissingNumbers(int[] nums) {
+		int i = 0;
+		while(i < nums.length) {
+			if(nums[i] == i+1) {
+				++i;
+			}
+			else {
+				if(nums[nums[i]-1] != nums[i]) {
+					swap(nums, i, nums[i]-1);
+				}
+				else {
+					++i;
+				}
+			}
+		}
+		
+		List<Integer> res = new ArrayList<>();
+		for(i = 0; i < nums.length; ++i) {
+			if(nums[i] != i+1) {
+				res.add(i+1);
+			}
+		}
+		
+		return res;
+	}
+	
+	/**
+	 * Find the Duplicate Number (easy)
+	 */
+	public int findDuplicateNumber(int[] nums) {
+		int i = 0;
+		while(i < nums.length) {
+			if(nums[i] == i+1) {
+				++i;
+			}
+			else {
+				if(nums[nums[i]-1] == nums[i]) {
+					return nums[i];
+				}
+				else {
+					swap(nums, nums[i]-1, i);
+				}
+			}
+		}
+		
+		return -1;
+	}
+	
+	/**
+	 * Find all duplicate numbers
+	 */
+	public List<Integer> findAllDuplicateNumbers(int[] nums) {
+		List<Integer> res = new ArrayList<>();
+		
+		int i = 0;
+		while(i < nums.length) {
+			if(nums[i] == i+1) {
+				++i;
+			}
+			else {
+				if(nums[nums[i]-1] == nums[i]) {
+					res.add(nums[i]);
+					++i;
+				}
+				else {
+					swap(nums, nums[i]-1, i);
+				}
+			}
+		}
+		
+		return res;
+	}
+	
+	/**
+	 * Find the Corrupt Pair (easy)
+	 */
+	public int[] findCorruptNums(int[] nums) {
+		int i = 0;
+		while(i < nums.length) {
+			if(nums[i] == i+1) {
+				++i;
+			}
+			else {
+				if(nums[nums[i]-1] == nums[i]) { // Duplicate
+					++i;
+				}
+				else {
+					swap(nums, nums[i]-1, i);
+				}
+			}
+		}
+		
+		for(i = 0; i < nums.length; ++i) {
+			if(nums[i] != i+1) {
+				return new int[] { nums[i], i + 1 };
+			}
+		}
+		
+		return new int[] { -1, -1 };
+		
+	}
+	
+	/**
+	 * Find the Smallest Missing Positive Number (medium)
+	 */
+	public int findFirstMissingPositive(int[] nums) {
+		
+		return -1;
+	}
+	
+	/**========================
+	 * ========================
+	 * ===== Cyclic Sort ======
+	 * ========================
+	 * ========================
+	 */
+
+	// ======================================================================================================
+	// ======================================================================================================
 }

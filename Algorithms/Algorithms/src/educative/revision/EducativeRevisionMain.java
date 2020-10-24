@@ -327,5 +327,43 @@ public class EducativeRevisionMain {
 	    		Lists.newArrayList(new Interval(3,5), new Interval(7,9))
 	    		);
 	    System.out.println(algos.findEmployeeFreeTime(schedule));
+
+	    // =========================================================================================
+	    // =========================================================================================
+	    
+	    // Cyclic Sort
+	    arr = new int[] {3, 1, 5, 4, 2};
+	    algos.cyclicSort(arr);
+	    Helpers.printArr(arr);
+
+	    arr = new int[] {2, 6, 4, 3, 1, 5};
+	    algos.cyclicSort(arr);
+	    Helpers.printArr(arr);
+
+	    arr = new int[] {1, 5, 6, 4, 3, 2};
+	    algos.cyclicSort(arr);
+	    Helpers.printArr(arr);
+	    
+	    // Find the first missing number
+	    System.out.println(algos.findMissingNumber(new int[] {4, 0, 3, 1}));
+	    System.out.println(algos.findMissingNumber(new int[] {8, 3, 5, 2, 4, 6, 0, 1}));
+	    
+	    // Find all missing numbers
+	    System.out.println(algos.findAllMissingNumbers(new int[] {2, 3, 1, 8, 2, 3, 5, 1}));
+	    System.out.println(algos.findAllMissingNumbers(new int[] {2, 4, 1, 2}));
+	    System.out.println(algos.findAllMissingNumbers(new int[] {2, 3, 2, 1}));
+	    
+	    // Find the duplicate number
+	    System.out.println(algos.findDuplicateNumber(new int[] {1, 4, 4, 3, 2}));
+	    System.out.println(algos.findDuplicateNumber(new int[] {2, 1, 3, 3, 5, 4}));
+	    System.out.println(algos.findDuplicateNumber(new int[] {2, 4, 1, 4, 4}));
+
+	    // Find all the duplicate numbers
+	    System.out.println(algos.findAllDuplicateNumbers(new int[] {3, 4, 4, 5, 5}));
+	    System.out.println(algos.findAllDuplicateNumbers(new int[] {5, 4, 7, 2, 3, 5, 3}));
+	    
+	    // Find the Corrupt Pair (easy)
+	    Helpers.printArr(algos.findCorruptNums(new int[] {3, 1, 2, 5, 2}));
+	    Helpers.printArr(algos.findCorruptNums(new int[] {3, 1, 2, 3, 6, 4}));
 	}
 }
