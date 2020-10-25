@@ -1515,8 +1515,78 @@ public class EducativeRevision {
 	 * Find the Smallest Missing Positive Number (medium)
 	 */
 	public int findFirstMissingPositive(int[] nums) {
+		// Move all the non-negative numbers (including 0) to the left
 		
-		return -1;
+		int i = 0; // insert index
+		int j = 0;
+		while(j < nums.length) {
+			if(nums[j] <= 0) {
+				swap(nums, j, i);
+				++i;
+			}
+			++j;
+		}
+		
+		// i becomes the 1st index of non-negative number
+		for(j = 0; j < nums.length-i;) {
+			// 3rd condition is to avoid duplicates
+			if(nums[i+j] != j+1 && nums[i+j] <= nums.length-i && nums[i+j] != nums[nums[i+j]-1]) {
+				// swap
+				swap(nums, i+j, nums[i+j]-1+i);
+			}
+			else {
+				++j;
+			}
+		}
+		
+		for(j = 0; j < nums.length-i; ++j) {
+			if(nums[i+j] != j+1) {
+				return j+1;
+			}
+		}
+		
+		return nums.length-i+1;
+	}
+	
+	/**
+	 * Find the first k missing positive integers
+	 */
+	public List<Integer> findFirstKMissingPositiveIntegers(int[] nums, int k) {
+		List<Integer> res = new ArrayList<>();
+		HashSet<Integer> set = new HashSet<>();
+		
+		int i = 0;
+		while(i < nums.length) {
+			if(nums[i] > nums.length) {
+				set.add(nums[i]);
+				++i;
+			}
+			else if(nums[i] > 0 && nums[i] != i+i && nums[i] != nums[nums[i]-1]) {
+				swap(nums, i, nums[i]-1);
+			}
+			else {
+				++i;
+			}
+		}
+		
+		for(i = 0; i < nums.length; ++i) {
+			if(nums[i] != i+1) {
+				res.add(i+1);
+			}
+			if(res.size() == k) {
+				return res;
+			}
+		}
+		
+		++i;
+		while(res.size() < k) {
+			if(!set.contains(i)) {
+				res.add(i);
+			}
+			++i;
+		}
+		
+		return res;
 	}
 	
 	/**========================

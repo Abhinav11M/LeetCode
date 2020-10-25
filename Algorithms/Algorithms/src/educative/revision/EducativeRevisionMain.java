@@ -365,5 +365,15 @@ public class EducativeRevisionMain {
 	    // Find the Corrupt Pair (easy)
 	    Helpers.printArr(algos.findCorruptNums(new int[] {3, 1, 2, 5, 2}));
 	    Helpers.printArr(algos.findCorruptNums(new int[] {3, 1, 2, 3, 6, 4}));
+	    
+	    // First missing positive integer
+	    System.out.println(algos.findFirstMissingPositive(new int[] {-3, 1, 5, 4, 2}));
+	    System.out.println(algos.findFirstMissingPositive(new int[] {3, -2, 0, 1, 2}));
+	    System.out.println(algos.findFirstMissingPositive(new int[] {3, 2, 5, 1}));
+	    
+	    // Find the first k missing positive numbers
+	    System.out.println(algos.findFirstKMissingPositiveIntegers(new int[] {3, -1, 4, 5, 5}, 3));
+	    System.out.println(algos.findFirstKMissingPositiveIntegers(new int[] {2, 3, 4}, 3));
+	    System.out.println(algos.findFirstKMissingPositiveIntegers(new int[] {-2, -3, 4}, 2));
 	}
 }
