@@ -8,6 +8,8 @@ import com.google.common.collect.Lists;
 import educative.fastandslowpointers.ListNode;
 import educative.revision.EducativeRevision.Job;
 import educative.revision.EducativeRevision.Meeting;
+import educative.revision.EducativeRevision.TreeNodeWithNext;
+import educative.tree.dfs.TreeNode;
 import educative.twoheaps.Interval;
 import helpers.Helpers;
 
@@ -375,5 +377,54 @@ public class EducativeRevisionMain {
 	    System.out.println(algos.findFirstKMissingPositiveIntegers(new int[] {3, -1, 4, 5, 5}, 3));
 	    System.out.println(algos.findFirstKMissingPositiveIntegers(new int[] {2, 3, 4}, 3));
 	    System.out.println(algos.findFirstKMissingPositiveIntegers(new int[] {-2, -3, 4}, 2));
+	    
+	    /**========================
+	     * === Pattern: Tree BFS ==
+	     * ========================
+	     */
+	    // Level order traversal
+	    TreeNode root = new TreeNode(12);
+	    root.left = new TreeNode(7);
+	    root.right = new TreeNode(1);
+	    root.left.left = new TreeNode(9);
+	    root.right.left = new TreeNode(10);
+	    root.right.right = new TreeNode(5);
+	    List<List<Integer>> result = algos.levelOrderTraversal(root);
+	    System.out.println(result);
+	    
+	    // Reverse level order traversal
+	    result = algos.reverseLevelOrderTraversal(root);
+	    System.out.println(result);
+
+	    // ZigZag level order traversal
+	    result = algos.zigZagLevelOrderTraversal(root);
+	    System.out.println(result);
+	    
+	    // Level order average
+	    System.out.println(algos.findLevelAverages(root));
+	    
+	    // Minimum binary tree depth
+	    root = new TreeNode(12);
+	    root.left = new TreeNode(7);
+	    root.right = new TreeNode(1);
+	    root.right.left = new TreeNode(10);
+	    root.right.right = new TreeNode(5);
+	    System.out.println("Tree Minimum Depth: " + algos.minimumBinaryTreeDepthRec(root));
+	    System.out.println("Tree Minimum Depth: " + algos.minimumBinaryTreeDepth(root));
+	    root.left.left = new TreeNode(9);
+	    root.right.left.left = new TreeNode(11);
+	    System.out.println("Tree Minimum Depth: " + algos.minimumBinaryTreeDepthRec(root));
+	    System.out.println("Tree Minimum Depth: " + algos.minimumBinaryTreeDepth(root));
+	    
+	    // Connect level order siblings
+	    TreeNodeWithNext root1 = new TreeNodeWithNext(12);
+	    root1.left = new TreeNodeWithNext(7);
+	    root1.right = new TreeNodeWithNext(1);
+	    root1.left.left = new TreeNodeWithNext(9);
+	    root1.right.left = new TreeNodeWithNext(10);
+	    root1.right.right = new TreeNodeWithNext(5);
+	    algos.connectLevelOrderSiblings(root1);
+	    System.out.println("Level order traversal using 'next' pointer: ");
+	    root1.printLevelOrder();
 	}
 }

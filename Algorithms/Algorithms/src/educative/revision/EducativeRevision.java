@@ -9,10 +9,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
+import java.util.Queue;
 
 import com.google.common.collect.Lists;
 
 import educative.fastandslowpointers.ListNode;
+import educative.tree.dfs.TreeNode;
 import educative.twoheaps.Interval;
 import lombok.ToString;
 
@@ -1592,6 +1594,317 @@ public class EducativeRevision {
 	/**========================
 	 * ========================
 	 * ===== Cyclic Sort ======
+	 * ========================
+	 * ========================
+	 */
+
+	// ======================================================================================================
+	// ======================================================================================================
+
+	/**========================
+	 * ========================
+	 * === Pattern: Tree BFS ==
+	 * ========================
+	 * ========================
+	 */
+
+	/**
+	 * Binary Tree Level Order Traversal
+	 */
+	public List<List<Integer>> levelOrderTraversal(TreeNode root) {
+		List<List<Integer>> res = new ArrayList<>();
+		Queue<TreeNode> queue = new LinkedList<>();
+		queue.add(root);
+		
+		while(!queue.isEmpty()) {
+			List<Integer> levelRes = new ArrayList<>();
+			int size = queue.size();
+			for(int i = 0; i < size; ++i) {
+				TreeNode node = queue.poll();
+				levelRes.add(node.value);
+				if(node.left != null) {
+					queue.add(node.left);
+				}
+				if(node.right != null) {
+					queue.add(node.right);
+				}
+			}
+			res.add(levelRes);
+		}
+		
+		return res;
+	}
+	
+	/**
+	 * Reverse level order traversal
+	 */
+	public List<List<Integer>> reverseLevelOrderTraversal(TreeNode root) {
+		List<List<Integer>> res = new ArrayList<>();
+		Queue<TreeNode> queue = new LinkedList<>();
+		queue.add(root);
+		
+		while(!queue.isEmpty()) {
+			List<Integer> levelRes = new LinkedList<>();
+			int size = queue.size();
+			for(int i = 0; i < size; ++i) {
+				TreeNode node = queue.poll();
+				levelRes.add(0, node.value); // add to the beginning
+				if(node.left != null) {
+					queue.add(node.left);
+				}
+				if(node.right != null) {
+					queue.add(node.right);
+				}
+			}
+			res.add(levelRes);
+		}
+		
+		return res;
+	}
+
+	public List<List<Integer>> zigZagLevelOrderTraversal(TreeNode root) {
+		List<List<Integer>> res = new ArrayList<>();
+		Queue<TreeNode> queue = new LinkedList<>();
+		queue.add(root);
+		boolean leftToRight = false;
+		
+		while(!queue.isEmpty()) {
+			leftToRight = !leftToRight;
+			List<Integer> levelRes = new LinkedList<>();
+			int size = queue.size();
+			for(int i = 0; i < size; ++i) {
+				TreeNode node = queue.poll();
+				if(leftToRight) {
+					levelRes.add(node.value);
+				}
+				else {
+					levelRes.add(0, node.value);
+				}
+				
+				if(node.left != null) {
+					queue.add(node.left);
+				}
+				if(node.right != null) {
+					queue.add(node.right);
+				}
+			}
+			res.add(levelRes);
+		}
+		
+		return res;
+	}
+	
+	/**
+	 * Level Averages in a Binary Tree
+	 */
+	public List<Double> findLevelAverages(TreeNode root) {
+		List<Double> res = new ArrayList<>();
+		Queue<TreeNode> queue = new LinkedList<>();
+		queue.add(root);
+		
+		while(!queue.isEmpty()) {
+			int sum = 0;
+			int size = queue.size();
+			for(int i = 0; i < size; ++i) {
+				TreeNode node = queue.poll();
+				sum += node.value;
+				
+				if(node.left != null) {
+					queue.add(node.left);
+				}
+				if(node.right != null) {
+					queue.add(node.right);
+				}
+			}
+			res.add((double)sum/size);
+		}
+		return res;
+	}
+	
+	/**
+	 * Minimum Depth of a Binary Tree
+	 */
+	public int minimumBinaryTreeDepthRec(TreeNode root) {
+		if(root == null) {
+			return 0;
+		}
+		
+		if(root.left == null && root.right == null) {
+			return 1;
+		}
+		
+		int left = root.left != null ? 1 + minimumBinaryTreeDepthRec(root.left) : Integer.MAX_VALUE;
+		int right = root.right != null ? 1 + minimumBinaryTreeDepthRec(root.right) : Integer.MAX_VALUE;
+		
+		return Math.min(left, right);
+		
+	}
+
+	// Method 2 : Using level order traversal
+	public int minimumBinaryTreeDepth(TreeNode root) {
+		int minDepth = 0;
+		Queue<TreeNode> queue = new LinkedList<>();
+		queue.add(root);
+		
+		while(!queue.isEmpty()) {
+			++minDepth;
+			int levelSize = queue.size();
+			for(int i = 0; i < levelSize; ++i) {
+				TreeNode node = queue.poll();
+
+				// Leaf node reached
+				if(node.left == null && node.right == null) {
+					return minDepth;
+				}
+				
+				if(node.left != null) {
+					queue.add(node.left);
+				}
+				if(node.right != null) {
+					queue.add(node.right);
+				}
+			}
+		}
+		
+		return minDepth;
+	}
+	
+	/**
+	 * Level order successor
+	 */
+	public TreeNode levelOrderSuccessor(TreeNode root, int key) {
+		Queue<TreeNode> queue = new LinkedList<>();
+		queue.add(root);
+		
+		while(!queue.isEmpty()) {
+			TreeNode node = queue.poll();
+			if(node.left != null) {
+				queue.add(node.left);
+			}
+			if(node.right != null) {
+				queue.add(node.right);
+			}
+
+			if(node.value == key) {
+				return !queue.isEmpty() ? queue.peek() : null;
+			}
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * Connect level order siblings
+	 */
+	static class TreeNodeWithNext {
+		int val;
+		TreeNodeWithNext left;
+		TreeNodeWithNext right;
+		TreeNodeWithNext next;
+
+		public TreeNodeWithNext(int x) {
+			val = x;
+			left = right = next = null;
+		}
+
+		public void printLevelOrder() {
+			TreeNodeWithNext nextLevelRoot = this;
+			while (nextLevelRoot != null) {
+				TreeNodeWithNext current = nextLevelRoot;
+				nextLevelRoot = null;
+				while (current != null) {
+					System.out.print(current.val + " ");
+					if (nextLevelRoot == null) {
+						if (current.left != null)
+							nextLevelRoot = current.left;
+						else if (current.right != null)
+							nextLevelRoot = current.right;
+					}
+					current = current.next;
+				}
+				System.out.println();
+			}
+		}
+	}
+	
+	public void connectLevelOrderSiblings(TreeNodeWithNext root) {
+		Queue<TreeNodeWithNext> queue = new LinkedList<>();
+		queue.add(root);
+		
+		while(!queue.isEmpty()) {
+			int levelSize = queue.size();
+			for(int i = 0; i < levelSize; ++i) {
+				TreeNodeWithNext currNode = queue.poll();
+				if(i != levelSize-1) {
+					currNode.next = queue.peek();
+				}
+
+				if(currNode.left != null) {
+					queue.add(currNode.left);
+				}
+				if(currNode.right != null) {
+					queue.add(currNode.right);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Connect all siblings
+	 */
+	public void connectAllSiblings(TreeNodeWithNext root) {
+		Queue<TreeNodeWithNext> queue = new LinkedList<>();
+		queue.add(root);
+		
+		while(!queue.isEmpty()) {
+			TreeNodeWithNext curr = queue.poll();
+			if(curr.left != null) {
+				queue.add(curr.left);
+			}
+			if(curr.right != null) {
+				queue.add(curr.right);
+			}
+			
+			if(!queue.isEmpty()) {
+				curr.next = queue.peek();
+			}
+		}
+	}
+	
+	/**
+	 * Right View of a Binary Tree
+	 * Note: Only the last node of each level goes to the result
+	 */
+	public List<TreeNode> rightViewTree(TreeNode root) {
+		Queue<TreeNode> queue = new LinkedList<>();
+		queue.add(root);
+		
+		List<TreeNode> res = new ArrayList<>();
+		
+		while(!queue.isEmpty()) {
+			int levelSize = queue.size();
+			for(int i = 0; i < levelSize; ++i) {
+				TreeNode curr = queue.poll();
+				if(i == levelSize-1) {
+					res.add(curr);
+				}
+				
+				if(curr.left != null) {
+					queue.add(curr.left);
+				}
+				if(curr.right != null) {
+					queue.add(curr.right);
+				}
+			}
+		}
+		
+		return res;
+	}
+
+
+	/**========================
+	 * ========================
+	 * === Pattern: Tree BFS ==
 	 * ========================
 	 * ========================
 	 */
