@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Queue;
+import java.util.stream.Collectors;
 
 import com.google.common.collect.Lists;
 
@@ -1901,10 +1902,231 @@ public class EducativeRevision {
 		return res;
 	}
 
-
 	/**========================
 	 * ========================
 	 * === Pattern: Tree BFS ==
+	 * ========================
+	 * ========================
+	 */
+
+	// ======================================================================================================
+	// ======================================================================================================
+
+	/**========================
+	 * ========================
+	 * === Pattern: Tree DFS ==
+	 * ========================
+	 * ========================
+	 */
+	
+	/**
+	 * Binary Tree Path Sum (easy)
+	 */
+	public boolean hasPathWithSum(TreeNode root, int sum) {
+		if(root == null || root.value > sum) {
+			return false;
+		}
+		
+		if(root.value == sum && root.left == null && root.right == null) {
+			return true;
+		}
+		
+		boolean left = hasPathWithSum(root.left, sum-root.value);
+		boolean right = hasPathWithSum(root.right, sum-root.value);
+		
+		return left || right;
+	}
+	
+	/**
+	 * All Paths for a Sum (medium)
+	 */
+	public List<List<Integer>> findPathsWithSum(TreeNode root, int sum) {
+		List<List<Integer>> res = new ArrayList<>();
+		
+		findPathsWithSum(root, sum, new ArrayList<Integer>(), res);
+		
+		return res;
+	}
+
+	private void findPathsWithSum(TreeNode root, int sum, List<Integer> path, List<List<Integer>> res) {
+		if(root == null) {
+			return;
+		}
+		
+		path.add(root.value);
+
+		// Leaf node
+		if(sum == root.value && root.left == null && root.right == null) {
+			res.add(new ArrayList<>(path));
+		}
+		else {
+			findPathsWithSum(root.left, sum-root.value, path, res);
+			findPathsWithSum(root.right, sum-root.value, path, res);
+		}
+		
+		path.remove(path.size()-1);
+	}
+	
+	/**
+	 * Sum of Path Numbers (medium)
+	 */
+	public int findSumOfPathNumbers(TreeNode root) {
+		List<Integer> res = new LinkedList<>();
+		findSumOfPathNumbers(root, res, 1);
+		return res.stream().collect(Collectors.summingInt(x -> x));
+	}
+
+	private void findSumOfPathNumbers(TreeNode root, List<Integer> res, int num) {
+		if(root == null) {
+			return;
+		}
+		
+		// Leaf node
+		if(root.left == null && root.right == null) {
+			res.add(num);
+			return;
+		}
+		else {
+			findSumOfPathNumbers(root.left, res, num*10+root.value);
+			findSumOfPathNumbers(root.right, res, num*10+root.value);
+		}
+	}
+	
+	/**
+	 * Path With Given Sequence (medium)
+	 */
+	public boolean findPathWithSequence(TreeNode root, int[] sequence) {
+		if(root == null) {
+			return sequence.length == 0;
+		}
+
+		return findPathWithSequence(root, sequence, 0);
+	}
+
+	private boolean findPathWithSequence(TreeNode root, int[] sequence, int index) {
+
+		if(sequence[index] != root.value) {
+			return false;
+		}
+		
+		// Reached the last index and the leaf node as well
+		if(index == sequence.length-1 && sequence[index] == root.value && root.left == null && root.right == null) {
+			return true;
+		}
+		
+		boolean left = false;
+		boolean right = false;
+		if(index < sequence.length) {
+			if(root.left != null) {
+				left = findPathWithSequence(root.left, sequence, index+1);
+			}
+			if(root.right != null) {
+				right = findPathWithSequence(root.right, sequence, index+1);
+			}
+		}
+		
+		return left||right;
+	}
+	
+	/**
+	 * Count Paths for a Sum (medium)
+	 * The path can start from any node and end at any node.
+	 */
+	public int countPathsWithSum(TreeNode root, int S) {
+		return countPathsWithSum(root, S, new ArrayList<Integer>());
+	}
+
+	private int countPathsWithSum(TreeNode root, int S, List<Integer> path) {
+		if(root == null) {
+			return 0;
+		}
+		
+		path.add(root.value);
+		
+		// Find all the paths that have possible sum of S
+		/**
+		 * Note: We need to run the loop in reverse direction.
+		 * This is because, after adding each node, we are covering all possible combinations,
+		 * from last added node till the root node. If we start from root, we will always be adding 
+		 * root node in every recursive call.
+		 */
+		int pathCount = 0, sum = 0;
+		for(int i = path.size()-1; i >= 0; --i) {
+			sum += path.get(i);
+			if(sum == S) {
+				++pathCount;
+			}
+		}
+		
+		// Search for pathCount including the child nodes
+		pathCount += countPathsWithSum(root.left, S, path);
+		pathCount += countPathsWithSum(root.right, S, path);
+		
+		// Remove the last inserted element
+		path.remove(path.size()-1);
+		
+		return pathCount;
+	}
+	
+	/**
+	 * Tree Diameter (medium)
+	 */
+	private static int diameterOfTree = 0;
+	
+	public int diameterOfTree(TreeNode root) {
+		diameterOfTree = 0;
+		heightOfTree(root);
+		return diameterOfTree;
+	}
+	
+	/**
+	 * This method will compute the height of the tree and 
+	 * will also update the diameter of the tree which is the 
+	 * highest height from all the nodes in the tree
+	 */
+	private int heightOfTree(TreeNode root) {
+		if(root == null) {
+			return 0;
+		}
+		
+		int left = heightOfTree(root.left);
+		int right = heightOfTree(root.right);
+		
+		int currDiameter = 1 + left + right;
+		diameterOfTree = Math.max(diameterOfTree, currDiameter);
+		
+		return 1 + Math.max(left, right);
+	}
+	
+	/**
+	 * Path with Maximum Sum (hard)
+	 */
+	private static int maxSum = Integer.MIN_VALUE;
+	public int findMaximumPathSum(TreeNode root) {
+		maxSum = Integer.MIN_VALUE;
+		findMaxMPath(root);
+		return maxSum;
+	}
+
+	private static int findMaxMPath(TreeNode root) {
+		
+		if(root == null) {
+			return 0;
+		}
+		
+		// Ignore path with negative value. So we need to take max of left/right and 0.
+		int left = Math.max(findMaxMPath(root.left), 0);
+		int right = Math.max(findMaxMPath(root.right), 0);
+		
+		int currPathSum = left + right + root.value;
+		maxSum = Math.max(maxSum, currPathSum);
+		
+		return Math.max(left, right) + root.value;
+	}
+	
+	/**========================
+	 * ========================
+	 * === Pattern: Tree DFS ==
 	 * ========================
 	 * ========================
 	 */

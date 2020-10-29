@@ -426,5 +426,98 @@ public class EducativeRevisionMain {
 	    algos.connectLevelOrderSiblings(root1);
 	    System.out.println("Level order traversal using 'next' pointer: ");
 	    root1.printLevelOrder();
+	    
+	    // =========================================================================================
+	    // =========================================================================================
+
+	    /**========================
+	     * === Pattern: Tree BFS ==
+	     * ========================
+	     */
+
+	    // Path with sum
+	    root = new TreeNode(12);
+	    root.left = new TreeNode(7);
+	    root.right = new TreeNode(1);
+	    root.left.left = new TreeNode(9);
+	    root.right.left = new TreeNode(10);
+	    root.right.right = new TreeNode(5);
+	    System.out.println("Tree has path: " + algos.hasPathWithSum(root, 23));
+	    System.out.println("Tree has path: " + algos.hasPathWithSum(root, 16));
+	    
+	    // All Paths for a Sum (medium)
+	    root = new TreeNode(12);
+	    root.left = new TreeNode(7);
+	    root.right = new TreeNode(1);
+	    root.left.left = new TreeNode(4);
+	    root.right.left = new TreeNode(10);
+	    root.right.right = new TreeNode(5);
+	    int sum = 23;
+	    List<List<Integer>> resultAllPaths = algos.findPathsWithSum(root, sum);
+	    System.out.println("Tree paths with sum " + sum + ": " + resultAllPaths);
+	    
+	    // Sum of Path Numbers (medium)
+	    root = new TreeNode(1);
+	    root.left = new TreeNode(0);
+	    root.right = new TreeNode(1);
+	    root.left.left = new TreeNode(1);
+	    root.right.left = new TreeNode(6);
+	    root.right.right = new TreeNode(5);
+	    System.out.println("Total Sum of Path Numbers: " + algos.findSumOfPathNumbers(root));
+	    
+	    // Path with given sequence
+	    root = new TreeNode(1);
+	    root.left = new TreeNode(0);
+	    root.right = new TreeNode(1);
+	    root.left.left = new TreeNode(1);
+	    root.right.left = new TreeNode(6);
+	    root.right.right = new TreeNode(5);
+
+	    System.out.println("Tree has path sequence: " + algos.findPathWithSequence(root, new int[] { 1, 0, 7 }));
+	    System.out.println("Tree has path sequence: " + algos.findPathWithSequence(root, new int[] { 1, 1, 6 }));
+	    
+	    // Count paths for a sum
+	    root = new TreeNode(12);
+	    root.left = new TreeNode(7);
+	    root.right = new TreeNode(1);
+	    root.left.left = new TreeNode(4);
+	    root.right.left = new TreeNode(10);
+	    root.right.right = new TreeNode(5);
+	    System.out.println("Tree has path: " + algos.countPathsWithSum(root, 11));
+	    
+	    // Find diameter of a tree
+	    root = new TreeNode(1);
+	    root.left = new TreeNode(2);
+	    root.right = new TreeNode(3);
+	    root.left.left = new TreeNode(4);
+	    root.right.left = new TreeNode(5);
+	    root.right.right = new TreeNode(6);
+	    System.out.println("Tree Diameter: " + algos.diameterOfTree(root));
+	    root.left.left = null;
+	    root.right.left.left = new TreeNode(7);
+	    root.right.left.right = new TreeNode(8);
+	    root.right.right.left = new TreeNode(9);
+	    root.right.left.right.left = new TreeNode(10);
+	    root.right.right.left.left = new TreeNode(11);
+	    System.out.println("Tree Diameter: " + algos.diameterOfTree(root));
+	    
+	    // Path with Maximum Sum (hard)
+	    root = new TreeNode(1);
+	    root.left = new TreeNode(2);
+	    root.right = new TreeNode(3);
+	    System.out.println("Maximum Path Sum: " + algos.findMaximumPathSum(root));
+	    
+	    root.left.left = new TreeNode(1);
+	    root.left.right = new TreeNode(3);
+	    root.right.left = new TreeNode(5);
+	    root.right.right = new TreeNode(6);
+	    root.right.left.left = new TreeNode(7);
+	    root.right.left.right = new TreeNode(8);
+	    root.right.right.left = new TreeNode(9);
+	    System.out.println("Maximum Path Sum: " + algos.findMaximumPathSum(root));
+	    
+	    root = new TreeNode(-1);
+	    root.left = new TreeNode(-3);
+	    System.out.println("Maximum Path Sum: " + algos.findMaximumPathSum(root));
 	}
 }
