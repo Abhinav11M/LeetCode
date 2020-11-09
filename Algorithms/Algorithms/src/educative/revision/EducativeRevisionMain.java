@@ -8,6 +8,7 @@ import com.google.common.collect.Lists;
 import educative.fastandslowpointers.ListNode;
 import educative.revision.EducativeRevision.Job;
 import educative.revision.EducativeRevision.Meeting;
+import educative.revision.EducativeRevision.Point;
 import educative.revision.EducativeRevision.TreeNodeWithNext;
 import educative.tree.dfs.TreeNode;
 import educative.twoheaps.Interval;
@@ -519,5 +520,148 @@ public class EducativeRevisionMain {
 	    root = new TreeNode(-1);
 	    root.left = new TreeNode(-3);
 	    System.out.println("Maximum Path Sum: " + algos.findMaximumPathSum(root));
+
+	    // =========================================================================================
+	    // =========================================================================================
+
+	    /**========================
+	     * === Pattern: Subsets ===
+	     * ========================
+	     */
+	    // Subsets
+	    System.out.println(algos.findSubsets(new int[] {1, 5, 3}));
+	    
+	    // Subsets with duplicates
+	    System.out.println(algos.findSubsetsWithDuplicates(new int[] {1, 3, 3}));
+	    System.out.println(algos.findSubsetsWithDuplicates(new int[] {1, 5, 3, 3}));
+	    
+	    // Permutations
+	    System.out.println(algos.findPermutations(new int[] {1,3,5}));
+	    System.out.println(algos.findPermutationsRec(new int[] {1,3,5}));
+	    
+	    // String Permutations by changing case (medium)
+	    System.out.println(algos.findLetterCaseStringPermutations("ad52"));
+	    System.out.println(algos.findLetterCaseStringPermutations("ab7c"));
+	    
+	    // Balanced Parentheses (hard)
+	    System.out.println(algos.generateValidParentheses(2));
+	    System.out.println(algos.generateValidParentheses(3));
+	    
+	    // Evaluate Expression (hard)
+	    System.out.println(algos.diffWaysToEvaluateExpression("1+2*3"));
+	    System.out.println(algos.diffWaysToEvaluateExpression("2*3-4-5"));    
+	    
+	    // Structurally Unique Binary Search Trees (hard)
+	    List<TreeNode> uniqueBsts = algos.findUniqueTrees(2);
+	    System.out.println(uniqueBsts);
+	    uniqueBsts = algos.findUniqueTrees(3);
+	    System.out.println(uniqueBsts);
+
+	    // =========================================================================================
+	    // =========================================================================================
+	    // Order agnostic binary search
+	    System.out.println(algos.agnosticBinSearch(new int[] { 4, 6, 10 }, 10));
+	    System.out.println(algos.agnosticBinSearch(new int[] { 1, 2, 3, 4, 5, 6, 7 }, 5));
+	    System.out.println(algos.agnosticBinSearch(new int[] { 10, 6, 4 }, 10));
+	    System.out.println(algos.agnosticBinSearch(new int[] { 10, 6, 4 }, 4));
+	    
+	    // Ceiling of a Number (medium)
+	    System.out.println("Ceiling of a number");
+	    System.out.println(algos.searchCeilingOfANumber(new int[] { 4, 6, 10 }, 6));
+	    System.out.println(algos.searchCeilingOfANumber(new int[] { 1, 3, 8, 10, 15 }, 12));
+	    System.out.println(algos.searchCeilingOfANumber(new int[] { 4, 6, 10 }, 17));
+	    System.out.println(algos.searchCeilingOfANumber(new int[] { 4, 6, 10 }, -1));
+	    
+	    // Next Letter (medium)
+	    System.out.println(algos.searchNextLetter(new char[] {'a', 'c', 'f', 'h'}, 'f'));
+	    System.out.println(algos.searchNextLetter(new char[] {'a', 'c', 'f', 'h'}, 'b'));
+	    System.out.println(algos.searchNextLetter(new char[] {'a', 'c', 'f', 'h'}, 'm'));
+	    System.out.println(algos.searchNextLetter(new char[] {'a', 'c', 'f', 'h'}, 'h'));
+	    
+	    // Number Range (medium)
+	    Helpers.printArr(algos.findRange(new int[] {4, 6, 6, 6, 9}, 6));
+	    Helpers.printArr(algos.findRange(new int[] {1, 3, 8, 10, 15}, 10));
+	    Helpers.printArr(algos.findRange(new int[] {1, 3, 8, 10, 15}, 12));
+	    
+	    // Minimum Difference Element (medium)
+	    System.out.println(algos.searchMinDiffElement(new int[] {4, 6, 10}, 7));
+	    System.out.println(algos.searchMinDiffElement(new int[] {4, 6, 10}, 4));
+	    System.out.println(algos.searchMinDiffElement(new int[] {1, 3, 8, 10, 15}, 12));
+	    System.out.println(algos.searchMinDiffElement(new int[] {4, 6, 10}, 17));
+	    
+	    // Bitonic Array Maximum (easy)
+	    System.out.println("Max of a bitonic array");
+	    System.out.println(algos.findMaxInBitonicArray(new int[] {1, 3, 8, 12, 4, 2}));
+	    System.out.println(algos.findMaxInBitonicArray(new int[] {3, 8, 3, 1}));
+	    System.out.println(algos.findMaxInBitonicArray(new int[] {1, 3, 8, 12}));
+	    System.out.println(algos.findMaxInBitonicArray(new int[] {10, 9, 8}));
+	    
+	    // Search Bitonic Array (medium) 
+	    System.out.println("Search in bitonic array");
+	    System.out.println(algos.searchInBitonicArray(new int[] {1, 3, 8, 4, 3}, 4));
+	    System.out.println(algos.searchInBitonicArray(new int[] {3, 8, 3, 1}, 8));
+	    System.out.println(algos.searchInBitonicArray(new int[] {1, 3, 8, 12}, 12));
+	    System.out.println(algos.searchInBitonicArray(new int[] {10, 9, 8}, 10));
+	    
+	    // Search in Rotated Array (medium)
+	    System.out.println(algos.searchRotatedArray(new int[] {10, 15, 1, 3, 8}, 15));
+	    System.out.println(algos.searchRotatedArray(new int[] {4, 5, 7, 9, 10, -1, 2}, 10));
+	    
+	    // Rotation Count (medium)
+	    System.out.println("Rotation count");
+	    System.out.println(algos.rotationCountOfRotatedArray(new int[] {10, 15, 1, 3, 8}));
+	    System.out.println(algos.rotationCountOfRotatedArray(new int[] {4, 5, 7, 9, 10, -1, 2}));
+	    System.out.println(algos.rotationCountOfRotatedArray(new int[] {1, 3, 8, 10}));
+
+	    // =========================================================================================
+	    // =========================================================================================
+	    // Top K elements
+	    System.out.println(algos.findKLargestNumbers(new int[] {3, 1, 5, 12, 2, 11}, 3));
+	    System.out.println(algos.findKLargestNumbers(new int[] {5, 12, 11, -1, 12}, 3));
+	    
+	    // Kth smallest number
+	    System.out.println(algos.findKthSmallestNumber(new int[] {1, 5, 12, 2, 11, 5}, 3));
+	    System.out.println(algos.findKthSmallestNumber(new int[] {1, 5, 12, 2, 11, 5}, 4));
+	    System.out.println(algos.findKthSmallestNumber(new int[] {5, 12, 11, -1, 12}, 3));
+	    
+	    // Closest points
+	    Point[] points = new Point[] { new Point(1,2), new Point(1,3) };
+	    System.out.println(algos.findClosestPoints(points, 1));
+
+	    points = new Point[] { new Point(1,3), new Point(3,4), new Point(2,-1) };
+	    System.out.println(algos.findClosestPoints(points, 2));
+	    
+	    // Connect Ropes (easy)
+	    System.out.println(algos.minimumCostToConnectRopes(new int[] {1, 3, 11, 5}));
+	    System.out.println(algos.minimumCostToConnectRopes(new int[] {3, 4, 5, 6}));
+	    System.out.println(algos.minimumCostToConnectRopes(new int[] {1, 3, 11, 5, 2}));
+	    
+	    // Top 'K' Frequent Numbers (medium)
+	    System.out.println(algos.findTopKFrequentNumbers(new int[] {1, 3, 5, 12, 11, 12, 11}, 2));
+	    System.out.println(algos.findTopKFrequentNumbers(new int[] {5, 12, 11, 3, 11}, 2));
+	    
+	    // Frequency Sort (medium)
+	    System.out.println(algos.sortCharacterByFrequency("Programming"));
+	    System.out.println(algos.sortCharacterByFrequency("abcbab"));
+	    
+	    // K Closest numbers (medium)
+	    System.out.println(algos.findClosestElements(new int[] {5, 6, 7, 8, 9}, 3, 7));
+	    System.out.println(algos.findClosestElements(new int[] {2, 4, 5, 6, 9}, 3, 6));
+	    System.out.println(algos.findClosestElements(new int[] {2, 4, 5, 6, 9}, 3, 10));
+
+	    System.out.println(algos.findClosestElements2(new int[] {5, 6, 7, 8, 9}, 3, 7));
+	    System.out.println(algos.findClosestElements2(new int[] {2, 4, 5, 6, 9}, 3, 6));
+	    System.out.println(algos.findClosestElements2(new int[] {2, 4, 5, 6, 9}, 3, 10));
+	    
+	    // Maximum Distinct Elements (medium)
+	    System.out.println(algos.findMaximumDistinctElements(new int[] {7, 3, 5, 8, 5, 3, 3}, 2));
+	    System.out.println(algos.findMaximumDistinctElements(new int[] {3, 5, 12, 11, 12}, 3));
+	    System.out.println(algos.findMaximumDistinctElements(new int[] {1, 2, 3, 3, 3, 3, 4, 4, 5, 5, 5}, 2));
+	    
+	    // Sum of Elements (medium)
+	    System.out.println(algos.findSumOfElements(new int[] {1, 3, 12, 5, 15, 11}, 3, 6));
+	    System.out.println(algos.findSumOfElements(new int[] {3, 5, 8, 7}, 1, 4));
+	    
+	    // Rearrange String (hard)
 	}
 }

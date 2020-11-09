@@ -1,5 +1,8 @@
 package educative.tree.dfs;
 
+import lombok.ToString;
+
+@ToString
 public class TreeNode {
 	public int value;
 	public TreeNode left;
