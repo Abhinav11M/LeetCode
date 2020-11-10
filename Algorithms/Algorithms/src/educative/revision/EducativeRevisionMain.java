@@ -663,5 +663,19 @@ public class EducativeRevisionMain {
 	    System.out.println(algos.findSumOfElements(new int[] {3, 5, 8, 7}, 1, 4));
 	    
 	    // Rearrange String (hard)
+	    System.out.println(algos.rearrangeString("aappp"));
+	    System.out.println(algos.rearrangeString("Programming"));
+	    System.out.println(algos.rearrangeString("aapa"));
+	    
+	    // Rearrange String K Distance Apart (hard)
+	    System.out.println("Rearrange String K Distance Apart");
+	    System.out.println(algos.reorganizeString("mmpp", 2));
+	    System.out.println(algos.reorganizeString("Programming", 3));
+	    System.out.println(algos.reorganizeString("aab", 2));
+	    System.out.println(algos.reorganizeString("aappa", 3));
+	    
+	    // Scheduling Tasks (hard)
+	    System.out.println(algos.scheduleTasks(new char[] {'a', 'a', 'a', 'b', 'c', 'c'}, 2));
+	    System.out.println(algos.scheduleTasks(new char[] {'a', 'b', 'a'}, 3));
 	}
 }

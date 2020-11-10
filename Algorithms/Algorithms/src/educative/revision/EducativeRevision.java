@@ -3027,8 +3027,102 @@ public class EducativeRevision {
 	 * that no two same characters come next to each other.
 	 */
 	public String rearrangeString(String str) {
+		Map<Character, Integer> freqMap = new HashMap<>();
+		for(char ch : str.toCharArray()) {
+			freqMap.put(ch, freqMap.getOrDefault(ch, 0) + 1);
+		}
+		
+		PriorityQueue<Map.Entry<Character, Integer>> maxHeap = new PriorityQueue<>((a,b) -> b.getValue() - a.getValue());
+		maxHeap.addAll(freqMap.entrySet());
+		
+		Map.Entry<Character, Integer> prev = null;
+		StringBuilder s = new StringBuilder();
+		while(!maxHeap.isEmpty()) {
+			Entry<Character, Integer> curr = maxHeap.poll();
+			s.append(curr.getKey());
+			curr.setValue(curr.getValue()-1);
 
-		return "";
+			if(prev != null && prev.getValue() > 0) {
+				maxHeap.offer(prev);
+			}
+
+			prev = curr;
+		}
+		
+		return s.toString().length() == str.length() ? s.toString() : "";
+	}
+	
+	/**
+	 * Rearrange String K Distance Apart (hard)
+	 */
+	public String reorganizeString(String str, int k) {
+		Map<Character, Integer> freqMap = new HashMap<>();
+		for(char ch : str.toCharArray()) {
+			freqMap.put(ch, freqMap.getOrDefault(ch, 0) + 1);
+		}
+		
+		PriorityQueue<Map.Entry<Character, Integer>> maxHeap = new PriorityQueue<>((a,b) -> b.getValue() - a.getValue());
+		maxHeap.addAll(freqMap.entrySet());
+		
+		Queue<Map.Entry<Character, Integer>> prev = new LinkedList<>();
+	
+		StringBuilder s = new StringBuilder();
+		while(!maxHeap.isEmpty()) {
+			Entry<Character, Integer> curr = maxHeap.poll();
+			s.append(curr.getKey());
+			curr.setValue(curr.getValue()-1);
+			
+			if(curr.getValue() > 0) {
+				prev.offer(curr);
+			}
+			
+			if(prev.size() == k) {
+				maxHeap.offer(prev.poll());
+			}
+		}
+		
+		while(!prev.isEmpty() && prev.peek().getValue() == 1) {
+			s.append(prev.poll().getKey());
+		}
+		
+		return s.toString().length() == str.length() ? s.toString() : "";
+	}
+	
+	/**
+	 * Scheduling Tasks (hard)
+	 */
+	public int scheduleTasks(char[] tasks, int k) {
+		Map<Character, Integer> freqMap = new HashMap<>();
+		for(char ch : tasks) {
+			freqMap.put(ch, freqMap.getOrDefault(ch, 0) + 1);
+		}
+		
+		PriorityQueue<Map.Entry<Character, Integer>> maxHeap = new PriorityQueue<>((a,b) -> b.getValue() - a.getValue());
+		maxHeap.addAll(freqMap.entrySet());
+		
+		int time = 0;
+		
+		while(!maxHeap.isEmpty()) {
+			List<Map.Entry<Character, Integer>> list = new LinkedList<>();
+			// Total task to be done in each iteration is k+1
+			int n = k+1;
+			for(; n > 0 && !maxHeap.isEmpty(); n--) {
+				Entry<Character, Integer> curr = maxHeap.poll();
+				++time;
+				if(curr.getValue() > 1) {
+					curr.setValue(curr.getValue() - 1);
+					list.add(curr);
+				}
+			}
+			
+			maxHeap.addAll(list);
+			// Idle count becomes n as n tasks could not be completed yet
+			if(!maxHeap.isEmpty()) {
+				time += n;
+			}
+		}
+		
+		return time;
 	}
 	
 	/**========================
