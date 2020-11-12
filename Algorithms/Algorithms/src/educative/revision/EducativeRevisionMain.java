@@ -677,5 +677,32 @@ public class EducativeRevisionMain {
 	    // Scheduling Tasks (hard)
 	    System.out.println(algos.scheduleTasks(new char[] {'a', 'a', 'a', 'b', 'c', 'c'}, 2));
 	    System.out.println(algos.scheduleTasks(new char[] {'a', 'b', 'a'}, 3));
+
+	    // =========================================================================================
+	    // =========================================================================================
+	    // Two Heaps
+	    MedianOfAStream medianOfStream = new MedianOfAStream();
+	    medianOfStream.insertNum(3);
+	    medianOfStream.insertNum(1);
+	    System.out.println(medianOfStream.findMedian());
+	    medianOfStream.insertNum(5);
+	    System.out.println(medianOfStream.findMedian());
+	    medianOfStream.insertNum(4);
+	    System.out.println(medianOfStream.findMedian());
+	    
+	    // Sliding Window Median (hard)
+	    SlidingWindowMedian slm = new SlidingWindowMedian();
+	    Helpers.printArr(slm.findSlidingWindowMedian(new int[] {1, 2, -1, 3, 5}, 2));
+	    
+	    // Maximize Capital (hard)
+	    System.out.println(algos.findMaximumCapital(new int[] { 0, 1, 2 }, new int[] { 1, 2, 3 }, 2, 1));
+	    System.out.println(algos.findMaximumCapital(new int[] { 0, 1, 2, 3 }, new int[] { 1, 2, 3, 5 }, 3, 0));
+	    
+	    // Next Interval (hard)
+	    Interval[] intervals3 = new Interval[] { new Interval(2, 3), new Interval(3, 4), new Interval(5, 6) };
+	    Helpers.printArr(algos.findNextInterval(intervals3));
+
+	    intervals3 = new Interval[] { new Interval(3, 4), new Interval(1, 5), new Interval(4, 6) };
+	    Helpers.printArr(algos.findNextInterval(intervals3));
 	}
 }

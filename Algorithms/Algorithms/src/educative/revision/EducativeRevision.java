@@ -3134,4 +3134,85 @@ public class EducativeRevision {
 
 	// ======================================================================================================
 	// ======================================================================================================
+
+	/**========================
+	 * ========================
+	 * ====== Two Heaps =======
+	 * ========================
+	 * ========================
+	 */
+	
+	/**
+	 * Maximize Capital (hard)
+	 */
+	 public int findMaximumCapital(int[] capital, int[] profits, int numberOfProjects, int initialCapital) {
+		 // We only store the indices and not the values (We can fetch the values from index)
+		 PriorityQueue<Integer> minCapital = new PriorityQueue<>((a,b) -> capital[a] - capital[b]);
+		 PriorityQueue<Integer> maxProfits = new PriorityQueue<>((a,b) -> profits[b] - profits[a]);
+		 
+		 // Push all the capitals into the minQueue
+		 for(int i = 0; i < capital.length; ++i) {
+			 minCapital.offer(i);
+		 }
+		 
+		 for(int i = 0; i < numberOfProjects; ++i) {
+			 while(!minCapital.isEmpty() && capital[minCapital.peek()] <= initialCapital) {
+				 maxProfits.offer(minCapital.poll());
+			 }
+			 
+			 if(maxProfits.isEmpty()) {
+				 break;
+			 }
+			 
+			 initialCapital += profits[maxProfits.poll()];
+		 }
+		 
+		 return initialCapital;
+	 }
+	 
+	 /**
+	  * Next Interval (hard)
+	  */
+	 public int[] findNextInterval(Interval[] intervals) {
+		 int[] res = new int[intervals.length];
+		 
+		 // We will only put the indices and not the values
+		 PriorityQueue<Integer> maxStartHeap = new PriorityQueue<>((a,b) -> intervals[b].start - intervals[a].start);
+		 PriorityQueue<Integer> maxEndHeap = new PriorityQueue<>((a,b) -> intervals[b].end - intervals[a].end);
+		 
+		 // Pushing the indices to both the heaps
+		 for(int i = 0; i < intervals.length; ++i) {
+			 maxStartHeap.offer(i);
+			 maxEndHeap.offer(i);
+		 }
+		 
+		 for(int i = 0; i < res.length; ++i) {
+			 int topEnd = maxEndHeap.poll();
+			 int next = -1;
+			 res[topEnd] = next;
+			 
+			 if(intervals[topEnd].end <= intervals[maxStartHeap.peek()].start) {
+				 // Move to the closest interval
+				 while(!maxStartHeap.isEmpty() && intervals[topEnd].end <= intervals[maxStartHeap.peek()].start) {
+					 next = maxStartHeap.poll();
+				 }
+				 res[topEnd] = next;
+				 maxStartHeap.offer(next); // Pushing the back as it may be the next interval for other intevals
+			 }
+
+		 }
+		 
+		 return res;
+	 }
+	 
+	
+	/**========================
+	 * ========================
+	 * =====Top K Elements=====
+	 * ========================
+	 * ========================
+	 */
+
+	// ======================================================================================================
+	// ======================================================================================================
 }

@@ -14,6 +14,14 @@ public class Helpers {
 		}
 		System.out.println();
 	}
+	
+	public static void printArr(double[] arr) {
+		for (double data : arr) {
+			System.out.print(data + ",");
+		}
+		System.out.println();
+	}
+
 
 	public static void printArr(int[][] arr) {
 		for (int i = 0; i < arr.length; ++i) {
