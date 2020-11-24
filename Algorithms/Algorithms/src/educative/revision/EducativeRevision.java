@@ -3205,6 +3205,327 @@ public class EducativeRevision {
 		 return res;
 	 }
 	 
+	/**========================
+	 * ========================
+	 * =====Top K Elements=====
+	 * ========================
+	 * ========================
+	 */
+
+	// ======================================================================================================
+	// ======================================================================================================
+
+	/**========================
+	 * ========================
+	 * ===Dynamic Programming==
+	 * ========================
+	 * ========================
+	 */
+	 
+	 /**
+	  * 0/1 Knapsack (medium)
+	  * Recursive approach
+	  */
+	 public int solveKnapsack(int[] profits, int[] weights, int capacity) {
+		 return solveKnapsack(profits, weights, capacity, 0, 0, 0);
+	 }
+
+	private int solveKnapsack(int[] profits, int[] weights, int capacity, int index, int currProfit, int currWeight) {
+		if (index >= weights.length) {
+			return currProfit;
+		}
+
+		int newWeight = currWeight + weights[index];
+		int left = currProfit;
+		if (newWeight <= capacity) {
+			left = solveKnapsack(profits, weights, capacity, index + 1, currProfit + profits[index], newWeight);
+		}
+
+		int right = solveKnapsack(profits, weights, capacity, index + 1, currProfit, currWeight);
+
+		return Math.max(left, right);
+	}
+
+	/**
+	 * 0/1 Knapsack (medium)
+	 * Top-Down approach (Memoization)
+	 */
+	public int solveKnapsackMemoization(int[] profits, int[] weights, int capacity) {
+		
+		Integer[][] dp = new Integer[capacity+1][weights.length];
+		return solveKnapsackMemoization(profits, weights, capacity, 0, 0, dp);
+	}
+
+	private int solveKnapsackMemoization(int[] profits, int[] weights, int capacity, int index, int currProfit, Integer[][] dp) {
+		
+		if(index >= profits.length) {
+			return currProfit;
+		}
+		
+		if(dp[capacity][index] != null) {
+			return dp[capacity][index];
+		}
+		
+		// Taking item at index
+		int left = currProfit;
+		if(capacity - weights[index] >= 0) {
+			left = solveKnapsackMemoization(profits, weights, capacity - weights[index], index + 1,
+					currProfit + profits[index], dp);
+		}
+		// Skipping item at index
+		int right = solveKnapsackMemoization(profits, weights, capacity, index + 1, currProfit, dp);
+		
+		dp[capacity][index] = Math.max(left, right);
+		return dp[capacity][index];
+	}
+
+	/**
+	 * 0/1 Knapsack (medium)
+	 * Bottom-Top approach (Tabulation)
+	 * Using 2-D array
+	 */
+	public int solveKnapsackTabulation(int[] profits, int[] weights, int capacity) {
+		int n = profits.length;
+		int[][] dp = new int[n][capacity+1];
+		
+		for(int i = 0; i <= capacity; ++i) {
+			if(i >= weights[0]) {
+				dp[0][i] = profits[0];
+			}
+		}
+		
+		for(int i = 0; i < weights.length; ++i) {
+			dp[i][0] = 0; // Profit will be 0 with capacity 0
+		}
+		
+		for(int i = 1; i < n; ++i) {
+			for(int j = 1; j <= capacity; ++j) {
+				dp[i][j] = dp[i-1][j];
+				if(j - weights[i] >= 0) {
+					dp[i][j] = Math.max(dp[i][j], profits[i]+dp[i-1][j-weights[i]]);
+				}
+			}
+		}
+		
+		return dp[n-1][capacity];
+	}
+
+	/**
+	 * 0/1 Knapsack (medium)
+	 * Bottom-Top approach (Tabulation Optimized)
+	 * Using 2-D array
+	 */
+	public int solveKnapsackTabulationOpt(int[] profits, int[] weights, int capacity) {
+		int[] dp = new int[capacity+1];
+		int n = weights.length;
+		
+		// fill dp table for index 0
+		int i = weights[0];
+		for(; i <= capacity; ++i) {
+			dp[i] = profits[0];
+		}
+		
+		for(i = 1; i < n; ++i) {
+			for(int j = capacity; j >= weights[i]; --j) {
+				int profit = profits[i] + dp[j-weights[i]];
+				dp[j] = Math.max(dp[j], profit);
+			}
+		}
+		
+		return dp[capacity];
+	}
+	
+	/**
+	 * Equal Subset Sum Partition (medium)
+	 */
+	public boolean canPartition(int[] nums) {
+		
+		int sum = Arrays.stream(nums).boxed().collect(Collectors.summingInt(x -> x));
+		if(sum % 2 != 0) {
+			return false;
+		}
+
+		return findSubset(nums, sum/2);
+	}
+
+	private boolean findSubset(int[] nums, int sum) {
+		boolean[] dp = new boolean[sum+1];
+		
+		dp[0] = true;
+		if(nums[0] <= sum) {
+			dp[nums[0]] = true;
+		}
+		
+		for(int i = 1; i < nums.length; ++i) {
+			for(int j = sum; j >= nums[i]; --j) {
+				boolean val = dp[j] || dp[j-nums[i]];
+				dp[j] = dp[j] || val;
+			}
+		}
+		
+		return dp[sum];
+	}
+
+	/**
+	 * Subset Sum (medium)
+	 */
+	public boolean canFindSubsetWithSum(int[] num, int sum) {
+		boolean[] dp = new boolean[sum+1];
+		dp[0] = true;
+		// set values for num[0]
+		if(num[0] <= sum) {
+			dp[num[0]] = true;
+		}
+		
+		for(int i = 1; i < num.length; ++i) {
+			for(int j = sum; j >= num[i]; --j) {
+				dp[j] = dp[j] || dp[j - num[i]];
+			}
+		}
+		
+		return dp[sum];
+	}
+	
+	/**
+	 * Minimum Subset Sum Difference (hard)
+	 * Recursive approach
+	 */
+	public static int minSubsetDiff = Integer.MAX_VALUE;
+	public int partitionWithMinDiffBewSubsets(int[] num) {
+		minSubsetDiff = Integer.MAX_VALUE;
+		int sum = Arrays.stream(num).boxed().collect(Collectors.summingInt(x -> x));
+		partitionWithMinDiffBewSubsets(num, 0, sum, 0);
+		return minSubsetDiff;
+	}
+
+	private void partitionWithMinDiffBewSubsets(int[] num, int lSum, int rSum, int idx) {
+		
+		if(idx >= num.length) {
+			minSubsetDiff = Math.min(Math.abs(lSum - rSum), minSubsetDiff);
+			return;
+		}
+		
+		int l = lSum + num[idx];
+		int r = rSum - num[idx];
+		partitionWithMinDiffBewSubsets(num, l, r, idx+1);
+		partitionWithMinDiffBewSubsets(num, lSum, rSum, idx+1);
+	}
+	
+	
+	public int partitionWithMinDiffBewSubsetsMemoization(int[] num) {
+		int sum = Arrays.stream(num).boxed().collect(Collectors.summingInt(x -> x));
+		return partitionWithMinDiffBewSubsetsMemoization(num, new Integer[num.length][sum+1], 0, 0, 0);
+	}
+
+	// Sum1 = including number at idx
+	// Sum2 = excluding number at idx
+	private int partitionWithMinDiffBewSubsetsMemoization(int[] num, Integer[][] dp, int idx, int sum1, int sum2) {
+		if(idx == num.length) {
+			return Math.abs(sum1 - sum2);
+		}
+		
+		if(dp[idx][sum1] == null) {
+			int left = partitionWithMinDiffBewSubsetsMemoization(num, dp, idx + 1, sum1 + num[idx], sum2);
+			int right = partitionWithMinDiffBewSubsetsMemoization(num, dp, idx + 1, sum1, sum2 + num[idx]);
+			
+			dp[idx][sum1] = Math.min(left, right);
+		}
+		
+		return dp[idx][sum1];
+	}
+	
+	public int partitionWithMinDiffBewSubsetsTabulation(int[] num) {
+		int sum = Arrays.stream(num).boxed().collect(Collectors.summingInt(x -> x));
+		int mid = sum/2; // This is as close we can get in 1 group
+		
+		int sum1 = findClosestSubsetSum(num, mid);
+		int sum2 = sum - sum1;
+		return Math.abs(sum1 - sum2);
+	}
+
+	private int findClosestSubsetSum(int[] num, int sum) {
+		boolean[] dp = new boolean[sum+1];
+		
+		if(num[0] <= sum) {
+			dp[num[0]] = true;
+		}
+		
+		for(int i = 1; i < num.length; ++i) {
+			for(int j = sum; j >= num[i]; --j) {
+				if(dp[j - num[i]] == true) {
+					dp[j] = true;
+				}
+			}
+		}
+		
+		// find the closest true
+		int i = sum;
+		for(; i >= 0; --i) {
+			if(dp[i] == true) {
+				break;
+			}
+		}
+		
+		return i;
+	}
+
+	/**
+	 * Count of Subset Sum (hard)
+	 */
+	public int countSubsets(int[] num, int sum) {
+		int n = num.length;
+		int[][] dp = new int[n][sum+1];
+		
+		for(int i = 0; i < n; ++i) {
+			dp[i][0] = 1;
+		}
+		
+		for(int i = 0; i <= sum; ++i) {
+			if(num[0] == i) {
+				dp[0][i] = 1;
+			}
+		}
+
+		for(int i = 1; i < n; ++i) {
+			for(int j = 0; j <= sum; ++j) {
+				int val = dp[i-1][j];
+				if(num[i] <= j) {
+					val += dp[i-1][j-num[i]];
+				}
+				
+				dp[i][j] = val;
+			}
+		}
+
+		return dp[n-1][sum];
+	}
+	
+	/**
+	 * Target Sum (hard) 
+	 * You are given a set of positive numbers and a target sum ‘S’. 
+	 * Each number should be assigned either a ‘+’ or ‘-’ sign. 
+	 * We need to find the total ways to assign symbols to make the 
+	 * sum of the numbers equal to the target ‘S’.
+	 */
+	static int targetCount = 0;
+	public int findTargetSubsets(int[] num, int s) {
+		targetCount = 0;
+		findTargetSubsets(num, 0, 0, s);
+		
+		return targetCount;
+	}
+
+	private void findTargetSubsets(int[] num, int index, int currSum, int target) {
+		if(index == num.length) {
+			if(currSum == target) {
+				++targetCount;
+			}
+			return;
+		}
+		
+		findTargetSubsets(num, index+1, currSum+num[index], target);
+		findTargetSubsets(num, index+1, currSum-num[index], target);
+	}
 	
 	/**========================
 	 * ========================

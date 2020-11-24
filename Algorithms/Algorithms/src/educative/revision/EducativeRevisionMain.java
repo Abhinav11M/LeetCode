@@ -704,5 +704,54 @@ public class EducativeRevisionMain {
 
 	    intervals3 = new Interval[] { new Interval(3, 4), new Interval(1, 5), new Interval(4, 6) };
 	    Helpers.printArr(algos.findNextInterval(intervals3));
+	    
+	    // =========================================================================================
+	    // =========================================================================================
+	    // Dynamic Programming
+	    // 0/1 Knapsack (Recursive)
+	    System.out.println(algos.solveKnapsack(new int[] {1, 6, 10, 16}, new int[] {1, 2, 3, 5}, 7));
+	    System.out.println(algos.solveKnapsack(new int[] {1, 6, 10, 16}, new int[] {1, 2, 3, 5}, 6));
+	    // 0/1 Knapsack (Memoization)
+	    System.out.println(algos.solveKnapsackMemoization(new int[] {1, 6, 10, 16}, new int[] {1, 2, 3, 5}, 7));
+	    System.out.println(algos.solveKnapsackMemoization(new int[] {1, 6, 10, 16}, new int[] {1, 2, 3, 5}, 6));
+	    // 0/1 Knapsack (Tabulation)
+	    System.out.println(algos.solveKnapsackTabulation(new int[] {1, 6, 10, 16}, new int[] {1, 2, 3, 5}, 7));
+	    System.out.println(algos.solveKnapsackTabulation(new int[] {1, 6, 10, 16}, new int[] {1, 2, 3, 5}, 6));
+	    // 0/1 Knapsack (Tabulation Optimized)
+	    System.out.println(algos.solveKnapsackTabulationOpt(new int[] {1, 6, 10, 16}, new int[] {1, 2, 3, 5}, 7));
+	    System.out.println(algos.solveKnapsackTabulationOpt(new int[] {1, 6, 10, 16}, new int[] {1, 2, 3, 5}, 6));
+	    
+	    // Equal Subset Sum Partition (medium)
+		System.out.println(algos.canPartition(new int[] { 1, 2, 3, 4 }));
+		System.out.println(algos.canPartition(new int[] { 1, 1, 3, 4, 7 }));
+		System.out.println(algos.canPartition(new int[] { 2, 3, 4, 6 }));
+		System.out.println(algos.canPartition(new int[] { 1, 2, 4, 9 }));
+		System.out.println(algos.canPartition(new int[] { 1, 2, 3, 8 }));
+		
+		// Subset Sum (medium)
+		System.out.println(algos.canFindSubsetWithSum(new int[] {1, 2, 3, 7}, 6));
+		System.out.println(algos.canFindSubsetWithSum(new int[] {1, 2, 7, 1, 5}, 10));
+		System.out.println(algos.canFindSubsetWithSum(new int[] {1, 3, 4, 8}, 6));
+		
+		// Minimum Subset Sum Difference (hard)
+		System.out.println(algos.partitionWithMinDiffBewSubsets(new int[] {1, 2, 3, 9}));
+		System.out.println(algos.partitionWithMinDiffBewSubsets(new int[] {1, 2, 7, 1, 5}));
+		System.out.println(algos.partitionWithMinDiffBewSubsets(new int[] {1, 3, 100, 4}));
+		System.out.println(algos.partitionWithMinDiffBewSubsetsMemoization(new int[] {1, 2, 3, 9}));
+		System.out.println(algos.partitionWithMinDiffBewSubsetsMemoization(new int[] {1, 2, 7, 1, 5}));
+		System.out.println(algos.partitionWithMinDiffBewSubsetsMemoization(new int[] {1, 3, 100, 4}));
+		System.out.println(algos.partitionWithMinDiffBewSubsetsTabulation(new int[] {1, 2, 3, 9}));
+		System.out.println(algos.partitionWithMinDiffBewSubsetsTabulation(new int[] {1, 2, 7, 1, 5}));
+		System.out.println(algos.partitionWithMinDiffBewSubsetsTabulation(new int[] {1, 3, 100, 4}));
+		
+		// Count of Subset Sum (hard)
+		System.out.println("Count number of subsets with sum");
+		System.out.println(algos.countSubsets(new int[] {1, 1, 2, 3}, 4));
+		System.out.println(algos.countSubsets(new int[] {1, 2, 7, 1, 5}, 9));
+		
+		// Target Sum (hard)
+		System.out.println("Target Sum");
+		System.out.println(algos.findTargetSubsets(new int[] {1, 1, 2, 3}, 1));
+		System.out.println(algos.findTargetSubsets(new int[] {1, 2, 7, 1}, 9));
 	}
 }
