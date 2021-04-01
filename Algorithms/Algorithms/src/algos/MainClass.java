@@ -7,6 +7,8 @@ public class MainClass {
 //		Questions.ques1(mat);
 		
 		System.out.println(Questions.findPerm("IIDD", 3));
+		System.out.println(Questions.integerReplacement(8, 0));
+		System.out.println(Questions.integerReplacement(7, 0));
 		
 	}
 

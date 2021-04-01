@@ -77,4 +77,25 @@ public class Questions {
 		// Add min+1 in each
 		return res.stream().map(x -> x+Math.abs(min)+1).collect(Collectors.toList());
 	}
+	
+	public static int integerReplacement(int n, int val) {
+		if(n == 1) {
+			return val;
+		}
+		
+		if(n%2 == 0) {
+			return integerReplacement(n/2, val+1);
+		}
+		else {
+			int v1 = 0;
+			if(n == Integer.MAX_VALUE) {
+				v1 = integerReplacement((n-1)/2 + 1, val+2);
+			}
+			else {
+				v1 = integerReplacement(n+1, val+1);
+			}
+			int v2 = integerReplacement(n-1, val+1);
+			return Math.min(v1, v2);
+		}
+    }
 }

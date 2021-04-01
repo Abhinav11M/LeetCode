@@ -13,8 +13,9 @@ import datastructures.ListNodeWithRandom;
 public class LeetMain {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 	
+		LeetAlgos algos = new LeetAlgos();
+
 		int[] arr = LeetAlgos.twoSum(new int[] {3,2,4}, 6);
 		
 		int[] a = new int[] {-1,0,1,2,-1,-4};
@@ -334,7 +335,80 @@ public class LeetMain {
 //		System.out.println(LeetAlgos.maxSatisfied1(new int[]{7,3,2,5,1,6}, new int[]{0,1,1,1,0,0}, 1));
 //		System.out.println(LeetAlgos.maxSatisfied1(new int[]{6,10,2,1,7,9}, new int[]{1,0,0,0,0,1}, 3));
 		System.out.println(LeetAlgos.maxSatisfied1(new int[]{4,2,1,2,8,9,1}, new int[]{0,1,1,1,1,0,0}, 4));
-		System.out.println("********* Grumpy **********");
+//		System.out.println("********* Grumpy **********");
+		
+		System.out.println("------------");
+		char[][] charMat = new char[][] {{'A','B','C','E'},{'S','F','C','S'},{'A','D','E','E'}};
+		System.out.println(algos.exist(charMat, "ABCCED"));
+		charMat = new char[][] {{'A','B','C','E'},{'S','F','C','S'},{'A','D','E','E'}};
+		System.out.println(algos.exist(charMat, "SEE"));
+		charMat = new char[][]{{'A','B','C','E'},{'S','F','C','S'},{'A','D','E','E'}};
+		System.out.println(algos.exist(charMat, "ABCB"));
+		System.out.println("Max Profit");
+		System.out.println(algos.maxProfit(new int[] {7,1,5,3,6,4}));
+		System.out.println(algos.maxProfit(new int[] {7,6,4,3,1}));
+
+		System.out.println(algos.maxProfit2(new int[] {7,1,5,3,6,4}));
+		System.out.println(algos.maxProfit2(new int[] {1,2,3,4,5}));
+		
+		System.out.println(algos.isPalindrome("A man, a plan, a canal: Panama"));
+		System.out.println(algos.isPalindrome("race a car"));
+		
+		System.out.println(algos.singleNumber2(new int[] {2,2,3,2}));
+
+		System.out.println(algos.findPeakElement(new int[] {1,2,3,1}));
+		System.out.println(algos.findPeakElement(new int[] {1,2,1,3,5,6,4}));
+		
+		System.out.println(algos.compareVersion("1.01", "1.001"));
+		System.out.println(algos.compareVersion("1.0", "1.0.0"));
+		System.out.println(algos.compareVersion("0.1", "1.1"));
+		System.out.println(algos.compareVersion("1.0.1", "1"));
+		System.out.println(algos.compareVersion("7.5.2.4", "7.5.3"));
+
+		System.out.println(algos.rob(new int[] {1,2,3,1}));
+		System.out.println(algos.rob(new int[] {2,7,9,3,1}));
+		System.out.println(algos.rob(new int[] {6,6,4,8,4,3,3,10}));
+		System.out.println(algos.rob(new int[] {82,217,170,215,153,55,185,55,185,232,69,131,130,102})); // 1082
+		
+		System.out.println(algos.findRepeatedDnaSequences("AAAAACCCCCAAAAACCCCCCAAAAAGGGTTT"));
+
+		System.out.println(algos.maxProfit(2, new int[] {2,4,1}));
+		System.out.println(algos.maxProfit(2, new int[] {3,2,6,5,0,3}));
+		System.out.println(algos.maxProfitMemoization(2, new int[] {2,4,1}));
+		System.out.println(algos.maxProfitMemoization(2, new int[] {3,2,6,5,0,3}));
+		System.out.println(algos.maxProfitTabulation(2, new int[] {2,4,1}));
+		System.out.println(algos.maxProfitTabulation(2, new int[] {3,2,6,5,0,3}));
+		
+		//========= Number of islands
+//		System.out.println(algos.numIslands(new char[][] {
+//			  {'1','1','1','1','0'},
+//			  {'1','1','0','1','0'},
+//			  {'1','1','0','0','0'},
+//			  {'0','0','0','0','0'}
+//			}));
+
+		System.out.println(algos.numIslands(new char[][] {
+			  {'1','1','0','0','0'},
+			  {'1','1','0','0','0'},
+			  {'0','0','1','0','0'},
+			  {'0','0','0','1','1'}
+			}));
+		
+		System.out.println(algos.restoreIpAddresses("25525511135"));
+		System.out.println(algos.restoreIpAddresses("0000"));
+		System.out.println(algos.restoreIpAddresses("010010"));
+		
+		char[][] charArr = new char[][] {
+			{'X','X','X','X'},
+			{'X','O','O','X'},
+			{'X','X','O','X'},
+			{'X','O','X','X'}
+		};
+		
+		algos.solve(charArr);
+		
+		System.out.println();
+		
 		
 		System.out.println();
 	}

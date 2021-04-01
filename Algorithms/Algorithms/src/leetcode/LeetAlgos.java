@@ -1,5 +1,6 @@
 package leetcode;
 
+import java.awt.AlphaComposite;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,6 +18,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import javax.naming.InitialContext;
+import javax.xml.stream.events.Characters;
 
 import datastructures.ListNode;
 import datastructures.ListNodeWithRandom;
@@ -4472,6 +4474,543 @@ public class LeetAlgos {
 		return satisfied;
 	}
 	
+	/**
+	 * Word Search
+	 */
+	static boolean isVisited[][];
+	public boolean exist(char[][] board, String word) {
+		isVisited = new boolean[board.length][board[0].length];
+		for(int i = 0; i < board.length; ++i) {
+			for(int j = 0; j < board[0].length; ++j) {
+				if(board[i][j] == word.charAt(0)) {
+					if(ifExists(board, word, 0, i, j)) {
+						return true;
+					}
+				}
+			}
+		}
+		
+		return false;
+    }
+
+	private boolean ifExists(char[][] board, String word, int idx, int i, int j) {
+		
+		if(idx == word.length()) {
+			return true;
+		}
+		
+		if(i < 0 || i >= board.length || j < 0 || j >= board[0].length || word.charAt(idx) != board[i][j] || isVisited[i][j]) {
+			return false;
+		}
+		
+		isVisited[i][j] = true;
+		
+		if (ifExists(board, word, idx + 1, i, j + 1) || 
+				ifExists(board, word, idx + 1, i, j - 1) || 
+				ifExists(board, word, idx + 1, i + 1, j) || 
+				ifExists(board, word, idx + 1, i - 1, j)
+				) {
+			return true;
+		}
+
+		isVisited[i][j] = false;
+		
+		return false;
+	}
+	
+	public ListNode partition(ListNode head, int x) {
+		ListNode less = null;
+        ListNode lessHead = null;
+        ListNode more = null;
+        ListNode moreHead = null;
+        
+        while(head != null) {
+        	if(head.val >= x) {
+        		if(more == null) {
+        			more = head;
+                    moreHead = more;
+        		}
+        		else {
+        			more.next = head;
+        			more = more.next;
+        		}
+        	}
+        	else {
+        		if(less == null) {
+        			less = head;
+        			lessHead = less;
+        		}
+        		else {
+        			less.next = head;
+        			less = less.next;
+        		}
+        	}
+        	
+        	head = head.next;
+        }
+        
+        if(less == null) {
+        	return moreHead;
+        }
+        
+        if(more == null) {
+            return lessHead;
+        }
+        
+        less.next = moreHead;
+        more.next = null;
+        
+        return lessHead;
+    }
+	
+	public int maxProfit(int[] prices) {
+		int profit = 0;
+		int start = Integer.MAX_VALUE;
+		int end = Integer.MIN_VALUE;
+		
+		for(int i = 0; i < prices.length; ++i) {
+			int price = prices[i];
+			if(start > price) {
+				start = price;
+				end = Integer.MIN_VALUE;
+			}
+			else {
+				end = Math.max(end, price);
+				profit = Math.max(profit, end - start);
+			}
+		}
+		
+		return profit;
+	}
+
+	public int maxProfit2(int[] prices) {
+		int profit = 0;
+		
+		for(int i = 1; i < prices.length; ++i) {
+			if(prices[i] > prices[i-1]) {
+				profit += prices[i] - prices[i-1];
+			}
+		}
+		
+		return profit;
+	}
+	
+	public boolean isPalindrome(String s) {
+		List<Character> chars = new ArrayList<>();
+		for(char ch : s.toCharArray()) {
+			if((ch >= 97 && ch <= 122) || (ch >= 48 && ch <= 57)) {
+				chars.add(ch);
+			}
+			else if(ch >= 65 && ch <= 90) {
+				chars.add(Character.toLowerCase(ch));
+			}
+		}
+		
+		// check palindrome
+		int start = 0, end = chars.size()-1;
+		while(start <= end) {
+			if(chars.get(start) == chars.get(end)) {
+				++start;
+				--end;
+			}
+			else {
+				break;
+			}
+		}
+		
+        return start > end;
+    }
+	
+	public int singleNumber2(int[] nums) {
+		// All numbers will fit in 32 bit
+		// We need to find the digit which is present only once.
+		/**
+		 * Algo: Add one bit starting from 0 till 32 for each of the numbers and check if the sum of bits is more divisible 3 or not.
+		 * if its not divisible, it means the odd number has that bit set, append a 1 to the result on that bit position.
+		 */
+		
+		int res = 0;
+
+		for(int i = 0; i < 32; ++i) {
+			int bit = (1 << i); // setting 1 at ith bit
+			int ones = 0;
+			for(int j = 0; j < nums.length; ++j) {
+				if((nums[j] & (bit)) != 0) {
+					// bit i for num[j] is set to 1, since the & operator returned 1
+					++ones;
+				}
+			}
+			if(ones % 3 != 0) {
+				res = res + (1 << i); // setting that bit in result
+			}
+		}
+        
+		return res;
+    }
+	
+	public int findPeakElement(int[] nums) {
+		int peak = nums[0];
+        for(int i = 1; i < nums.length; ++i) {
+        	if(nums[i] >= nums[i-1]) {
+        		peak = nums[i];
+        	}
+        }
+        
+        return peak;
+    }
+	
+	public int compareVersion(String version1, String version2) {
+		String[] v1 = version1.split("\\.");
+		String[] v2 = version2.split("\\.");
+		
+		int i = 0;
+		for(; i < Math.min(v1.length, v2.length); ++i) {
+			int i1 = Integer.parseInt(v1[i]);
+			int i2 = Integer.parseInt(v2[i]);
+			
+			if(i1 < i2) {
+				return -1;
+			}
+			else if(i1 > i2) {
+				return 1;
+			}
+		}
+		
+		if(v2.length > v1.length) {
+			while(i < v2.length) {
+				int i2 = Integer.parseInt(v2[i]);
+				if(i2 > 0) {
+					return -1;
+				}
+				++i;
+			}
+		}
+
+		else if(v1.length > v2.length) {
+			while(i < v1.length) {
+				int i1 = Integer.parseInt(v1[i]);
+				if(i1 > 0) {
+					return 1;
+				}
+				++i;
+			}
+		}
+		
+		return 0;
+	}
+	
+	/**
+	 * House Robber
+	 */
+	public int rob(int[] nums) {
+		if(nums.length == 1) {
+			return nums[0];
+		}
+		
+		if(nums.length == 2) {
+			return Math.max(nums[0], nums[1]);
+		}
+		
+		int[] dp = new int[nums.length];
+		
+		return rob(nums, 0, dp);
+    }
+
+	private int rob(int[] nums, int i, int[] dp) {
+		if(i > nums.length - 1) {
+			return 0;
+		}
+		
+		if(i == nums.length-1) {
+			return nums[i];
+		}
+		
+		if(dp[i] != 0) {
+			return dp[i];
+		}
+		
+		int rob1 = nums[i] + rob(nums, i+2, dp);
+		int rob2 = rob(nums, i+1, dp);
+		
+		int res = Math.max(rob1, rob2);
+		dp[i] = res;
+		
+		return res;
+	}
+	
+	public int robDP(int[] nums) {
+		if(nums.length == 1) {
+			return nums[0];
+		}
+		
+		if(nums.length == 2) {
+			return Math.max(nums[0], nums[1]);
+		}
+		
+		int dp[] = new int[nums.length];
+		
+		dp[0] = nums[0];
+		dp[1] = Math.max(nums[0], nums[1]);
+		
+		for(int i = 2; i < nums.length; ++i) {
+			dp[i] = Math.max(nums[i] + dp[i-2], dp[i-1]);
+		}
+		
+		return dp[nums.length-1];
+    }
+	
+	public List<String> findRepeatedDnaSequences(String s) {
+		if(s.length() < 10) {
+			return new ArrayList<>();
+		}
+		
+		String pattern = s.substring(0, 10);
+		int right = 10;
+		Set<String> findSet = new HashSet<>();
+		Set<String> res = new HashSet<>();
+		findSet.add(pattern);
+		
+		while(right < s.length()) {
+			pattern = pattern.substring(1) + s.charAt(right);
+			++right;
+			
+			if(findSet.contains(pattern)) {
+				res.add(pattern);
+			}
+			else {
+				findSet.add(pattern);
+			}
+		}
+		
+        return new ArrayList<>(res);
+    }
+	
+	public int maxProfit(int k, int[] prices) {
+        return maxProfit(0, 0, 'B', prices, 2*k);
+    }
+
+	private int maxProfit(int idx, int transactionNum, char action, int[] prices, int maxTrans) {
+		if(idx >= prices.length || transactionNum >= maxTrans) {
+			return 0;
+		}
+		
+		if(action == 'B') {
+			int p1 = maxProfit(idx+1, transactionNum+1, 'S', prices, maxTrans) - prices[idx]; // Bought stock
+			int p2 = maxProfit(idx+1, transactionNum, 'B', prices, maxTrans); // No action
+			
+			return Math.max(p1, p2);
+		}
+		else {
+			int p1 = maxProfit(idx+1, transactionNum+1, 'B', prices, maxTrans) + prices[idx]; // Sold stock
+			int p2 = maxProfit(idx+1, transactionNum, 'S', prices, maxTrans); // No action
+			
+			return Math.max(p1, p2);
+		}
+	}
+	
+	public int maxProfitMemoization(int k, int[] prices) {
+        return maxProfitMemoization(0, 0, 'B', prices, 2*k, new Integer[prices.length][2*k][2]);
+    }
+
+	private int maxProfitMemoization(int idx, int transactionNum, char action, int[] prices, int maxTrans, Integer[][][] dp) {
+		if(idx >= prices.length || transactionNum >= maxTrans) {
+			return 0;
+		}
+		
+		
+		if(action == 'B') {
+			if(dp[idx][transactionNum][0] != null) {
+				return dp[idx][transactionNum][0];
+			}
+
+			int p1 = maxProfitMemoization(idx+1, transactionNum+1, 'S', prices, maxTrans, dp) - prices[idx]; // Bought stock
+			int p2 = maxProfitMemoization(idx+1, transactionNum, 'B', prices, maxTrans, dp); // No action
+			
+			int max = Math.max(p1, p2);
+			dp[idx][transactionNum][0] = max;
+			return max;
+		}
+		else {
+			if(dp[idx][transactionNum][1] != null) {
+				return dp[idx][transactionNum][1];
+			}
+			int p1 = maxProfitMemoization(idx+1, transactionNum+1, 'B', prices, maxTrans, dp) + prices[idx]; // Sold stock
+			int p2 = maxProfitMemoization(idx+1, transactionNum, 'S', prices, maxTrans, dp); // No action
+			
+			int max = Math.max(p1, p2);
+			dp[idx][transactionNum][1] = max;
+			return max;
+		}
+	}
+
+	public int maxProfitTabulation(int k, int[] prices) {
+		if(prices.length < 2 || k < 1) {
+			return 0;
+		}
+		
+		int[] dp = new int[2*k];
+		
+		/**
+		 * Even positions are Buy and odd are sell
+		 * We fill all the buy positions with Min value.
+		 */
+		for(int i = 0; i < 2*k; i += 2) {
+			dp[i] = -prices[0];
+		}
+		
+		for(int i = 1; i < prices.length; ++i) {
+			for(int j = 0; j < 2*k; ++j) {
+				if(j == 0) {
+					dp[j] = Math.max(dp[j], -prices[i]);
+				}
+				else {
+					if(j%2 == 0) { // Buy
+						dp[j] = Math.max(dp[j], dp[j-1] - prices[i]);
+					}
+					else { // Sell
+						dp[j] = Math.max(dp[j], dp[j-1] + prices[i]);
+					}
+				}
+			}
+		}
+		
+		return dp[2*k-1];
+    }
+	
+	/**
+	 * Number of Islands
+	 */
+	public int numIslands(char[][] grid) {
+        int numIslands = 0;
+        // Using DFS
+        for(int i = 0; i < grid.length; ++i) {
+        	for(int j = 0; j < grid[0].length; ++j) {
+        		if(grid[i][j] != '1') {
+        			continue;
+        		}
+        		++numIslands;
+        		// mark visited
+        		checkConnected(i, j, grid);
+        	}
+        }
+        
+        return numIslands;
+    }
+
+	private void checkConnected(int i, int j, char[][] grid) {
+		if(i < 0 || i >= grid.length || j < 0 || j >= grid[0].length || grid[i][j] == '0') {
+			return;
+		}
+		// Mark visited
+		grid[i][j] = '0';
+
+		// check Left
+		if(j > 0) {
+			checkConnected(i, j-1, grid);
+		}
+		// Check right
+		if(j < grid[0].length-1) {
+			checkConnected(i, j+1, grid);
+		}
+		// Check up
+		if(i > 0) {
+			checkConnected(i-1, j, grid);
+		}
+		// Check down
+		if(i < grid.length-1) {
+			checkConnected(i+1, j, grid);
+		}
+	}
+	
+	/**
+	 * Restore IP Addresses
+	 */
+	public List<String> restoreIpAddresses(String s) {
+		ArrayList<String> res = new ArrayList<>();
+        restoreIpAddresses(s, 0, 0, new StringBuilder(), res);
+        
+        return res;
+    }
+
+	private void restoreIpAddresses(String s, int i, int octets, StringBuilder sub, ArrayList<String> res) {
+		if(octets == 4 && i < s.length()) {
+			return;
+		}
+		
+		if(i == s.length() && octets == 4) {
+			res.add(sub.substring(0, sub.length()-1).toString());
+			return;
+		}
+		
+		if(i >= s.length()) {
+			return;
+		}
+		
+		StringBuilder s1 = new StringBuilder(sub).append(s.substring(i, i+1)).append(".");
+		restoreIpAddresses(s, i+1, octets+1, s1, res);
+
+		if(i+2 <= s.length()) {
+			String o = s.substring(i, i+2);
+			if(o.charAt(0) != '0') { // trailing 0s not allowed
+				StringBuilder s2 = new StringBuilder(sub).append(o).append(".");
+				restoreIpAddresses(s, i+2, octets+1, s2, res);
+			}
+		}
+
+		if(i+3 <= s.length()) {
+			String o = s.substring(i, i+3);
+			if(o.charAt(0) != '0') { // trailing 0s not allowed 
+				StringBuilder s3 = new StringBuilder(sub).append(o).append(".");
+				if(Integer.parseInt(s.substring(i, i+3)) <= 255) {
+					restoreIpAddresses(s, i+3, octets+1, s3, res);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Surrounded Regions
+	 */
+	public void solve(char[][] board) {
+        for(int i = 1; i < board.length; ++i) {
+        	for(int j = 1; j < board[0].length; ++j) {
+        		if(board[i][j] == '0') {
+        			List<Integer[]> path = new ArrayList<>();
+        			boolean isConnectedToBorder = checkConnectedToBorder(board, i, j, path);
+        			if(isConnectedToBorder) {
+        				for(Integer[] p : path) {
+        					board[p[0]][p[1]] = 'X';
+        				}
+        			}
+        		}
+        	}
+        }
+    }
+
+	private boolean checkConnectedToBorder(char[][] board, int i, int j, List<Integer[]> path) {
+		if((i == 0 || i == board.length-1 || j == 0 || j == board[0].length-1) && board[i][j] == '0') {
+			return true;
+		}
+//		if(i < 0 || i > board.length-1 || j < 0 || j > board[0].length-1) {
+//			return true;
+//		}
+		
+		if(board[i][j] == 'X') {
+			return false;
+		}
+
+		path.add(new Integer[] {i, j});
+
+		// check left
+		return checkConnectedToBorder(board, i-1, j, path) || 
+				checkConnectedToBorder(board, i+1, j, path) ||
+				checkConnectedToBorder(board, i, j-1, path) ||
+				checkConnectedToBorder(board, i, j+1, path);
+
+
+
+
+	}
 }
 
 

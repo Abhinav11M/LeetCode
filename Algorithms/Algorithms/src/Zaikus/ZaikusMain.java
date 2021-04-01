@@ -17,10 +17,13 @@ public class ZaikusMain {
 //		System.out.println(z.find_string("ghijk", "ghijkghi"));
 //		System.out.println(z.find_string(s1, s2));
 		
-		System.out.println(test(new int[] {4,3,2}, 7));
-		System.out.println(test(new int[] {4,2,3}, 7));
-
-		System.out.println(getMaxDel("URDR"));
+//		System.out.println(test(new int[] {4,3,2}, 7));
+//		System.out.println(test(new int[] {4,2,3}, 7));
+//
+//		System.out.println(getMaxDel("URDR"));
+		
+		Zaikus z = new Zaikus();
+		System.out.println(z.checkInclusion("ab", "eidbaooo"));
 	}
 	
 	public static boolean test(int[] arr, int minLen) {
