@@ -18,4 +18,22 @@ public class ListNode {
 		val = x;
 		next = n;
 	}
+	
+	public static ListNode getLinkedList(int[] values) {
+		ListNode head = null;
+		ListNode curr = null;
+		
+		for(int v : values) {
+			if(head == null) {
+				head = new ListNode(v);
+				curr = head;
+			}
+			else {
+				curr.next = new ListNode(v);
+				curr = curr.next;
+			}
+		}
+		
+		return head;
+	}
 }

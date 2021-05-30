@@ -338,7 +338,7 @@ public class GreedyAlgosQues {
 	}
 	
 	 /**
-	  * @apiNote Prim's algorithm to find the minimum spanning tree
+	  * @apiNote Kruskal's algorithm to find the minimum spanning tree
 	  * @param g Input graph
 	  */
 	public void KruskalMST(Graph2 g) {

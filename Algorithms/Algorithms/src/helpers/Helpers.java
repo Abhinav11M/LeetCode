@@ -21,6 +21,13 @@ public class Helpers {
 		}
 		System.out.println();
 	}
+	
+	public static void printArr(char[] arr) {
+		for (char data : arr) {
+			System.out.print(data + ",");
+		}
+		System.out.println();
+	}
 
 
 	public static void printArr(int[][] arr) {

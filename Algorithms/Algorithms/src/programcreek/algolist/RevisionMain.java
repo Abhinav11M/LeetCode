@@ -202,5 +202,203 @@ public class RevisionMain {
 //		cache.get(3);
 //		cache.get(4);
 //		cache.get(5);
+		
+//		System.out.println(algos.canCompleteCircuit(new int[] {1,2,3,4,5}, new int[] {3,4,5,1,2}));
+//		System.out.println(algos.canCompleteCircuit(new int[] {2,3,4}, new int[] {3,4,3}));
+		System.out.println(algos.canCompleteCircuitOpt(new int[] {1,2,3,4,5}, new int[] {3,4,5,1,2}));
+		System.out.println(algos.canCompleteCircuitOpt(new int[] {2,3,4}, new int[] {3,4,3}));
+		System.out.println(algos.canCompleteCircuitOpt(new int[] {3,3,4}, new int[] {3,4,4}));
+
+		// Verifying an Alien Dictionary
+		System.out.println(algos.isAlienSorted(new String[] {"hello","leetcode"}, "hlabcdefgijkmnopqrstuvwxyz"));
+		System.out.println(algos.isAlienSorted(new String[] {"word","world","row"}, "worldabcefghijkmnpqstuvxyz"));
+		System.out.println(algos.isAlienSorted(new String[] {"apple", "app"}, "abcdefghijklmnopqrstuvwxyz"));
+		
+		ListNode l1 = new ListNode(1);
+		l1.next = new ListNode(2);
+		ListNode l2 = l1.next;
+		System.out.println(algos.getIntersectionNode(l1, l2));
+		
+		// Dungeon game
+		int[][] dungeon = new int[][] {{-2,-3,3},{-5,-10,1},{10,30,-5}};
+		System.out.println(algos.calculateMinimumHP(dungeon));
+		
+		System.out.println("=========================");
+		System.out.println(algos.getNthCatalanNumber1(5));
+		
+		System.out.println(algos.getMaximumGold(new int[][] {{0,6,0},{5,8,7},{0,9,0}}));
+
+		System.out.println(algos.coinChange(new int[] {1,2,5}, 11));
+		System.out.println(algos.coinChangeDP(new int[] {1,2,5}, 11));
+		System.out.println(algos.coinChangeDP(new int[] {2}, 3));
+
+		System.out.println(algos.canPartition(new int[] {1,5,11,5}));
+		System.out.println(algos.canPartition(new int[] {1,2,5}));
+		
+		System.out.println(algos.cutRod(new int[] {1,5,8,9,10,17,17,20}, 8));
+		System.out.println(algos.cutRod(new int[] {3,5,8,9,10,17,17,20}, 8));
+
+//		System.out.println(algos.lengthOfLIS(new int[] {10,9,2,5,3,7,101,18}));
+//		System.out.println(algos.lengthOfLIS(new int[] {0,1,0,3,2,3}));
+//		System.out.println(algos.lengthOfLIS(new int[] {7,7,7,7,7,7,7}));
+//		System.out.println(algos.lengthOfLIS_DP(new int[] {10,9,2,5,3,7,101,18}));
+//		System.out.println(algos.lengthOfLIS_DP(new int[] {0,1,0,3,2,3}));
+//		System.out.println(algos.lengthOfLIS_DP(new int[] {7,7,7,7,7,7,7}));
+		
+//		System.out.println(algos.removeDuplicates("abcd", 2));
+		System.out.println(algos.removeDuplicates("deeedbbcccbdaa", 3));
+		
+		System.out.println(algos.numSubmatrixSumTarget(new int[][] {{0,1,0},{1,1,1},{0,1,0}}, 0));
+		
+		System.out.println(algos.combinationSum4(new int[] {1,2,3}, 4));
+		System.out.println(algos.combinationSum4(new int[] {9}, 3));
+		System.out.println(algos.combinationSum4DP(new int[] {1,2,3}, 4));
+		System.out.println(algos.combinationSum4DP(new int[] {9}, 3));
+		
+		System.out.println(algos.minPathSum(new int[][] {{1,3,1},{1,5,1},{4,2,1}}));
+
+		Helpers.printArr(algos.maxSlidingWindow(new int[] {1,3,-1,-3,5,3,6,7}, 3));
+		Helpers.printArr(algos.nextLargerElement(new int[] {4, 5, 2, 25}));
+		Helpers.printArr(algos.nextLargerElement(new int[] {13, 7, 6, 12}));
+	
+		System.out.println("=========== Max Events ===========");
+		System.out.println(algos.maxEvents(new int[][] {{1,2},{2,3},{3,4}}));
+		System.out.println(algos.maxEvents(new int[][] {{1,2},{2,3},{3,4},{1,2}}));
+		System.out.println(algos.maxEvents(new int[][] {{1,4},{4,4},{2,2},{3,4},{1,1}}));
+		System.out.println(algos.maxEvents(new int[][] {{1,5},{1,5},{1,5},{2,3},{2,3}}));
+		System.out.println(algos.maxEvents(new int[][] {{1,2},{2,2},{3,3},{3,4},{3,4}}));
+		
+		TreeNode tt = new TreeNode(-2);
+		tt.left = new TreeNode(-3);
+		System.out.println(algos.pathSum(tt, -5));
+		
+		List<List<Integer>> triangle = Lists.newArrayList(
+				Lists.newArrayList(2), Lists.newArrayList(3,4), Lists.newArrayList(6,5,7), Lists.newArrayList(4,1,8,3)
+				);
+		System.out.println(algos.minimumTotal1(triangle));
+		
+		System.out.println(algos.trap1(new int[] {0,1,0,2,1,0,1,3,2,1,2,1}));
+		
+		System.out.println("Count binary substring");
+		System.out.println(algos.countBinarySubstrings("00110011"));
+		
+		System.out.println("Farthest building");
+		System.out.println(algos.furthestBuilding(new int[] {4,2,7,6,9,14,12}, 5, 1));
+		System.out.println(algos.furthestBuilding(new int[] {4,12,2,7,3,18,20,3,19}, 10, 2));
+		System.out.println(algos.furthestBuilding(new int[] {14,3,19,3}, 17, 0));
+
+		System.out.println(algos.furthestBuildingOpt(new int[] {4,2,7,6,9,14,12}, 5, 1));
+		System.out.println(algos.furthestBuildingOpt(new int[] {4,12,2,7,3,18,20,3,19}, 10, 2));
+		System.out.println(algos.furthestBuildingOpt(new int[] {14,3,19,3}, 17, 0));
+
+		System.out.println(algos.isPowerOfThree(27));
+		
+		TreeNode res11 = algos.buildTreeIP(new int[] {9,3,15,20,7}, new int[] {9,15,7,20,3});
+		res11 = algos.buildTreeIP(new int[] {1,2,3,4}, new int[] {2,1,4,3});
+		
+		ListNode head = new ListNode(-10);
+		head.next = new ListNode(-3);
+		head.next.next = new ListNode(0);
+		head.next.next.next = new ListNode(5);
+		head.next.next.next.next = new ListNode(9);
+		res11 = algos.sortedListToBST(head);
+		char[][] charMat = new char[][] {{'X','X','X','X'},{'X','O','O','X'},{'X','X','O','X'},{'X','O','X','X'}};
+		algos.solve(charMat);
+		charMat = new char[][] { { 'O', 'X', 'X', 'O', 'X' }, { 'X', 'O', 'O', 'X', 'O' }, { 'X', 'O', 'X', 'O', 'X' },
+				{ 'O', 'X', 'O', 'O', 'O' }, { 'X', 'X', 'O', 'X', 'O' } };
+		algos.solve(charMat);
+		charMat = new char[][] { { 'X', 'O', 'X', 'O', 'X', 'O' }, { 'O', 'X', 'O', 'X', 'O', 'X' },
+				{ 'X', 'O', 'X', 'O', 'X', 'O' }, { 'O', 'X', 'O', 'X', 'O', 'X' } };
+		algos.solve(charMat);
+		System.out.println();
+		
+		ListNode sortList = new ListNode(4);
+		sortList.next = new ListNode(2);
+		sortList.next.next = new ListNode(1);
+		sortList.next.next.next = new ListNode(3);
+		
+		System.out.println(algos.insertionSortList(sortList));
+		System.out.println(algos.convertToTitle(28));
+		
+		TreeNode rightView = new TreeNode(1);
+		rightView.left = new TreeNode(2);
+		rightView.right = new TreeNode(3);
+		rightView.left.right = new TreeNode(5);
+		rightView.right.right = new TreeNode(4);
+		
+		System.out.println(algos.rightSideView(rightView));
+
+		ListNode l3 = ListNode.getLinkedList(new int[] {1,2,6,3,4,5,6});
+		l3 = algos.removeElements(l3, 6);
+		System.out.println(l3);
+		
+		l3 = ListNode.getLinkedList(new int[] {1,7,5,1,9,2,5,1});
+		Helpers.printArr(algos.nextLargerNodes(l3));
+		
+		System.out.println("==== Course Schedule ====");
+		Helpers.printArr(algos.findOrder(2, new int[][] {{1,0}}));
+		Helpers.printArr(algos.findOrder(4, new int[][] {{1,0},{2,0},{3,1},{3,2}}));
+		
+//		System.out.println(algos.combinationSum3(3, 9));
+		System.out.println(algos.combinationSum3(9, 45));
+		
+//		System.out.println(algos.countPrimesOpt(10));
+//		System.out.println(algos.rob(new int[] {2,3,2}));
+//		System.out.println(algos.rob(new int[] {1,2,3,1}));
+//		System.out.println(algos.rob(new int[] {6}));
+//		System.out.println(algos.rob(new int[] {1, 2, 3, 4, 5, 1, 2, 3, 4, 5}));
+		
+		System.out.println(algos.maximalSquare(new char[][] { { '1', '0', '1', '0', '0' }, { '1', '0', '1', '1', '1' },
+				{ '1', '1', '1', '1', '1' }, { '1', '0', '0', '1', '0' } }));
+		
+		TreeNode t1 = new TreeNode(37);
+		t1.left = new TreeNode(-34);
+		t1.right = new TreeNode(48);
+		t1.left.right = new TreeNode(-100);
+		t1.right.left = new TreeNode(-100);
+		t1.right.right = new TreeNode(48);
+		
+		System.out.println(algos.binaryTreePaths(t1));
+		
+		System.out.println(algos.isMatch("aa", "*"));
+		System.out.println(algos.isMatch("aa", "a"));
+		System.out.println(algos.isMatch("cb", "?a"));
+		System.out.println(algos.isMatch("cb", "?b"));
+		System.out.println(algos.isMatch("adceb", "*a*b"));
+		System.out.println(algos.isMatch("acdcb", "a*c?b"));
+		System.out.println(algos.isMatch("", "******"));
+		
+		System.out.println(algos.isMatchRegex("mississippi", "mis*is*p*."));
+		System.out.println(algos.isMatchRegex("aa", "a*"));
+		System.out.println(algos.isMatchRegex("ab", ".*"));
+		
+//		System.out.println("Scramble String");
+//		System.out.println(algos.isScramble("great", "rgeat"));
+//		System.out.println(algos.isScramble("abcde", "caebd"));
+		
+//		System.out.println(algos.shortestSuperstring(new String[] {"alex","loves","leetcode"}));
+//		System.out.println(algos.shortestSuperstring(new String[] {"catg","ctaagt","gcta","ttca","atgcatc"}));
+//		System.out.println(algos.shortestSuperstring(new String[] {"abc", "ab"}));
+		
+		System.out.println(algos.compress(new char[] {'a','a','b','b','c','c','c'}));
+		System.out.println(algos.compress(new char[] {'a'}));
+		System.out.println(algos.compress(new char[] {'a','b','b','b','b','b','b','b','b','b','b','b','b'}));
+		char[] chars = new char[] {'a','a','a','b','b','a','a'};
+		chars = new char[] {'a','b','c'};
+		System.out.println(algos.compress(chars));
+		Helpers.printArr(chars);
+		
+		System.out.println(algos.partitionLabels("ababcbacadefegdehijhklij"));
 	}
 }
+
+
+
+
+
+
+
+
+
+
+

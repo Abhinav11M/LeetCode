@@ -6,7 +6,7 @@ import java.util.Queue;
 
 public class Graph {
 	
-	private LinkedList<Integer> adjList[];
+	private LinkedList<Integer>[] adjList;
 	
 	@SuppressWarnings("unchecked")
 	Graph(int numberOfVertices) {
