@@ -1,6 +1,7 @@
 package programcreek.algolist;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.google.common.collect.Lists;
@@ -389,6 +390,53 @@ public class RevisionMain {
 		Helpers.printArr(chars);
 		
 		System.out.println(algos.partitionLabels("ababcbacadefegdehijhklij"));
+		
+		// Longest string chain
+		System.out.println(algos.longestStrChain(new String[] {"a","b","ba","bca","bda","bdca"}));
+		System.out.println(algos.longestStrChain(new String[] {"xbc","pcxbcf","xb","cxbc","pcxbc"}));
+
+		// Word Ladder 2
+		System.out.println(algos.findLadders("hit", "cog",
+				Lists.newArrayList("hot", "dot", "dog", "lot", "log", "cog")));
+		
+		System.out.println(algos.ladderLength1("hot", "dog", Lists.newArrayList("hot","dog","dot")));
+		
+//		System.out.println(algos.containsNearbyAlmostDuplicate(new int[] {-2147483648,2147483647}, 1, 1));
+		System.out.println(algos.containsNearbyAlmostDuplicate(new int[] {-3,3,-6}, 2, 3));
+		
+		// Move Zeroes
+		algos.moveZeroes1(new int[] {0,1,0,3,12});
+		System.out.println(algos.maxArea2(new int[] {1,8,6,2,5,4,8,3,7}));
+		
+		System.out.println(algos.minSubArrayLen(7, new int[] {2,3,1,2,4,3}));
+//		System.out.println(algos.findMin(new int[] {1,2,3,4,5}));
+//		System.out.println(algos.findMin(new int[] {3,4,5,1,2}));
+		System.out.println(algos.findMin(new int[] {11,13,15,17}));
+//		System.out.println(algos.findMin(new int[] {11,13}));
+		
+//		System.out.println(algos.minDeletions("bbcebab"));
+//		System.out.println(algos.minDeletions("adec"));
+		
+		System.out.println("Open Lock");
+		System.out.println(algos.openLock(new String[]{"0201","0101","0102","1212","2002"}, "0202"));
+		System.out.println(algos.openLock(new String[]{"8888"}, "0009"));
+		System.out.println(algos.openLock(new String[]{"8887","8889","8878","8898","8788","8988","7888","9888"}, "8888"));
+		
+		System.out.println(algos.minRemoveToMakeValid("lee(t(c)o)de)"));
+		System.out.println(algos.minRemoveToMakeValid("())()((("));
+		
+//		System.out.println(algos.simplifyPath("/home/"));
+//		System.out.println(algos.simplifyPath("/../"));
+//		System.out.println(algos.simplifyPath("/home//foo/"));
+//		System.out.println(algos.simplifyPath("/a/./b/../../c/"));
+//		System.out.println(algos.simplifyPath("/a/../../b/../c//.//"));
+//		System.out.println(algos.simplifyPath("/a//b////c/d//././/.."));
+		System.out.println(algos.simplifyPath("/..hidden/"));
+		System.out.println(algos.simplifyPath("/hello../world"));
+		
+		System.out.println(algos.temp(new int[] {1,3,0,0,1,2,4}));
+		
+		System.out.println(algos.maxVal11(new int[] {175, 133, 109, 210, 97}, new int[] {200, 125, 128, 228, 133}, 250));
 	}
 }
 

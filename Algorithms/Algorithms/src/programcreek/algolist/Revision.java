@@ -13,12 +13,10 @@ import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.Stack;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import com.google.common.collect.Lists;
 
 import datastructures.ListNode;
 import datastructures.TreeNode;
@@ -3755,8 +3753,873 @@ public class Revision {
 	 * Longest String Chain
 	 */
 	public int longestStrChain(String[] words) {
-        
+        // Create String to index map
+		Map<String, Integer> posMap = new HashMap<>();
+		for(int i = 0; i < words.length; ++i) {
+			posMap.put(words[i], i);
+		}
+		
+		// Graph structure. It will only the list of vertices from each vertex.
+		List<List<Integer>> edges = new ArrayList<>();
+		for(int i = 0; i < words.length; ++i) {
+			edges.add(new LinkedList<Integer>());
+		}
+		
+		for(int i = 0; i < words.length; ++i) {
+			String currWord = words[i];
+			// Find the next possible words from word and check if it is available in the map
+			// Iterate over the chars of the word removing one char at a time
+			// and check if its available in the list of words or not (check in the map)
+			for(int j = 0; j < currWord.length(); ++j) {
+				String possibleNext = currWord.substring(0, j) + currWord.substring(j+1);
+				if(posMap.containsKey(possibleNext)) {
+					// Create an edge from possibleNext to currWord
+					edges.get(posMap.get(possibleNext)).add(i);
+				}
+			}
+		}
+		
+		// Find the longest path in the graph
+		return getLongest(edges);
     }
+	
+	private int getLongest(List<List<Integer>> edges) {
+		int longest = 0;
+		// Tracks the max length of each vertex
+		Integer[] connectedLength = new Integer[edges.size()];
+		for(int v = 0; v < edges.size(); ++v) {
+			longest = Math.max(longest, getLongest(edges, connectedLength, v));
+		}
+		
+		return longest;
+	}
+
+	private int getLongest(List<List<Integer>> edges, Integer[] connectedLength, int v) {
+		if(connectedLength[v] != null) {
+			return connectedLength[v];
+		}
+		// Initializing the first vertex as 1 as the length of chain with 1 vertex is still 1
+		connectedLength[v] = 1;
+		List<Integer> connections = edges.get(v);
+		for(int j = 0; j < connections.size(); ++j) {
+			connectedLength[v] = Math.max(connectedLength[v],
+					1 + getLongest(edges, connectedLength, connections.get(j)));
+		}
+		
+		return connectedLength[v];
+	}
+	
+	/**
+	 * Word Ladder I
+	 */
+	public int ladderLength1(String beginWord, String endWord, List<String> wordList) {
+		Set<String> words = new HashSet<String>(wordList);
+		words.remove(beginWord);
+		Queue<String> queue = new LinkedList<>();
+		queue.offer(beginWord);
+		int level = 1; // one word inserted
+		
+		// BFS
+		while(!queue.isEmpty()) {
+			int size = queue.size();
+			for(int i = 0; i < size; ++i) {
+				String currWord = queue.poll();
+				for(int j = 0; j < currWord.length(); ++j) {
+					for(char ch = 'a'; ch <= 'z'; ++ch) {
+						String newWord = currWord.substring(0,j) + ch + currWord.substring(j+1);
+						if(words.contains(newWord)) {
+							if(newWord.equals(endWord)) {
+								return level+1;
+							}
+							queue.add(newWord);
+							words.remove(newWord);
+						}
+					}
+				}
+			}
+			// level for BFS completed
+			++level;
+		}
+		
+		return 0;
+	}
+
+	public int ladderLength(String beginWord, String endWord, List<String> wordList) {
+		if(wordList.get(0) != beginWord) {
+			wordList.add(0, beginWord);
+		}
+		// Create map of word to pos
+		Map<String, Integer> posMap = new HashMap<>();
+		for(int i = 0; i < wordList.size(); ++i) {
+			posMap.put(wordList.get(i), i);
+		}
+		
+		if(!posMap.containsKey(endWord)) {
+			return 0;
+		}
+		
+		// Forming the graph/adjacency matrix
+		List<List<Integer>> edges = new ArrayList<List<Integer>>();
+		for(int i = 0; i < posMap.size(); ++i) {
+			edges.add(new ArrayList<Integer>());
+		}
+
+		// create a graph from all the words after
+		String allAlpha = "abcdefghijklmnopqrstuvwxyz";
+		boolean[] traversed = new boolean[wordList.size()];
+		String currWord = wordList.get(0);
+		for(int i = 1; i < wordList.size(); ++i) {
+			// try to form different combinations using allAlpha to get the next word
+			// If found, make an entry in the graph
+			for(int j = 0; j < currWord.length(); ++j) {
+				// Replacing the char at j with all chars in allAlpha
+				for(int k = 0; k < 26; ++k) {
+					String possible = currWord.substring(0, j) + allAlpha.charAt(k) + currWord.substring(j+1);
+					if(posMap.containsKey(possible) && !traversed[posMap.get(possible)]) {
+						// add to the graph
+						edges.get(i).add(posMap.get(possible));
+						traversed[i] = true;
+					}
+				}
+			}
+			currWord = wordList.get(i);
+		}
+		
+		// Traverse the graph to identify the path from beginWord till endWord
+		boolean[] isTraversed = new boolean[wordList.size()];
+		List<List<Integer>> res = new ArrayList<List<Integer>>();
+		List<Integer> currPath = new ArrayList<Integer>();
+		currPath.add(0);
+		isTraversed[0] = true;
+		findPaths(edges, isTraversed, 0, wordList.size()-1, currPath, res);
+		
+		int min = Integer.MAX_VALUE;
+		for(List<Integer> l : res) {
+			if(l.size() < min) {
+				min = l.size();
+			}
+		}
+		
+		return min == Integer.MAX_VALUE ? 0 : min;
+    }
+	
+	
+	/**
+	 * Word Ladder II
+	 */
+	public List<List<String>> findLadders(String beginWord, String endWord, List<String> wordList) {
+		wordList.add(0, beginWord);
+		// Create map of word to pos
+		Map<String, Integer> posMap = new HashMap<>();
+		for(int i = 0; i < wordList.size(); ++i) {
+			posMap.put(wordList.get(i), i);
+		}
+		
+		if(!posMap.containsKey(endWord)) {
+			return new ArrayList<List<String>>();
+		}
+		
+		// Forming the graph/adjacency matrix
+		List<List<Integer>> edges = new ArrayList<List<Integer>>();
+		for(int i = 0; i < posMap.size(); ++i) {
+			edges.add(new ArrayList<Integer>());
+		}
+
+		// create a graph from all the words after
+		String allAlpha = "abcdefghijklmnopqrstuvwxyz";
+		boolean[] traversed = new boolean[wordList.size()];
+		for(int i = 0; i < wordList.size(); ++i) {
+			String currWord = wordList.get(i);
+			traversed[i] = true;
+			// try to form different combinations using allAlpha to get the next word
+			// If found, make an entry in the graph
+			for(int j = 0; j < currWord.length(); ++j) {
+				// Replacing the char at j with all chars in allAlpha
+				for(int k = 0; k < 26; ++k) {
+					String possible = currWord.substring(0, j) + allAlpha.charAt(k) + currWord.substring(j+1);
+					if(posMap.containsKey(possible) && !traversed[posMap.get(possible)]) {
+						// add to the graph
+						edges.get(i).add(posMap.get(possible));
+					}
+				}
+			}
+		}
+		
+		// Traverse the graph to identify the path from beginWord till endWord
+		boolean[] isTraversed = new boolean[wordList.size()];
+		List<List<Integer>> res = new ArrayList<List<Integer>>();
+		List<Integer> currPath = new ArrayList<Integer>();
+		currPath.add(0);
+		isTraversed[0] = true;
+		findPaths(edges, isTraversed, 0, wordList.size()-1, currPath, res);
+//		System.out.println(res);
+		return null;
+    }
+
+	private void findPaths(
+			List<List<Integer>> edges,
+			boolean[] isTraversed,
+			int currIdx,
+			int endIdx,
+			List<Integer> currPath,
+			List<List<Integer>> res) {
+		
+		if(currIdx == endIdx) {
+			res.add(new ArrayList<Integer>(currPath));
+			return;
+		}
+		
+		List<Integer> nextVertices = edges.get(currIdx);
+		for(int i = 0; i < nextVertices.size(); ++i) {
+			int next = nextVertices.get(i);
+			if(isTraversed[next]) {
+				continue;
+			}
+
+			isTraversed[next] = true;
+			currPath.add(next);
+
+			findPaths(edges, isTraversed, next, endIdx, currPath, res);
+
+			isTraversed[next] = false;
+			currPath.remove(currPath.size()-1);
+		}
+	}
+	
+	/**
+	 * Range Addition II
+	 */
+	public int maxCountOpt(int m, int n, int[][] ops) {
+		if(ops == null || ops.length == 0) {
+			return m*n;
+		}
+
+		int xMax = ops[0][0];
+		int yMax = ops[0][1];
+		
+		for(int i = 1; i < ops.length; ++i) {
+			int[] op = ops[i];
+			if(op[0] < xMax) {
+				xMax = op[0];
+			}
+			if(op[1] < yMax) {
+				yMax = op[1];
+			}
+		}
+		
+		return xMax * yMax;
+	}
+	
+	/**
+	 * Contains Duplicate III
+	 */
+	public boolean containsNearbyAlmostDuplicate(int[] nums, int k, int t) {
+		// Set of numbers
+		// Note: Only keep numbers b/w i and i + k in the set
+		TreeSet<Integer> cache = new TreeSet<>();
+		
+		for(int i = 0; i < nums.length; ++i) {
+			int leftBoundary = Integer.MIN_VALUE;
+			if(nums[i] < Integer.MIN_VALUE + t) {
+				leftBoundary = Integer.MIN_VALUE;
+			}
+			else {
+				leftBoundary = nums[i] - t;
+			}
+
+			int rightBoundary = Integer.MAX_VALUE;
+			if(nums[i] > Integer.MAX_VALUE - t - 1) {
+				rightBoundary = Integer.MAX_VALUE;
+			}
+			else {
+				rightBoundary = nums[i] + t + 1;
+			}
+			
+			SortedSet<Integer> subset = cache.subSet(leftBoundary, rightBoundary);
+			if(subset.size() > 0) {
+				return true;
+			}
+			
+			cache.add(nums[i]);
+			if(i >= k) {
+				cache.remove(nums[i-k]);
+			}
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Move Zeroes
+	 */
+	public void moveZeroes1(int[] nums) {
+		int insIdx = 0;
+		for(int i = 0; i < nums.length; ++i) {
+			if(nums[i] == 0) {
+				continue;
+			}
+			else if(i == insIdx) {
+				++insIdx;
+				continue;
+			}
+			else {
+				nums[insIdx] = nums[i];
+				nums[i] = 0;
+				++insIdx;
+			}
+		}
+	}
+	
+	/**
+	 * Container With Most Water
+	 */
+	public int maxArea2(int[] height) {
+		int left = 0, right = height.length-1;
+		int max = Integer.MIN_VALUE;
+		
+		while(left < right) {
+			max = Math.max(max, Math.min(height[left], height[right]) * (right - left));
+			
+			if(left < right) {
+				++left;
+			}
+			else if(left > right) {
+				--right;
+			}
+			else {
+				++left;
+				--right;
+			}
+		}
+		
+		return max;
+	}
+	
+	/**
+	 * Minimum Size Subarray Sum
+	 */
+	public int minSubArrayLen(int s, int[] nums) {
+        int left = 0, right = 0;
+        int currSum = 0;
+        int minLength = Integer.MAX_VALUE;
+        while(right < nums.length) {
+        	currSum += nums[right];
+        	if(currSum >= s) {
+        		minLength = Math.min(right - left + 1, minLength);
+        	}
+        	
+        	while(currSum > s) {
+        		currSum -= nums[left++];
+        		if(currSum >= s) {
+        			minLength = Math.min(right - left + 1, minLength);
+        		}
+        	}
+
+        	++right;
+        }
+        
+        return minLength == Integer.MAX_VALUE ? 0 : minLength;
+    }
+	
+	/**
+	 * Median of Two Sorted Arrays
+	 */
+	public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+		
+		int s1 = nums1.length, s2 = nums2.length;
+		int xStart = 0, yStart = 0;
+		int xEnd = nums1.length-1, yEnd = nums2.length-1;
+		
+		while(xStart <= xEnd) {
+			int xMid = (xStart + xEnd) / 2;
+			int yMid = (s1 + s2 + 1) / 2 - xMid;
+			
+			int xLeft = xMid == 0 ? Integer.MIN_VALUE : nums1[xMid-1];
+			int yLeft = yMid == 0 ? Integer.MIN_VALUE : nums2[yMid-1];
+			int xRight = xMid == s1 ? Integer.MAX_VALUE : nums1[xMid];
+			int yRight = yMid == s2 ? Integer.MAX_VALUE : nums2[yMid];
+			
+			if(xLeft > yRight) { // need smaller value from x, so move to left
+				xEnd = xMid-1;
+			}
+			else if(yLeft > xRight) { // Need more element of X; Mid has to be moved to right
+				xStart = xMid + 1;
+			}
+			else {
+				if((s1 + s2) % 2 == 0) {
+					return (Math.max(xLeft, yLeft) + Math.min(xRight, yRight))/2.;
+				}
+				else {
+					return Math.max(xLeft, yLeft);
+				}
+			}
+		}
+		
+		return 0.;
+	}
+	
+	/**
+	 * 
+	 */
+	public int findMin(int[] nums) {
+		int left = 0, right = nums.length-1;
+		
+		while(left < right) {
+			int mid = left + (right - left)/2;
+			
+			if(mid > 0 && nums[mid-1] > nums[mid]) {
+				return nums[mid];
+			}
+			
+			if(nums[mid] > nums[left] && nums[right] < nums[mid]) { // left sorted and right unsorted
+				left = mid + 1;
+			}
+			else {
+				right = mid - 1;
+			}
+		}
+		
+		return nums[left];
+    }
+	
+	/**
+	 * Find Minimum in Rotated Sorted Array II
+	 */
+	public int findMin2(int[] nums) {
+		int left = 0, right = nums.length-1;
+		
+		while(left < right) {
+			while(left < right && nums[left] == nums[right]) {
+				++left;
+			}
+			if(left >= right) {
+				return nums[left];
+			}
+			
+			int mid = left + (right-left)/2;
+			if(mid > 0 && nums[mid] < nums[mid-1]) {
+				return nums[mid];
+			}
+			
+			if(nums[mid] > nums[right]) {
+				left = mid+1;
+			}
+			else {
+				right = mid-1;
+			}
+		}
+		
+		return nums[left];
+	}
+	
+	/**
+	 * Search in Rotated Sorted Array
+	 */
+	public int search(int[] nums, int target) {
+		
+		if(nums.length == 1) {
+    		return nums[0] == target ? 0 : -1;
+    	}
+		
+		int left = 0, right = nums.length-1;
+		while(left <= right) {
+			int mid = left + (right-left)/2;
+			
+			if(nums[mid] == target) {
+				return mid;
+			}
+			
+			if(target > nums[mid]) {
+				if(nums[left] > nums[mid]) {
+					if(target < nums[left]) {
+						left = mid + 1;
+					}
+					else {
+						right = mid-1;
+					}
+				}
+				else if(nums[right] < nums[mid]) {
+					left = mid + 1;
+				}
+				else {
+					left = mid + 1;
+				}
+			}
+			else {
+				if(nums[left] > nums[mid]) {
+					right = mid - 1;
+				}
+				else if(nums[right] < nums[mid]) {
+					if(target < nums[left]) {
+						left = mid + 1;
+					}
+					else {
+						right = mid - 1;
+					}
+				}
+				else {
+					right = mid - 1;
+				}
+			}
+		}
+		
+		return -1;
+	}
+	
+	/**
+	 * Minimum Deletions to Make Character Frequencies Unique
+	 */
+	public int minDeletions(String s) {
+		HashMap<Character, Integer> freq = new HashMap<>();
+		
+		for(char ch : s.toCharArray()) {
+			freq.put(ch, freq.getOrDefault(ch, 0) + 1);
+		}
+		
+		List<Integer> list = new ArrayList<>(freq.values());
+//		Collections.sort(list, (a, b) -> Integer.compare(b, a));
+		Collections.sort(list);
+		
+		int res = 0;
+		boolean isDuplicate = true;
+		while(isDuplicate) {
+			isDuplicate = false;
+			for(int i = 0; i < list.size()-1; ++i) {
+				if(list.get(i) > 0 && list.get(i+1) > 0 && (list.get(i) == list.get(i+1))) {
+					++res;
+					list.set(i, list.get(i)-1);
+					isDuplicate = true;
+				}
+			}
+		}
+
+		return res;
+		
+		/*
+		PriorityQueue<Integer> minHeap = new PriorityQueue<Integer>();
+		for(int i = 0; i < list.size(); ++i) {
+			int f = list.get(i);
+			if(minHeap.isEmpty()) {
+				minHeap.offer(f);
+			}
+			else {
+				if(minHeap.peek() <= f) {
+					if(minHeap.peek() == 0) {
+						res += f;
+					}
+					else {
+						res += f - minHeap.peek() + 1;
+						minHeap.offer(minHeap.peek()-1);
+					}
+				}
+				else {
+					minHeap.offer(f);
+				}
+			}
+		}
+		
+		return res;*/
+	}
+	
+	/**
+	 * Open the Lock
+	 */
+	public int openLock(String[] deadends, String target) {
+		if(target.equals("0000")) {
+			return 0;
+		}
+
+		int turns = 0;
+		HashSet<String> blocks = new HashSet<>();
+		for(String d : deadends) {
+			blocks.add(d);
+		}
+		
+		if(blocks.contains(target) || blocks.contains("0000")) {
+			return -1;
+		}
+		
+		// we don't want to go to previously visited states. So we cache the states
+		HashSet<String> traversed = new HashSet<>();
+		
+		// We will use DFS to reach to the final state
+		Queue<String> queue = new LinkedList<>();
+		queue.add("0000");
+		
+		while(!queue.isEmpty()) {
+			// entries from the previous state or level
+			int n = queue.size();
+			++turns; // at every level, we will turn only one of the digits. So, the turns should increase by 1.
+			for(int i = 0; i < n; ++i) {
+				String lastState = queue.poll();
+				for(int k = 0; k < 4; ++k) {
+					List<String> possibleStates = getPossibleStates(lastState, k);
+					for(String s : possibleStates) {
+						if(target.equals(s)) {
+							return turns;
+						}
+						else if(blocks.contains(s) || traversed.contains(s)) {
+							continue;
+						}
+						else {
+							queue.add(s);
+							traversed.add(s);
+						}
+					}
+				}
+			}
+		}
+		
+		return -1; // could not reach the target state
+	}
+	
+	private List<String> getPossibleStates(String lastState, int i) {
+		List<String> ret = new ArrayList<>();
+		char[] lState = lastState.toCharArray();
+		int digit = Character.getNumericValue(lastState.charAt(i));
+		// move ahead
+		int d1 = digit == 9 ? 0 : digit + 1;
+		// move back
+		int d2 = digit == 0 ? 9 : digit - 1;
+		
+		char ch = Character.forDigit(d1, 10);
+		lState[i] = ch;
+		ret.add(String.valueOf(lState));
+
+		ch = Character.forDigit(d2, 10);
+		lState[i] = ch;
+		ret.add(String.valueOf(lState));
+		
+		return ret;
+	}
+
+	/*
+	private int turns = Integer.MAX_VALUE;
+	public int openLock(String[] deadends, String target) {
+		Set<String> blocks = new HashSet<>();
+		turns = Integer.MAX_VALUE;
+		for(String d : deadends) {
+			blocks.add(d);
+		}
+		
+		Set<String> traversed = new HashSet<>();
+		openLock("0000", target, blocks, 0, traversed);
+		return turns;
+    }
+
+	private void openLock(String lastState, String target, Set<String> blocks, int currCount, Set<String> traversed) {
+		if(lastState.equals(target)) {
+			turns = Math.min(currCount, turns);
+			return;
+		}
+		if(blocks.contains(lastState) || traversed.contains(lastState)) {
+			return;
+		}
+		
+		traversed.add(lastState);
+		// Turn one char at each index
+		for(int i = 0; i < 4; ++i) {
+			char[] arr = lastState.toCharArray();
+			int val = Character.getNumericValue(arr[i]);
+			int nextVal1 = val + 1;
+			int nextVal2 = val > 0 ? val - 1 : 9;
+			if(nextVal1 <= 9) {
+				arr[i] = Character.forDigit(nextVal1, 10);
+				openLock(String.valueOf(arr), target, blocks, currCount+1, traversed);
+			}
+			arr[i] = Character.forDigit(nextVal2, 10);
+			openLock(String.valueOf(arr), target, blocks, currCount+1, traversed);
+		}
+	}*/
+	
+	/**
+	 * Minimum Remove to Make Valid Parentheses
+	 */
+	public String minRemoveToMakeValid(String s) {
+		if(s == null || s.isEmpty()) {
+			return s;
+		}
+		
+		Deque<Integer> openIndices = new LinkedList<>();
+		StringBuilder sb = new StringBuilder();
+		List<Integer> removeIndices = new LinkedList<>();
+		
+		for(int i = 0; i < s.length(); ++i) {
+			char ch = s.charAt(i);
+			
+			if(ch == '(') {
+				openIndices.add(i);
+			}
+			else if(ch == ')') {
+				if(openIndices.isEmpty()) {
+					removeIndices.add(i);
+					continue;
+				}
+				openIndices.pollLast();
+			}
+			sb.append(ch);
+		}
+		
+		while(!openIndices.isEmpty()) {
+			int idx = openIndices.pollFirst();
+			if(removeIndices.isEmpty()) {
+				removeIndices.add(idx);
+			}
+			else {
+				if(removeIndices.get(0) > idx) {
+					removeIndices.add(0, idx);
+				}
+				else {
+					removeIndices.add(idx);
+				}
+			}
+		}
+		
+		if(removeIndices.isEmpty()) {
+			return s;
+		}
+		
+		StringBuilder retVal = new StringBuilder();
+		int start = 0;
+		for(int end : removeIndices) {
+			retVal.append(s.substring(start, end));
+			start = end+1;
+		}
+		if(start < s.length()) {
+			retVal.append(s.substring(start));
+		}
+		
+		return retVal.toString();
+	}
+	
+	/**
+	 * Simplify Path
+	 */
+	String simplifyPath(String path) {
+		Stack<Character> stack = new Stack<>();
+		int dotCount = 0;
+		
+		for(char ch : path.toCharArray()) {
+			if(!stack.isEmpty() && stack.peek() == '/' && ch == '/') {
+				continue;
+			}
+			if(ch == '.') {
+				if(dotCount == 0 && !stack.isEmpty()) {
+					if(stack.peek() != '/') {
+						stack.push(ch);
+					}
+				}
+				else {
+					stack.push(ch);
+					++dotCount;
+				}
+				continue;
+			}
+
+			if(ch == '/' && dotCount == 1) {
+				// remove the last dot
+				stack.pop();
+				dotCount = 0;
+			}
+			else if(ch == '/' && dotCount == 2) {
+				// remove till 2nd the last /
+				int slashCount = 0;
+				while(!stack.isEmpty()) {
+					char c = stack.pop();
+					if(c == '/') {
+						++slashCount;
+					}
+					if(slashCount == 2) {
+						stack.push('/');
+						break;
+					}
+				}
+				dotCount = 0;
+                if(stack.isEmpty()) {
+					stack.push('/');
+				}
+			}
+			else {
+				stack.push(ch);
+				dotCount = 0;
+			}
+		}
+		
+        if(!stack.isEmpty() && stack.peek() == '.') {
+            if(dotCount == 2) {
+                // remove till the 2nd last /
+                int slashCount = 0;
+                while(!stack.isEmpty()) {
+                    char c = stack.pop();
+                    if(c == '/') {
+                        ++slashCount;
+                    }
+                    if(slashCount == 2) {
+                        stack.push('/');
+                        break;
+                    }
+                }
+                dotCount = 0;
+                if(stack.isEmpty()) {
+                    stack.push('/');
+                }
+
+            }
+            if(dotCount == 1) {
+                stack.pop();
+            }
+        }
+        
+		if(!stack.isEmpty() && stack.peek() == '/') {
+			stack.pop();
+		}
+		if(stack.isEmpty()) {
+			stack.push('/');
+		}
+
+		StringBuilder ret = new StringBuilder();
+		for(char ch : stack) {
+			ret.append(ch);
+		}
+        
+		return ret.toString();
+	}
+	
+	public int[] temp(int[] arr) {
+		Stack<Integer> stack = new Stack<Integer>();
+		Map<Integer, Integer> dict = new HashMap<>();
+
+		for(int i = 0; i < arr.length; ++i) { 
+			while(!stack.isEmpty() && stack.peek() < arr[i]) { 
+				dict.put(stack.pop(), arr[i]);
+			}
+			stack.push(arr[i]);
+		}
+
+		while(!stack.isEmpty()) {
+			dict.put(stack.pop(), -1);
+		}
+		
+		int[] res = new int[arr.length];
+		for(int i = 0; i < res.length; ++i) {
+			res[i] = dict.get(arr[i]);
+		}
+		
+		return res;
+	}
+	
+	public int maxVal11(int[] pvs, int[] fvs, int savings) {
+		int n = pvs.length;
+		int dp[] = new int[savings+1];
+		
+		for(int i = 0; i < n; ++i) {
+			for(int j = savings; j >= pvs[i]; --j) {
+				dp[j] = Math.max(dp[j] , fvs[i] - pvs[i] + dp[j - pvs[i]]);
+			}
+		}
+		
+		return dp[savings];
+	}
 }
 
 
